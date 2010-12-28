@@ -18,7 +18,7 @@ V8Bot.prototype.init = function() {
 	IRCBot.prototype.init.call(this);
 
 	// >> command to execute javascript code
-	this.register_listener(/^(>>>?)([^>].*)+/, function(channel, user, text, command, code) {
+	this.register_listener(/^(>>>?)([^>].*)+/, function(context, text, command, code) {
 		var engine = (command === ">>>" ? "v8" : "spidermonkey");
 		this.sandbox.run(engine, 2000, code, function(result) {
 			var reply;
@@ -29,7 +29,7 @@ V8Bot.prototype.init = function() {
 				if (result.error !== null) {
 					reply = result.error;
 				} else {
-					if (result.data.type !== null) {
+					if (result.data.type !== "undefined") {
 						reply = (result.data.obvioustype ? "" :
 							"("+result.data.type+") ") + result.result;
 					} else {
@@ -44,22 +44,22 @@ V8Bot.prototype.init = function() {
 					}
 				}
 
-				this.send_truncated(channel, reply, user.name+": ");
+				this.send_truncated(context.channel, reply, user.name+": ");
 			} catch (e) {
-				channel.send(
-					user.name+": UnforseenError: "+e.name+": "+e.message);
+				context.channel.send(
+					context.intent.name+": Unforseen Error: "+e.name+": "+e.message);
 			}
 		}, this);
 	});
 
 	this.register_listener(/^(\S+)(\+\+|--);?$/,
-		function(channel, user, text, nick, operation) {
+		function(context, text, nick, operation) {
 		if (operation === "++") {
 			if (nick.toLowerCase() !== "c") {
-				channel.send(user.name + ": Even if " + nick +
+				context.channel.send(context.sender.name + ": Even if " + nick +
 					" deserves any beer, I don't have any to spare.");
 			} else {
-				channel.send(user.name + ": C doesn't deserve beer.");
+				context.channel.send(context.sender.name + ": C doesn't deserve beer.");
 			}
 		} else {
 			channel.send_action(
@@ -68,44 +68,44 @@ V8Bot.prototype.init = function() {
 	});
 
 	// Generates a randomly-sized dick each time
-	this.register_command("dick", function(channel, user, text) {
+	this.register_command("dick", function(context, text) {
 		var reply = "8"+(new Array(1+((Math.random()*9)|0)).join("="))+"D";
-		channel.send(user.name+": "+reply);
+		context.channel.send(context.intent.name+": "+reply);
 	});
 
 	// Generates an ascii unicorn
-	this.register_command("cornify", function(channel, user, text) {
-		channel.send(user.name+": `^nn~");
+	this.register_command("cornify", function(context, text) {
+		context.channel.send(context.intent.name+": `^nn~");
 	});
 
 	// Generates kirby
-	this.register_command("kirby", function(channel, user, text) {
-		channel.send(user.name+": <(n_n<) <(n_n)> (>n_n)>");
+	this.register_command("kirby", function(context, text) {
+		context.channel.send(context.intent.name+": <(n_n<) <(n_n)> (>n_n)>");
 	});
 
 	// Raw irc command
-	this.register_command("raw", function(channel, user, text) {
-		if (user.name === "eboyjr") {
-			channel.client.raw(text);
+	this.register_command("raw", function(context, text) {
+		if (context.sender.name === "eboyjr") {
+			context.channel.client.raw(text);
 		} else {
-			channel.send(user.name +
+			context.channel.send(context.sender.name +
 				": You need to be eboyjr to send raw commands.");
 		}
 	});
 
 	// ECMA-262 Reference
-	this.register_command("ecma", function(channel, user, text) {
+	this.register_command("ecma", function(context, text) {
 		try {
 
 		if (typeof this.ecma_ref === "undefined") {
-			channel.send(user.name + ": The ECMA-262 reference is not loaded.");
+			context.channel.send(context.sender.name + ": The ECMA-262 reference is not loaded.");
 			return;
 		}
 
 		var chain = text.replace(/[^A-Z0-9_.]/gi, '').split(".");
 		var len = chain.length;
 		if (!len) {
-			channel.send(user.name + ": No arguments");
+			context.channel.send(context.sender.name + ": No arguments");
 			return;
 		}
 		var result;
@@ -115,10 +115,10 @@ V8Bot.prototype.init = function() {
 					result = this.ecma_ref[chain[i]];
 					continue newaccess;
 				}
-				channel.send(
-					user.name + ": Unexpected '" + chain[i] +
+				context.channel.send(
+					context.sender.name + ": Unexpected '" + chain[i] +
 					"'; Expected built-in ECMA-262 object (" +
-					Object.getOwnPropertyNames(this.ecma_ref).sort().join(", ") +
+					Object.keys(this.ecma_ref).sort().join(", ") +
 					")");
 				return;
 			}
@@ -128,8 +128,8 @@ V8Bot.prototype.init = function() {
 					continue newaccess;
 				}
 			}
-			channel.send(
-				user.name+": "+chain.splice(0, i+1).join(".")+" is not defined.");
+			context.channel.send(
+				context.sender.name+": "+chain.splice(0, i+1).join(".")+" is not defined.");
 			return;
 		}
 		var string = chain.join(".");
@@ -159,13 +159,13 @@ V8Bot.prototype.init = function() {
 			reply.push("Returns: "+result.returns+".");
 		}
 
-		channel.send(user.name+": "+string+": "+reply.join(" || "));
+		context.channel.send(context.intent.name+": "+string+": "+reply.join(" || "));
 
-		} catch (e) { channel.send(user.name+": "+e.name+": "+e.message); }
+		} catch (e) { context.channel.send(context.sender.name+": "+e.name+": "+e.message); }
 	});
 
 	// Evalutates regular expressions
-	this.register_command("re", function(channel, user, msg) {
+	this.register_command("re", function(context, msg) {
 
 		var parseRegex = (~msg.indexOf("@") ? /(.*)\s+@\s+(\S+)$/.exec(msg) : msg);
 		if (Array.isArray(parseRegex) && parseRegex.length > 1) {
@@ -187,41 +187,41 @@ V8Bot.prototype.init = function() {
 				else out = "No matches found.";
 			}
 
-			channel.send(user.name+": "+out);
+			context.channel.send(context.intent.name+": "+out);
 		} else if (sre && sre.length >= 4) {
 			var s = sre[1], r = sre[3], u = sre[4], f = sre[5], out = [], m;
 
 			var gRegex = RegExp(r, f);
 			out = s.replace(gRegex,u);
 
-			channel.send(user.name+": "+out);
+			context.channel.send(context.intent.name+": "+out);
 		} else {
-			channel.send(user.name+": Invalid syntax: Usage: `re text /regex/flags");
+			context.channel.send(context.sender.name+": Invalid syntax: Usage: `re text /regex/flags");
 		}
 	});
 
 	// About
-	this.register_command("about", function(channel, user, text) {
-		channel.send(user.name + ": "+channel.client.nick +
+	this.register_command("about", function(context, text) {
+		context.channel.send(context.intent.name + ": "+context.channel.client.nick +
 			" is an IRC bot written entirely in Javascript using Google's v8 Javascript engine and Node.js. Credits: eisd, Tim_Smart, gf3, MizardX, inimino, eboyjr. Join us at #v8bot!");
 	});
 
 	// What is the topic
-	this.register_command("topic", function(channel, user) {
-		channel.send(user.name+": "+channel.topic);
+	this.register_command("topic", function(context) {
+		context.channel.send(context.intent.name+": "+context.channel.topic);
 	});
 
 	// Quit
-	this.register_command("quit", function(channel, user) {
-		if (user.name == "eboyjr") this.quit();
+	this.register_command("quit", function(context) {
+		if (context.sender.name == "eboyjr") this.quit();
 	});
 	
-	this.register_command("help", function(channel, user) {
-		channel.send(user.name + ": Use the `>>` command for the SpiderMonkey JavaScript interpreter, and use the `>>>` command for the V8 JavaScript interpreter.");
+	this.register_command("help", function(context) {
+		context.channel.send(context.intent.name + ": Use the `>>` command for the SpiderMonkey JavaScript interpreter, and use the `>>>` command for the V8 JavaScript interpreter.");
 	});
 
-	this.on('command_not_found', function(channel, user, command) {
-		channel.send(user.name + ": '" + command +
+	this.on('command_not_found', function(context, command) {
+		context.channel.send(context.sender.name + ": '" + command +
 			"' is not recognized as a valid command. Valid commands are: "+this.get_commands().join(", "));
 	});
 	

@@ -189,7 +189,7 @@ SandboxError sandbox_throw_error (Sandbox *this, const char  *message,
 {
 	static const char* format = "{"
 		"\"data\": {},"
-		"\"error\": \"RuntimeError: %s: line %d, %s\","
+		"\"error\": \"Runtime Error: %s: line %d, %s\","
 		"\"result\": \"undefined\" }\n";
 
 	fprintf (stdout, format, function, line, message);
