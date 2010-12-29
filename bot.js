@@ -1,10 +1,15 @@
 var File = require('fs');
 var Util = require("util");
-var IRCBot = require("./lib/irc").IRCBot;
 var Sandbox = require("./lib/sandbox");
+var FactoidServer = require("./lib/factoidserv").FactoidServer;
+
+var IRCLib   = require("./lib/irc");
+var IRCBot   = IRCLib.IRCBot;
+var IRCUtils = IRCLib.Utilities;
 
 var V8Bot = function(profile) {
 	this.sandbox = new Sandbox();
+	this.factoids = new FactoidServer('./factoids/factoids.json');
 
 	IRCBot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
@@ -18,7 +23,7 @@ V8Bot.prototype.init = function() {
 	IRCBot.prototype.init.call(this);
 
 	// >> command to execute javascript code
-	this.register_listener(/^(>>>?)([^>].*)+/, function(context, text, command, code) {
+	this.register_listener(/^(>>>?)([^>].*)+/, function(cx, text, command, code) {
 		var engine = (command === ">>>" ? "v8" : "js");
 		this.sandbox.run(engine, 2000, code, function(result) {
 			var reply;
@@ -44,22 +49,22 @@ V8Bot.prototype.init = function() {
 					}
 				}
 
-				this.send_truncated(context.channel, reply, context.intent.name+": ");
+				this.send_truncated(cx.channel, reply, cx.intent.name+": ");
 			} catch (e) {
-				context.channel.send(
-					context.intent.name+": Unforseen Error: "+e.name+": "+e.message);
+				cx.channel.send(
+					cx.intent.name+": Unforseen Error: "+e.name+": "+e.message);
 			}
 		}, this);
 	});
 
 	this.register_listener(/^(\S+)(\+\+|--);?$/,
-		function(context, text, nick, operation) {
+		function(cx, text, nick, operation) {
 		if (operation === "++") {
 			if (nick.toLowerCase() !== "c") {
-				context.channel.send(context.sender.name + ": Even if " + nick +
+				cx.channel.send(cx.sender.name + ": Even if " + nick +
 					" deserves any beer, I don't have any to spare.");
 			} else {
-				context.channel.send(context.sender.name + ": C doesn't deserve beer.");
+				cx.channel.send(cx.sender.name + ": C doesn't deserve beer.");
 			}
 		} else {
 			channel.send_action(
@@ -68,44 +73,44 @@ V8Bot.prototype.init = function() {
 	});
 
 	// Generates a randomly-sized dick each time
-	this.register_command("dick", function(context, text) {
+	this.register_command("dick", function(cx, text) {
 		var reply = "8"+(new Array(1+((Math.random()*9)|0)).join("="))+"D";
-		context.channel.send(context.intent.name+": "+reply);
+		cx.channel.send(cx.intent.name+": "+reply);
 	});
 
 	// Generates an ascii unicorn
-	this.register_command("cornify", function(context, text) {
-		context.channel.send(context.intent.name+": `^nn~");
+	this.register_command("cornify", function(cx, text) {
+		cx.channel.send(cx.intent.name+": `^nn~");
 	});
 
 	// Generates kirby
-	this.register_command("kirby", function(context, text) {
-		context.channel.send(context.intent.name+": <(n_n<) <(n_n)> (>n_n)>");
+	this.register_command("kirby", function(cx, text) {
+		cx.channel.send(cx.intent.name+": <(n_n<) <(n_n)> (>n_n)>");
 	});
 
 	// Raw irc command
-	this.register_command("raw", function(context, text) {
-		if (context.sender.name === "eboyjr") {
-			context.channel.client.raw(text);
+	this.register_command("raw", function(cx, text) {
+		if (cx.sender.name === "eboyjr") {
+			cx.client.raw(text);
 		} else {
-			context.channel.send(context.sender.name +
+			cx.channel.send(cx.sender.name +
 				": You need to be eboyjr to send raw commands.");
 		}
 	});
 
 	// ECMA-262 Reference
-	this.register_command("ecma", function(context, text) {
+	this.register_command("ecma", function(cx, text) {
 		try {
 
 		if (typeof this.ecma_ref === "undefined") {
-			context.channel.send(context.sender.name + ": The ECMA-262 reference is not loaded.");
+			cx.channel.send(cx.sender.name + ": The ECMA-262 reference is not loaded.");
 			return;
 		}
 
 		var chain = text.replace(/[^A-Z0-9_.]/gi, '').split(".");
 		var len = chain.length;
 		if (!len) {
-			context.channel.send(context.sender.name + ": No arguments");
+			cx.channel.send(cx.sender.name + ": No arguments");
 			return;
 		}
 		var result;
@@ -115,8 +120,8 @@ V8Bot.prototype.init = function() {
 					result = this.ecma_ref[chain[i]];
 					continue newaccess;
 				}
-				context.channel.send(
-					context.sender.name + ": Unexpected '" + chain[i] +
+				cx.channel.send(
+					cx.sender.name + ": Unexpected '" + chain[i] +
 					"'; Expected built-in ECMA-262 object (" +
 					Object.keys(this.ecma_ref).sort().join(", ") +
 					")");
@@ -128,8 +133,8 @@ V8Bot.prototype.init = function() {
 					continue newaccess;
 				}
 			}
-			context.channel.send(
-				context.sender.name+": "+chain.splice(0, i+1).join(".")+" is not defined.");
+			cx.channel.send(
+				cx.sender.name+": "+chain.splice(0, i+1).join(".")+" is not defined.");
 			return;
 		}
 		var string = chain.join(".");
@@ -159,13 +164,13 @@ V8Bot.prototype.init = function() {
 			reply.push("Returns: "+result.returns+".");
 		}
 
-		context.channel.send(context.intent.name+": "+string+": "+reply.join(" || "));
+		cx.channel.send(cx.intent.name+": "+string+": "+reply.join(" || "));
 
-		} catch (e) { context.channel.send(context.sender.name+": "+e.name+": "+e.message); }
+		} catch (e) { cx.channel.send(cx.sender.name+": "+e.name+": "+e.message); }
 	});
 
 	// Evalutates regular expressions
-	this.register_command("re", function(context, msg) {
+	this.register_command("re", function(cx, msg) {
 
 		var parseRegex = (~msg.indexOf("@") ? /(.*)\s+@\s+(\S+)$/.exec(msg) : msg);
 		if (Array.isArray(parseRegex) && parseRegex.length > 1) {
@@ -187,48 +192,87 @@ V8Bot.prototype.init = function() {
 				else out = "No matches found.";
 			}
 
-			context.channel.send(context.intent.name+": "+out);
+			cx.channel.send(cx.intent.name+": "+out);
 		} else if (sre && sre.length >= 4) {
 			var s = sre[1], r = sre[3], u = sre[4], f = sre[5], out = [], m;
 
 			var gRegex = RegExp(r, f);
 			out = s.replace(gRegex,u);
 
-			context.channel.send(context.intent.name+": "+out);
+			cx.channel.send(cx.intent.name+": "+out);
 		} else {
-			context.channel.send(context.sender.name+": Invalid syntax: Usage: `re text /regex/flags");
+			cx.channel.send(cx.sender.name+": Invalid syntax: Usage: `re text /regex/flags");
 		}
 	});
 
 	// About
-	this.register_command("about", function(context, text) {
-		context.channel.send(context.intent.name + ": "+context.channel.client.nick +
+	this.register_command("about", function(cx, text) {
+		cx.channel.send(cx.intent.name + ": "+cx.client.nick +
 			" is an IRC bot written mostly in Javascript using Google's v8 Javascript engine and Node.js. Credits: eboyjr, eisd, Tim_Smart, gf3, MizardX, inimino. Source: https://github.com/eboyjr/vbotjr/");
 	});
 
 	// What is the topic
-	this.register_command("topic", function(context) {
-		context.channel.send(context.intent.name+": "+context.channel.topic);
+	this.register_command("topic", function(cx) {
+		cx.channel.send(cx.intent.name+": "+cx.channel.topic);
 	});
 
 	// Quit
-	this.register_command("quit", function(context) {
-		if (context.sender.name == "eboyjr") this.quit();
+	this.register_command("quit", function(cx) {
+		if (cx.sender.name == "eboyjr") this.quit();
 	});
 	
-	this.register_command("help", function(context) {
-		context.channel.send(context.intent.name + ": Use the `>>` command for the SpiderMonkey JavaScript interpreter, and use the `>>>` command for the V8 JavaScript interpreter.");
+	this.register_command("help", function(cx) {
+		cx.channel.send(cx.intent.name + ": Use the `>>` command for the SpiderMonkey JavaScript interpreter, and use the `>>>` command for the V8 JavaScript interpreter.");
+	});
+	
+	this.register_command("learn", function(cx, text) {
+		var eq = text.indexOf('=');
+		
+		if (~eq) {
+			var factoid = IRCUtils.trim(text.substr(0, eq));
+			var content = IRCUtils.trim(text.substr(eq+1));
+	
+			this.factoids.learn(factoid, content);
+			cx.channel.send(cx.sender.name + ": Learned '"+factoid+"'.");
+			return;
+		}
+		
+		cx.channel.send(cx.sender.name + ": Error: Syntax is learn foo = bar");
+	});
+	
+	this.register_command("forget", function(cx, text) {
+		var factoid = text;
+		
+		if (this.factoids.forget(factoid)) {
+			cx.channel.send(cx.sender.name + ": Forgot '"+factoid+"'.");
+		} else {
+			cx.channel.send(cx.sender.name + ": Error: '"+factoid+"' was not a factoid.");
+		}
 	});
 
-	this.on('command_not_found', function(context, command) {
-		context.channel.send(context.sender.name + ": '" + command +
-			"' is not recognized as a valid command. Valid commands are: "+this.get_commands().join(", "));
+	this.on('command_not_found', function(cx, text) {
+		
+		var fc = this.factoids.find(text);
+		if (typeof fc !== "undefined") {
+			cx.channel.send(cx.intent.name+": "+fc);
+		} else {
+			var reply = [cx.sender.name+": '"+text+"' is not recognized."],
+			    found = this.factoids.search(text);
+			
+			if (found.length) {
+				if (found.length > 1) found[found.length-1] = "or "+found[found.length];
+				reply.push("Did you mean: "+found.join(", ")+"?");
+			}
+			
+			reply.push("Valid commands are: "+this.get_commands().join(", "));
+			cx.channel.send(reply.join(" "));
+		}
 	});
 	
 };
 
 V8Bot.prototype.load_ecma_ref = function() {
-	var filename = "/var/www/node/ebot/ecma-ref.js";
+	var filename = "/var/www/node/vbotjr/ecma-ref.js";
 	Util.puts("Loading ECMA-262 reference...");
 	var bot = this;
 	File.readFile(filename, function (err, data) {
@@ -255,5 +299,5 @@ V8Bot.prototype.load_ecma_ref = function() {
 	password: null,
 	user: "eboyjr",
 	real: "A v8bot overhaul",
-	channels: ["##eboyjr", "##javascript"]
+	channels: ["##eboyjr"]
 }])).init();

@@ -1,0 +1,115 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: #00f;
+}
+
+html, body {
+	background-color: #ddd;
+	font-family: serif;
+	color: #000;
+}
+body {
+	background: #eeeeee;
+	background: -moz-linear-gradient(top, #eeeeee 0%, #dddddd 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#dddddd));
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#dddddd',GradientType=0 );
+}
+
+#container {
+	padding: 1em;
+}
+
+h1 {
+	font-weight: normal;
+	margin-bottom: 0.5em;
+}
+
+dl.factoidlist {
+	margin: 2em 0;
+	font-family: monospace;
+}
+
+dl.factoidlist .factoid {
+	padding-bottom: 0.5em;
+	margin: 1em 0;
+	color: #000;
+	width: 100%;
+	overflow: hidden;
+	
+	background: #ffffff;
+background: -moz-linear-gradient(top, #ffffff 0%, #eeeeee 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#eeeeee));
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eeeeee',GradientType=0 );
+	
+	-webkit-border-top-right-radius: 12px;
+	-webkit-border-bottom-left-radius: 12px;
+	-moz-border-radius-topright: 12px;
+	-moz-border-radius-bottomleft: 12px;
+	border-top-right-radius: 12px;
+	border-bottom-left-radius: 12px;
+}
+
+dl.factoidlist dt, dl.factoidlist dd {
+	padding: 8px;
+}
+
+dl.factoidlist dt {
+	float: left;
+	width: 200px;
+	clear: left;
+	font-size: 1.5em;
+}
+
+dl.factoidlist dt:after {
+	content: ":";
+}
+
+dl.factoidlist dd {
+	margin-left: 216px;
+}
+
+.contents {
+	margin-bottom: 1em;
+	white-space: pre-wrap;
+}
+
+.popularity {
+	font-family: sans-serif;
+	font-size: 0.85em;
+	font-style: italic;
+	float: right;
+}
+
+
+#searchbox {
+	position: absolute;
+	position: fixed;
+	top: 0;
+	right: 0;
+	padding: 1em;
+}
+
+#searchbox .submit {
+	display: none;
+}
+
+#searchbox .input {
+	background-color: #fff;
+	font-family: monospace;
+	font-weight: inherit;
+	font-size: inherit;
+	color: inherit;
+	border: none;
+	border-bottom: 1px solid #000;
+	padding: 4px;
+	outline: none;
+}
+.error {
+	margin: 1em 0;
+	padding: 2em;
+	border: 1px solid #5ff;
+}
