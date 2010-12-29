@@ -19,7 +19,7 @@ V8Bot.prototype.init = function() {
 
 	// >> command to execute javascript code
 	this.register_listener(/^(>>>?)([^>].*)+/, function(context, text, command, code) {
-		var engine = (command === ">>>" ? "v8" : "spidermonkey");
+		var engine = (command === ">>>" ? "v8" : "js");
 		this.sandbox.run(engine, 2000, code, function(result) {
 			var reply;
 
@@ -44,7 +44,7 @@ V8Bot.prototype.init = function() {
 					}
 				}
 
-				this.send_truncated(context.channel, reply, user.name+": ");
+				this.send_truncated(context.channel, reply, context.intent.name+": ");
 			} catch (e) {
 				context.channel.send(
 					context.intent.name+": Unforseen Error: "+e.name+": "+e.message);
@@ -203,7 +203,7 @@ V8Bot.prototype.init = function() {
 	// About
 	this.register_command("about", function(context, text) {
 		context.channel.send(context.intent.name + ": "+context.channel.client.nick +
-			" is an IRC bot written entirely in Javascript using Google's v8 Javascript engine and Node.js. Credits: eisd, Tim_Smart, gf3, MizardX, inimino, eboyjr. Join us at #v8bot!");
+			" is an IRC bot written mostly in Javascript using Google's v8 Javascript engine and Node.js. Credits: eboyjr, eisd, Tim_Smart, gf3, MizardX, inimino. Source: https://github.com/eboyjr/vbotjr/");
 	});
 
 	// What is the topic
