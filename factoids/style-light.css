@@ -64,8 +64,12 @@ dl.factoidlist dt {
 	font-size: 1.5em;
 }
 
-dl.factoidlist dt:after {
+dl.factoidlist .name:after {
 	content: ":";
+}
+
+dl.factoidlist .aliases li {
+	font-size: 0.75em;
 }
 
 dl.factoidlist dd {

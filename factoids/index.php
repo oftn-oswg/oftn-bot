@@ -1,7 +1,4 @@
 <?php
-
-/* Sloppy factoid browser made in PHP starts now.. will improve. */
-
 $filename = "factoids.json";
 $factoids_max = 50; // per page
 
@@ -22,15 +19,7 @@ function query_set($key, $value=null) {
 	}
 	echo $str;
 }
-function query_unset($key) {
-	$str = "?";
-	foreach ($_GET as $k => $v) {
-		if ($k != $key) {
-			$str .= '&'.$k."=".urlencode($v);
-		}
-	}
-	echo $str;
-}
+
 $json = array(); 
 $errors = array();
 if( file_exists($filename) ) { 
@@ -45,9 +34,25 @@ $db = $json['factoids'];
 if (isset($_GET['q']) && !empty($_GET['q'])) {
 	$q = strtolower($_GET['q']);
 	foreach ($db as $k => $v) {
-		if (strpos(strtolower($k." ".$v['value']), $q) === false) {
-			unset($db[$k]);
+		if (isset($v['value'])) {
+			if (strpos(strtolower($k." ".$v['value']), $q) === false) {
+				unset($db[$k]);
+			}
 		}
+	}
+}
+
+foreach ($db as $k => $v) {
+	if (isset($v['alias'])) {
+		if (isset($db[$v['alias']])) {
+			$alias = array("key"=>$k,"popularity"=>$v['popularity']);
+			if (!isset($db[$v['alias']]['aliases'])) {
+				$db[$v['alias']]['aliases'] = array($alias);
+			} else {
+				$db[$v['alias']]['aliases'][] = $alias;
+			}
+		}
+		unset($db[$k]);
 	}
 }
 
@@ -64,7 +69,7 @@ uasort($db, "popularsort");
 <div id="container">
 	<h1>IRC Factoids</h1>
 	
-	<p>Factoids take up to <?php $min = floor($json['wait']/60000); echo $min." minute".($min!=1?"s":""); ?> to save to disk.<br />The following is sorted by popularity (number of times factoid is used).</p>
+	<p>Factoids take up to <?php $min = floor($json['wait']/60000); echo $min." minute".($min!=1?"s":""); ?> to save to disk.</p>
 	
 	<div id="searchbox">
 		<form action="" method="get">
@@ -84,7 +89,7 @@ uasort($db, "popularsort");
 	<?php if (count($db)) { ?>
 	<dl class="factoidlist"><?php foreach ($db as $key => $data) { if (!$factoids_max--) continue; ?> 
 		<div class="factoid">
-			<dt class="aliases"><?php html($key); ?></dt>
+			<dt class="aliases"><span class="name"><?php html($key); ?></span><?php if (isset($data['aliases'])) { ?><ul><?php foreach ($data['aliases'] as $alias) {?><li class="alias"><?php html($alias['key']." (".$alias['popularity'].")"); ?></li><?php } ?></ul><?php } ?></dt>
 			<dd>
 				<div class="contents"><?php echo preg_replace("@(s?ftp|https?)://[-\\w\\.]+(:\\d+)?([-/\\w\\.?=+%]+)@i", "<a href=\"\\0\">\\0</a>", html($data['value'], false)); ?></div>
 				<div class="popularity">Popularity: <?php echo $data['popularity']; ?></div>
@@ -93,7 +98,7 @@ uasort($db, "popularsort");
 	<?php } ?></dl><?php } ?>
 	
 	<div id="footer">
-		Style: [<a href="<?php query_set('dark'); ?>">dark</a>/<a href="<?php query_unset('dark'); ?>">light</a>]
+		Style: [<a href="<?php query_set('dark'); ?>">dark</a>]
 	</div>
 	
 </div>

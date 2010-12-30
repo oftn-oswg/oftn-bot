@@ -119,8 +119,9 @@ V8Bot.prototype.re = function(cx, msg) {
 			cx.channel.send(cx.intent.name+": No matches found.");
 			return;
 		}
-		cx.channel.send(cx.intent.name+
-			": Matches: "+SandboxUtils.pretty_print(result));
+		this.send_truncated(cx.channel,
+			"Matches: "+SandboxUtils.pretty_print(result),
+			cx.intent.name+": ");
 	} else {
 		cx.channel.send(cx.sender.name+
 			": Invalid syntax: Usage: `re Your text here /regex/gim");
@@ -153,6 +154,15 @@ V8Bot.prototype.learn = function(cx, text) {
 	var eq = text.indexOf('=');
 	
 	if (~eq) {
+		if (text.substr(0, 5).toLowerCase() === "alias") {
+			var factoid = IRCUtils.trim(text.substr(5, eq-5));
+			var alias = IRCUtils.trim(text.substr(eq+1));
+
+			this.factoids.alias(factoid, alias);
+			cx.channel.send(cx.sender.name + ": Learned '"+factoid+"' => '"+alias+"'.");
+			return
+		}
+	
 		var factoid = IRCUtils.trim(text.substr(0, eq));
 		var content = IRCUtils.trim(text.substr(eq+1));
 
@@ -161,7 +171,7 @@ V8Bot.prototype.learn = function(cx, text) {
 		return;
 	}
 	
-	cx.channel.send(cx.sender.name + ": Error: Syntax is learn foo = bar");
+	cx.channel.send(cx.sender.name + ": Error: Syntax is learn [alias] foo = bar");
 };
 
 
@@ -186,7 +196,7 @@ V8Bot.prototype.command_not_found = function(cx, text) {
 		    found = this.factoids.search(text);
 		
 		if (found.length) {
-			if (found.length > 1) found[found.length-1] = "or "+found[found.length];
+			if (found.length > 1) found[found.length-1] = "or "+found[found.length-1];
 			reply.push("Did you mean: "+found.join(", ")+"?");
 		}
 		
