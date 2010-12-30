@@ -86,8 +86,8 @@ dl.factoidlist dd {
 
 
 #searchbox {
+	position: fixed !important;
 	position: absolute;
-	position: fixed;
 	top: 0;
 	right: 0;
 	padding: 1em;
@@ -102,7 +102,7 @@ dl.factoidlist dd {
 	font-family: monospace;
 	font-weight: inherit;
 	font-size: inherit;
-	color: inherit;
+	color: #000;
 	border: none;
 	border-bottom: 1px solid #000;
 	padding: 4px;

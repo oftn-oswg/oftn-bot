@@ -64,7 +64,7 @@ uasort($db, "popularsort");
 <div id="container">
 	<h1>IRC Factoids</h1>
 	
-	<p>Factoids take up to <?php $min = floor($json['wait']/60000); echo $min." minute".($min!=1?"s":""); ?> to save to disk.</p>
+	<p>Factoids take up to <?php $min = floor($json['wait']/60000); echo $min." minute".($min!=1?"s":""); ?> to save to disk.<br />The following is sorted by popularity (number of times factoid is used).</p>
 	
 	<div id="searchbox">
 		<form action="" method="get">
