@@ -28,7 +28,7 @@ V8Bot.prototype.init = function() {
 
 	this.register_listener(/^(>>>?)([^>].*)+/, this.execute_js);
 	this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
-	this.register_listener(/^((well|okay|sure),? )?i(\u0027?ll| will) try.*$/i,
+	this.register_listener(/\bi(?:\u0027| wi)?ll try\b/i,
 		this.there_is_no_try);
 		
 	this.register_command("dick", function(cx, text) {
@@ -59,14 +59,14 @@ V8Bot.prototype.init = function() {
 
 
 V8Bot.prototype.there_is_no_try = function(cx, text) {
-	var msPerHour = 1000*60*60;
+	var hours = 1000*60*60;
 	var now = +new Date();
 
-	if (now > arguments.callee.last_invocation + msPerHour ||
+	if (now > arguments.callee.last_invocation + 3*hours ||
 		typeof arguments.callee.last_invocation === "undefined") {
 
 		cx.channel.send(cx.sender.name +
-			": Do or do not... there is no `try`. --Yoda");
+			": Do or do not... there is no `try`. -- Yoda");
 		arguments.callee.last_invocation = now;
 
 	}
@@ -191,13 +191,17 @@ V8Bot.prototype.learn = function(cx, text) {
 			var factoid = IRCUtils.trim(text.substr(5, eq-5));
 			var alias = IRCUtils.trim(text.substr(eq+1));
 
-			var key = this.factoids.alias(factoid, alias);
-			if (key) {
-				cx.channel.send(cx.sender.name +
-					": Learned `"+factoid+"` => `"+key+"`.");
-			} else {
-				cx.channel.send(cx.sender.name +
-					": There is no `"+alias+"`.");
+			try {
+				var key = this.factoids.alias(factoid, alias);
+				if (key) {
+					cx.channel.send(cx.sender.name +
+						": Learned `"+factoid+"` => `"+key+"`.");
+				} else {
+					cx.channel.send(cx.sender.name +
+						": There is no `"+alias+"`.");
+				}
+			} catch (e) {
+				cx.channel.send(cx.sender.name+": "+e);
 			}
 			return;
 		}
