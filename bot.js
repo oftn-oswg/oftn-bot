@@ -24,6 +24,9 @@ V8Bot.prototype.init = function() {
 	IRCBot.prototype.init.call(this);
 
 	this.register_listener(/^(>>>?)([^>].*)+/, this.execute_js);
+	
+	//	/(\S+)\s*(?:(\+\+|--)|=\s*(?:\1)\s*(\+|-)\s*1);?/ More advanced beer management
+	
 	this.register_listener(/^(\S+)(\+\+|--);?$/,
 		function(cx, text, nick, operation) {
 		if (operation === "++") {
@@ -34,10 +37,11 @@ V8Bot.prototype.init = function() {
 				cx.channel.send(cx.sender.name + ": C doesn't deserve beer.");
 			}
 		} else {
-			channel.send_action(
+			cx.channel.send_action(
 				"steals a beer a from " + nick + ", since we're taking 'em.");
 		}
 	});
+	this.register_listener(/^((well|okay|sure),? )?i(\u0027?ll| will) try.*$/i, this.there_is_no_try);
 	this.register_command("dick", function(cx, text) {
 		var reply = "8"+(new Array(1+((Math.random()*9)|0)).join("="))+"D";
 		cx.channel.send(cx.intent.name+": "+reply);
@@ -60,6 +64,21 @@ V8Bot.prototype.init = function() {
 	this.register_command("forget", this.forget);
 	this.on('command_not_found', this.command_not_found);
 	
+};
+
+
+V8Bot.prototype.there_is_no_try = function(cx, text) {
+	var msPerHour = 1000*60*60;
+	var now = +new Date();
+
+	if (now > arguments.callee.last_invocation + msPerHour ||
+		typeof arguments.callee.last_invocation === "undefined") {
+
+		cx.channel.send(cx.sender.name +
+			": Do or do not... there is no `try`. --Yoda");
+		arguments.callee.last_invocation = now;
+
+	}
 };
 
 
@@ -131,7 +150,7 @@ V8Bot.prototype.re = function(cx, msg) {
 
 V8Bot.prototype.about = function(cx, text) {
 	cx.channel.send(cx.intent.name + ": "+cx.client.nick +
-		" is an IRC bot written mostly in Javascript using Google's v8 Javascript engine and Node.js. Credits: eboyjr, eisd, Tim_Smart, gf3, MizardX, inimino. Source: https://github.com/eboyjr/vbotjr/");
+		" is an IRC bot written entirely in Javascript using Google's v8 Javascript engine and Node.js. Credits: eboyjr, eisd, Tim_Smart, gf3, MizardX, inimino. Source: https://github.com/eboyjr/vbotjr/");
 };
 
 
