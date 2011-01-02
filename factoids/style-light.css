@@ -17,6 +17,7 @@ body {
 	background: -moz-linear-gradient(top, #eeeeee 0%, #dddddd 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#eeeeee), color-stop(100%,#dddddd));
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#dddddd',GradientType=0 );
+	font-size: 16px;
 }
 
 #container {

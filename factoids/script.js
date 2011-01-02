@@ -19,6 +19,17 @@ if (!Array.prototype.forEach) {
 }
 
 
+if (!Function.prototype.bind) {
+	/* Minimal implementation */
+	Function.prototype.bind = function(thisArg) {
+		var self = this;
+		return function() {
+			return self.apply(thisArg, arguments);
+		};
+	};
+}
+
+
 var FactoidClient = function() {
 	this.filter = "";
 	this.maxnum = 10;

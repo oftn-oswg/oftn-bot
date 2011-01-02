@@ -8,6 +8,7 @@ var IRCLib   = require("./lib/irc");
 var IRCBot   = IRCLib.IRCBot;
 var IRCUtils = IRCLib.Utilities;
 
+
 var V8Bot = function(profile) {
 	this.sandbox = new Sandbox();
 	this.factoids = new FactoidServer('./factoids/factoids.json');
@@ -18,34 +19,23 @@ var V8Bot = function(profile) {
 	this.load_ecma_ref();
 };
 
+
 Util.inherits(V8Bot, IRCBot);
+
 
 V8Bot.prototype.init = function() {
 	IRCBot.prototype.init.call(this);
 
 	this.register_listener(/^(>>>?)([^>].*)+/, this.execute_js);
-	
-	//	/(\S+)\s*(?:(\+\+|--)|=\s*(?:\1)\s*(\+|-)\s*1);?/ More advanced beer management
-	
-	this.register_listener(/^(\S+)(\+\+|--);?$/,
-		function(cx, text, nick, operation) {
-		if (operation === "++") {
-			if (nick.toLowerCase() !== "c") {
-				cx.channel.send(cx.sender.name + ": Even if " + nick +
-					" deserves any beer, I don't have any to spare.");
-			} else {
-				cx.channel.send(cx.sender.name + ": C doesn't deserve beer.");
-			}
-		} else {
-			cx.channel.send_action(
-				"steals a beer a from " + nick + ", since we're taking 'em.");
-		}
-	});
-	this.register_listener(/^((well|okay|sure),? )?i(\u0027?ll| will) try.*$/i, this.there_is_no_try);
+	this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
+	this.register_listener(/^((well|okay|sure),? )?i(\u0027?ll| will) try.*$/i,
+		this.there_is_no_try);
+		
 	this.register_command("dick", function(cx, text) {
 		var reply = "8"+(new Array(1+((Math.random()*9)|0)).join("="))+"D";
 		cx.channel.send(cx.intent.name+": "+reply);
 	});
+	
 	this.register_command("raw", function(cx, text) {
 		if (cx.sender.name === "eboyjr") {
 			cx.client.raw(text);
@@ -54,6 +44,7 @@ V8Bot.prototype.init = function() {
 				": You need to be eboyjr to send raw commands.");
 		}
 	});
+	
 	this.register_command("ecma", this.ecma);
 	this.register_command("re", this.re);
 	this.register_command("about", this.about);
@@ -82,6 +73,25 @@ V8Bot.prototype.there_is_no_try = function(cx, text) {
 };
 
 
+V8Bot.prototype.do_beers = function(cx, text, nick, operation) {
+	/**
+	 * /(\S+)\s*(?:(\+\+|--)|=\s*(?:\1)\s*(\+|-)\s*1);?/
+	 * More advanced beer management
+	 **/
+	if (operation === "++") {
+		if (nick.toLowerCase() !== "c") {
+			cx.channel.send(cx.sender.name + ": Even if " + nick +
+				" deserves any beer, I don't have any to spare.");
+		} else {
+			cx.channel.send(cx.sender.name + ": C doesn't deserve beer.");
+		}
+	} else {
+		cx.channel.send_action(
+			"steals a beer a from " + nick + ", since we're taking 'em.");
+	}
+};
+
+
 V8Bot.prototype.execute_js = function(cx, text, command, code) {
 	var engine = (command === ">>>" ? "v8" : "js");
 	this.sandbox.run(engine, 2000, code, function(result) {
@@ -101,7 +111,7 @@ V8Bot.prototype.execute_js = function(cx, text, command, code) {
 				}
 			}
 			
-			if (typeof result.data.console !== "undefined") {
+			if (Array.isArray(result.data.console)) {
 				// Add console log output
 				if (result.data.console.length) {
 					reply += "; Console: "+result.data.console.join(", ");
@@ -121,7 +131,7 @@ V8Bot.prototype.re = function(cx, msg) {
 	// Okay first we need to check for the regex literal at the end
 	// The regular expression to match a real js regex literal
 	// is too long, so we need to use a simpler one.
-	var regexmatches, regexliteral = /\/((?:[^\\\/]|\\.)*)\/([img]*)$/;
+	var regexmatches, regexliteral = /\/((?:[^\\\/]|\\.)*)\/([gi]*)$/;
 	
 	if (regexmatches = msg.match(regexliteral)) {
 		try {
@@ -138,12 +148,16 @@ V8Bot.prototype.re = function(cx, msg) {
 			cx.channel.send(cx.intent.name+": No matches found.");
 			return;
 		}
-		this.send_truncated(cx.channel,
-			"Matches: "+SandboxUtils.pretty_print(result),
+		
+		var reply = [];
+		for (var i = 0, len = result.length; i < len; i++) {
+			reply.push(SandboxUtils.string_format(result[i]));
+		}
+		this.send_truncated(cx.channel, "Matches: "+reply.join(", "),
 			cx.intent.name+": ");
 	} else {
 		cx.channel.send(cx.sender.name+
-			": Invalid syntax: Usage: `re Your text here /regex/gim");
+			": Invalid syntax || USAGE: `re Your text here /expression/flags || FLAGS: (g: global match, i: ignore case)");
 	}
 };
 
@@ -177,20 +191,26 @@ V8Bot.prototype.learn = function(cx, text) {
 			var factoid = IRCUtils.trim(text.substr(5, eq-5));
 			var alias = IRCUtils.trim(text.substr(eq+1));
 
-			this.factoids.alias(factoid, alias);
-			cx.channel.send(cx.sender.name + ": Learned '"+factoid+"' => '"+alias+"'.");
-			return
+			var key = this.factoids.alias(factoid, alias);
+			if (key) {
+				cx.channel.send(cx.sender.name +
+					": Learned `"+factoid+"` => `"+key+"`.");
+			} else {
+				cx.channel.send(cx.sender.name +
+					": There is no `"+alias+"`.");
+			}
+			return;
 		}
 	
 		var factoid = IRCUtils.trim(text.substr(0, eq));
 		var content = IRCUtils.trim(text.substr(eq+1));
 
 		this.factoids.learn(factoid, content);
-		cx.channel.send(cx.sender.name + ": Learned '"+factoid+"'.");
+		cx.channel.send(cx.sender.name + ": Learned `"+factoid+"`.");
 		return;
 	}
 	
-	cx.channel.send(cx.sender.name + ": Error: Syntax is learn [alias] foo = bar");
+	cx.channel.send(cx.sender.name + ": Error: Syntax is `learn [alias] foo = bar`.");
 };
 
 
@@ -208,7 +228,7 @@ V8Bot.prototype.forget = function(cx, text) {
 V8Bot.prototype.command_not_found = function(cx, text) {
 	
 	var fc = this.factoids.find(text);
-	if (typeof fc !== "undefined") {
+	if (fc) {
 		cx.channel.send(cx.intent.name+": "+fc);
 	} else {
 		var reply = [cx.sender.name+": '"+text+"' is not recognized."],
