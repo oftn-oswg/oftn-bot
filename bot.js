@@ -76,7 +76,7 @@ V8Bot.prototype.there_is_no_try = function(cx, text) {
 V8Bot.prototype.do_beers = function(cx, text, nick, operation) {
 	/**
 	 * /(\S+)\s*(?:(\+\+|--)|=\s*(?:\1)\s*(\+|-)\s*1);?/
-	 * More advanced beer management
+	 * TODO: More advanced beer management
 	 **/
 	if (operation === "++") {
 		if (nick.toLowerCase() !== "c") {
@@ -107,15 +107,15 @@ V8Bot.prototype.execute_js = function(cx, text, command, code) {
 					reply = (result.data.obvioustype ? "" :
 						"("+result.data.type+") ") + result.result;
 				} else {
-					reply = "undefined (Nothing returned)";
+					reply = "undefined";
 				}
 			}
 			
-			if (Array.isArray(result.data.console)) {
+			if (Array.isArray(result.data.console) && result.data.console.length) {
 				// Add console log output
-				if (result.data.console.length) {
-					reply += "; Console: "+result.data.console.join(", ");
-				}
+				reply += "; Console: "+result.data.console.join(", ");
+			} else if (result.data.type === "undefined") {
+				reply += " (Nothing returned)";
 			}
 
 			this.send_truncated(cx.channel, reply, cx.intent.name+": ");
@@ -148,10 +148,12 @@ V8Bot.prototype.re = function(cx, msg) {
 			cx.channel.send(cx.intent.name+": No matches found.");
 			return;
 		}
-		
+
 		var reply = [];
 		for (var i = 0, len = result.length; i < len; i++) {
-			reply.push(SandboxUtils.string_format(result[i]));
+			reply.push(typeof result[i] !== "undefined" ?
+				SandboxUtils.string_format(result[i]) :
+				"[undefined]");
 		}
 		this.send_truncated(cx.channel, "Matches: "+reply.join(", "),
 			cx.intent.name+": ");
@@ -184,57 +186,71 @@ V8Bot.prototype.help = function(cx) {
 
 
 V8Bot.prototype.learn = function(cx, text) {
-	var eq = text.indexOf('=');
-	
-	if (~eq) {
-		if (text.substr(0, 5).toLowerCase() === "alias") {
-			var factoid = IRCUtils.trim(text.substr(5, eq-5));
-			var alias = IRCUtils.trim(text.substr(eq+1));
 
-			try {
-				var key = this.factoids.alias(factoid, alias);
-				if (key) {
-					cx.channel.send(cx.sender.name +
-						": Learned `"+factoid+"` => `"+key+"`.");
-				} else {
-					cx.channel.send(cx.sender.name +
-						": There is no `"+alias+"`.");
-				}
-			} catch (e) {
-				cx.channel.send(cx.sender.name+": "+e);
-			}
+	try {
+		var parsed = text.match(/^(alias)?\s*(.+?)\s*(=~?)\s*(.+)$/i);
+		if (!parsed) {
+			throw new SyntaxError(
+				"Syntax is `learn ( [alias] foo = bar | foo =~ s/expression/replace/gi )`.");
+		}
+
+		var alias = !!parsed[1];
+		var factoid = parsed[2];
+		var operation = parsed[3];
+		var value = parsed[4];
+
+		if (alias) {
+			var key = this.factoids.alias(factoid, value);
+			cx.channel.send(cx.sender.name +
+				": Learned `"+factoid+"` => `"+key+"`.");
 			return;
 		}
-	
-		var factoid = IRCUtils.trim(text.substr(0, eq));
-		var content = IRCUtils.trim(text.substr(eq+1));
 
-		this.factoids.learn(factoid, content);
-		cx.channel.send(cx.sender.name + ": Learned `"+factoid+"`.");
-		return;
+		/* Setting the text of a factoid */ 
+		if (operation === "=") {
+			this.factoids.learn(factoid, value);
+			cx.channel.send(cx.sender.name + ": Learned `"+factoid+"`.");
+			return;
+
+		/* Replacing the text of a factoid based on regular expression */
+		} else if (operation === "=~") {
+			var regexparsed = value.match(/s\/((?:[^\\\/]|\\.)*)\/((?:[^\\\/]|\\.)*)\/([gi]*)$/);
+			if (!regexparsed) {
+				throw new SyntaxError("Syntax is `learn foo =~ s/expression/replacetext/gi`.");
+			}
+
+			var regex = new RegExp(regexparsed[1], regexparsed[3]);
+			var result = this.factoids.find(factoid, false)
+				.replace(regex, regexparsed[2].replace(/\\\//g, '/'));
+
+			this.factoids.learn(factoid, result);
+			cx.channel.send(cx.sender.name+": Changed `"+factoid+
+				"` to: "+result);
+			return;
+
+		}
+
+	} catch (e) {
+		cx.channel.send(cx.sender.name+": "+e);
 	}
-	
-	cx.channel.send(cx.sender.name + ": Error: Syntax is `learn [alias] foo = bar`.");
 };
 
 
 V8Bot.prototype.forget = function(cx, text) {
-	var factoid = text;
-	
-	if (this.factoids.forget(factoid)) {
-		cx.channel.send(cx.sender.name + ": Forgot '"+factoid+"'.");
-	} else {
-		cx.channel.send(cx.sender.name + ": Error: '"+factoid+"' was not a factoid.");
+	try {
+		this.factoids.forget(text);
+		cx.channel.send(cx.sender.name + ": Forgot '"+text+"'.");
+	} catch(e) {
+		cx.channel.send(cx.sender.name + ": " + e);
 	}
 };
 
 
 V8Bot.prototype.command_not_found = function(cx, text) {
-	
-	var fc = this.factoids.find(text);
-	if (fc) {
-		cx.channel.send(cx.intent.name+": "+fc);
-	} else {
+
+	try {
+		cx.channel.send(cx.intent.name+": "+this.factoids.find(text, true));
+	} catch(e) {
 		var reply = [cx.sender.name+": '"+text+"' is not recognized."],
 		    found = this.factoids.search(text);
 		

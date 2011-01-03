@@ -76,9 +76,13 @@ FactoidClient.prototype.request = function() {
 
 FactoidClient.prototype.load = function(data) {
 	var list = $("#list").empty();
-	data.forEach(function(obj) {
-		$(this.create_dom_for_data(obj)).appendTo(list);
-	}, this);
+	if (data.length) {
+		data.forEach(function(obj) {
+			$(this.create_dom_for_data(obj)).appendTo(list);
+		}, this);
+	} else {
+		this.error(this.filter ? "No factoids found matching '"+this.filter+"'." : "No factoids found.");
+	}
 };
 
 
@@ -132,7 +136,7 @@ FactoidClient.prototype.linkify = function(text) {
 
 
 FactoidClient.prototype.error = function(message) {
-	console.log(message);
+	$(document.createElement('div')).text(message).addClass('error').appendTo("#list");
 };
 
 function switch_style() {
