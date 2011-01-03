@@ -11,7 +11,7 @@ var IRCUtils = IRCLib.Utilities;
 
 var V8Bot = function(profile) {
 	this.sandbox = new Sandbox();
-	this.factoids = new FactoidServer('./factoids/factoids.json');
+	this.factoids = new FactoidServer('./lib/factoidserv/static/factoids.json');
 
 	IRCBot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
@@ -51,8 +51,8 @@ V8Bot.prototype.init = function() {
 	this.register_command("topic", this.topic);
 	this.register_command("quit", this.quit_command);
 	this.register_command("help", this.help);
-	this.register_command("learn", this.learn);
-	this.register_command("forget", this.forget);
+	this.register_command("learn", this.learn, {allow_intentions: false});
+	this.register_command("forget", this.forget, {allow_intentions: false});
 	this.on('command_not_found', this.command_not_found);
 	
 };
@@ -114,8 +114,6 @@ V8Bot.prototype.execute_js = function(cx, text, command, code) {
 			if (Array.isArray(result.data.console) && result.data.console.length) {
 				// Add console log output
 				reply += "; Console: "+result.data.console.join(", ");
-			} else if (result.data.type === "undefined") {
-				reply += " (Nothing returned)";
 			}
 
 			this.send_truncated(cx.channel, reply, cx.intent.name+": ");
@@ -363,7 +361,7 @@ V8Bot.prototype.load_ecma_ref = function() {
 	port: 6667,
 	nick: "vbotjr",
 	password: null,
-	user: "eboyjr",
-	real: "A v8bot overhaul",
+	user: "v8bot-new",
+	real: "v8bot clone by eboyjr",
 	channels: ["##eboyjr"]
 }])).init();
