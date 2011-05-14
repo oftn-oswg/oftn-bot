@@ -46,5 +46,5 @@ Adds a command. When the command is called, the callback is called with the argu
 Additional Documentation
 ------------------------
 
-This bot AND/OR bot library is still being developed, but those are some of the basic commands. Look at bot.js for an example usage.
+This bot AND/OR bot library is still being developed, but those are some of the basic commands. Look at javascriptbot.js for an example usage.
 

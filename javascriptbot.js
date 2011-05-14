@@ -1,5 +1,6 @@
 var File = require('fs');
 var Util = require("util");
+var HTTP = require("http");
 var Sandbox = require("./lib/sandbox");
 var SandboxUtils = require("./lib/sandbox/utils");
 var FactoidServer = require("./lib/factoidserv").FactoidServer;
@@ -11,7 +12,7 @@ var IRCUtils = IRCLib.Utilities;
 
 var V8Bot = function(profile) {
 	this.sandbox = new Sandbox();
-	this.factoids = new FactoidServer('./lib/factoidserv/static/factoids.json');
+	this.factoids = new FactoidServer(__dirname+'/lib/factoidserv/static/factoids.json');
 
 	IRCBot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
@@ -31,10 +32,10 @@ V8Bot.prototype.init = function() {
 	this.register_listener(/\bi(?:\u0027| wi)?ll try\b/i,
 		this.there_is_no_try);
 		
-	this.register_command("dick", function(cx, text) {
-		var reply = "8"+(new Array(1+((Math.random()*9)|0)).join("="))+"D";
+	/*this.register_command("dick", function(cx, text) {
+		var reply = "8"+(Array(1+((Math.random()*9)|0)).join("="))+"D";
 		cx.channel.send(cx.intent.name+": "+reply);
-	});
+	}); //*/
 	
 	this.register_command("raw", function(cx, text) {
 		if (cx.sender.name === "eboyjr") {
@@ -43,18 +44,25 @@ V8Bot.prototype.init = function() {
 			cx.channel.send(cx.sender.name +
 				": You need to be eboyjr to send raw commands.");
 		}
-	});
+	}, {allow_indentions: false, hidden: true});
 	
 	this.register_command("ecma", this.ecma);
 	this.register_command("re", this.re);
-	this.register_command("about", this.about);
 	this.register_command("topic", this.topic);
-	this.register_command("quit", this.quit_command);
-	this.register_command("help", this.help);
+	this.register_command("quit", this.quit_command, {hidden: true});
+	this.register_command("lmgtfy", this.lmgtfy);
 	this.register_command("learn", this.learn, {allow_intentions: false});
 	this.register_command("forget", this.forget, {allow_intentions: false});
 	this.on('command_not_found', this.command_not_found);
 	
+};
+
+
+V8Bot.prototype.lmgtfy = function(cx, text) {
+	if (text) {
+		var reply = "http://www.lmgtfy.com/?q="+encodeURIComponent(text);
+		cx.channel.send(cx.intent.name+": "+reply);
+	}
 };
 
 
@@ -162,12 +170,6 @@ V8Bot.prototype.re = function(cx, msg) {
 };
 
 
-V8Bot.prototype.about = function(cx, text) {
-	cx.channel.send(cx.intent.name + ": "+cx.client.nick +
-		" is an IRC bot written entirely in Javascript using Google's v8 Javascript engine and Node.js. Credits: eboyjr, eisd, Tim_Smart, gf3, MizardX, inimino. Source: https://github.com/eboyjr/vbotjr/");
-};
-
-
 V8Bot.prototype.topic = function(cx) {
 	cx.channel.send(cx.intent.name+": "+cx.channel.topic);
 };
@@ -175,11 +177,6 @@ V8Bot.prototype.topic = function(cx) {
 
 V8Bot.prototype.quit_command = function(cx) {
 	if (cx.sender.name == "eboyjr") this.quit();
-};
-
-
-V8Bot.prototype.help = function(cx) {
-	cx.channel.send(cx.intent.name + ": Use the `>>` command for the SpiderMonkey JavaScript interpreter, and use the `>>>` command for the V8 JavaScript interpreter.");
 };
 
 
@@ -359,9 +356,9 @@ V8Bot.prototype.load_ecma_ref = function() {
 (new V8Bot([{
 	host: "irc.freenode.net",
 	port: 6667,
-	nick: "vbotjr",
+	nick: "jsbotjr",
 	password: null,
-	user: "v8bot-new",
+	user: "javascript-bot",
 	real: "v8bot clone by eboyjr",
-	channels: ["##eboyjr"]
+	channels: ["##javascript", "##jsbotjr"]
 }])).init();
