@@ -125,7 +125,7 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 	exports = JS_NewObject (context, NULL, NULL, global);
 
 	if (!JS_DefineProperty(context, global, "exports", OBJECT_TO_JSVAL (exports),
-                       JS_PropertyStub, JS_PropertyStub, JSPROP_PERMANENT)) {
+                       JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
 		SANDBOX_THROW_ERROR (this, "Could not make new exports global.");
 	}
 
@@ -137,7 +137,7 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 	}
 
 	if (!JS_DefineProperty(context, global, "GlobalObject", OBJECT_TO_JSVAL (global_object),
-                       JS_PropertyStub, JS_PropertyStub, JSPROP_PERMANENT)) {
+                       JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
 		SANDBOX_THROW_ERROR (this, "Could not make global object.");
 	}
 
@@ -225,12 +225,12 @@ JSObject* sandbox_globals_create (Sandbox *this, JSContext *context)
 	
 	static JSClass global_class = {
 		"global", JSCLASS_GLOBAL_FLAGS,
-		JS_PropertyStub, JS_PropertyStub, JS_PropertyStub, JS_PropertyStub,
+		JS_PropertyStub, JS_PropertyStub, JS_PropertyStub, JS_StrictPropertyStub,
 		JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub,
 		JSCLASS_NO_OPTIONAL_MEMBERS
 	};
 	
-	global = JS_NewGlobalObject (context, &global_class);
+	global = JS_NewCompartmentAndGlobalObject (context, &global_class, NULL);
 	if (global == NULL) {
 		SANDBOX_THROW_ERROR (this, "Could not create global object.");
 	}

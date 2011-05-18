@@ -27,7 +27,7 @@ Util.inherits(V8Bot, IRCBot);
 V8Bot.prototype.init = function() {
 	IRCBot.prototype.init.call(this);
 
-	this.register_listener(/^(>>>?)([^>].*)+/, this.execute_js);
+	this.register_listener(/^(sm?|v8?|js?|>>?)>([^>].*)+/, this.execute_js);
 	this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
 	this.register_listener(/\bi(?:\u0027| wi)?ll try\b/i,
 		this.there_is_no_try);
@@ -101,7 +101,17 @@ V8Bot.prototype.do_beers = function(cx, text, nick, operation) {
 
 
 V8Bot.prototype.execute_js = function(cx, text, command, code) {
-	var engine = (command === ">>>" ? "v8" : "js");
+	var engine;
+	switch (command) {
+	case ">>":
+		engine = "v8"; break;
+	case ">":
+		engine = "js"; break;
+	default:
+	//case "v8": case "v":
+	//case "sm": case "s": case "js": case "j":
+		return;
+	}
 	this.sandbox.run(engine, 2000, code, function(result) {
 		var reply;
 
@@ -360,5 +370,5 @@ V8Bot.prototype.load_ecma_ref = function() {
 	password: null,
 	user: "javascript-bot",
 	real: "v8bot clone by eboyjr",
-	channels: ["##javascript", "##jsbotjr"]
+	channels: ["##javascript", "##jsbotjr", "#inimino", "#v8bot", "#v8"]
 }])).init();
