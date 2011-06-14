@@ -4,6 +4,7 @@ var HTTP = require("http");
 var Sandbox = require("./lib/sandbox");
 var SandboxUtils = require("./lib/sandbox/utils");
 var FactoidServer = require("./lib/factoidserv").FactoidServer;
+var FeelingLucky = require("./lib/feelinglucky");
 
 var IRCLib   = require("./lib/irc");
 var IRCBot   = IRCLib.IRCBot;
@@ -28,7 +29,7 @@ V8Bot.prototype.init = function() {
 	IRCBot.prototype.init.call(this);
 
 	this.register_listener(/^(sm?|v8?|js?|>>?)>([^>].*)+/, this.execute_js);
-	this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
+	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
 	this.register_listener(/\bi(?:\u0027| wi)?ll try\b/i,
 		this.there_is_no_try);
 		
@@ -46,11 +47,12 @@ V8Bot.prototype.init = function() {
 		}
 	}, {allow_indentions: false, hidden: true});
 	
-	this.register_command("ecma", this.ecma);
+	//this.register_command("ecma", this.ecma);
 	this.register_command("re", this.re);
-	this.register_command("topic", this.topic);
+	//this.register_command("topic", this.topic);
 	this.register_command("quit", this.quit_command, {hidden: true});
 	this.register_command("lmgtfy", this.lmgtfy);
+	this.register_command("g", this.google);
 	this.register_command("learn", this.learn, {allow_intentions: false});
 	this.register_command("forget", this.forget, {allow_intentions: false});
 	this.on('command_not_found', this.command_not_found);
@@ -65,6 +67,17 @@ V8Bot.prototype.lmgtfy = function(cx, text) {
 	}
 };
 
+V8Bot.prototype.google = function(cx, text) {
+	FeelingLucky(text, function(data) {
+		if (data) {
+			cx.channel.send (cx.sender.name +
+				":\x02 "+data.title+"\x0F \x032<"+data.url+">\x0F", true);
+		} else {
+			cx.channel.send (cx.sender.name + ": No search results found.");
+		}
+	});
+};
+
 
 V8Bot.prototype.there_is_no_try = function(cx, text) {
 	var hours = 1000*60*60;
@@ -74,7 +87,7 @@ V8Bot.prototype.there_is_no_try = function(cx, text) {
 		typeof arguments.callee.last_invocation === "undefined") {
 
 		cx.channel.send(cx.sender.name +
-			": Do or do not... there is no `try`. -- Yoda");
+			": Do or do not; there is no try. --Yoda");
 		arguments.callee.last_invocation = now;
 
 	}
@@ -364,11 +377,11 @@ V8Bot.prototype.load_ecma_ref = function() {
 
 
 (new V8Bot([{
-	host: "irc.freenode.net",
+	host: "208.71.169.36",//"irc.freenode.net",
 	port: 6667,
-	nick: "jsbotjr",
+	nick: "jbotjr",
 	password: null,
-	user: "javascript-bot",
-	real: "v8bot clone by eboyjr",
-	channels: ["##javascript", "##jsbotjr", "#inimino", "#v8bot", "#v8"]
+	user: "eboyjr",
+	real: "Bot for javascript channel",
+	channels: ["##javascript", "#jbotjr", "#inimino", "#v8bot", "#v8"]
 }])).init();
