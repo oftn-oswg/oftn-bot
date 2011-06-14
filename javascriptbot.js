@@ -55,6 +55,7 @@ V8Bot.prototype.init = function() {
 	this.register_command("g", this.google);
 	this.register_command("learn", this.learn, {allow_intentions: false});
 	this.register_command("forget", this.forget, {allow_intentions: false});
+	this.register_command("commands", this.commands);
 	this.on('command_not_found', this.command_not_found);
 	
 };
@@ -263,6 +264,10 @@ V8Bot.prototype.forget = function(cx, text) {
 	}
 };
 
+V8Bot.prototype.commands = function(cx, text) {
+	cx.channel.send (cx.sender.name + ": Valid commands are: "+this.get_commands().join(", "));
+};
+
 
 V8Bot.prototype.command_not_found = function(cx, text) {
 
@@ -277,8 +282,8 @@ V8Bot.prototype.command_not_found = function(cx, text) {
 			reply.push("Did you mean: "+found.join(", ")+"?");
 		}
 		
-		reply.push("Valid commands are: "+this.get_commands().join(", "));
-		cx.channel.send(reply.join(" "));
+		reply.push("See !commands for a list of commands.");
+		cx.sender.notice(reply.join(" "));
 	}
 };
 
