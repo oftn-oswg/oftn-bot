@@ -12,7 +12,7 @@ int main (int argc, const char *argv[]) {
 	const char *utils_filepath;
 
 	if (argc < 2) {
-		SANDBOX_THROW_ERROR (this, "Required argument for utilities file.");
+		sandbox_throw_error (this, "Required argument for utilities file.");
 	} else {
 		utils_filepath = argv[1];
 	}
@@ -30,7 +30,7 @@ Sandbox* sandbox_new ()
 {
 	Sandbox *this = malloc(sizeof(Sandbox));
 	if (this == NULL) {
-		SANDBOX_THROW_ERROR (NULL, "Could not allocate new sandbox.");
+		sandbox_throw_error (NULL, "Could not allocate new sandbox.");
 	}
 	return this;
 }
@@ -42,7 +42,7 @@ void sandbox_initialize (Sandbox *this)
 
 	this->runtime = JS_NewRuntime (8L * 1024L * 1024L);
 	if (this->runtime == NULL) {
-		SANDBOX_THROW_ERROR (this, "Could not create runtime.");
+		sandbox_throw_error (this, "Could not create JavaScript runtime.");
 	}
 }
 
@@ -60,7 +60,6 @@ void sandbox_destroy (Sandbox *this)
 
 		free (this);
 	}
-	this = NULL;
 }
 
 
@@ -76,7 +75,7 @@ void sandbox_run (Sandbox *this, const char *filepath)
 	execute = JS_NewFunction(this->utils_context.context,
 				sandbox_jsnative_execute, 1, 0, NULL, NULL);
 	if (execute == NULL) {
-		SANDBOX_THROW_ERROR (this,
+		sandbox_throw_error (this,
 			"Out of memory while creating native execute function.");
 	}
 
@@ -84,14 +83,17 @@ void sandbox_run (Sandbox *this, const char *filepath)
 
 	if (!JS_CallFunctionName(this->utils_context.context,
 				this->utils_exports, "run", 1, &input, &returned)) {
-		SANDBOX_THROW_ERROR (this,
-			"Could not call exports.run function in utilities file.");
+		
+		SANDBOX_THROW_ERROR_JS (this, this->utils_context.context);
+		sandbox_throw_error (this,
+			"Failed to call exports.run function from utilities file.");
 	}
 	
 	output = JS_ValueToString (this->utils_context.context, returned);
 	if (output == NULL) {
-		SANDBOX_THROW_ERROR (this,
-			"Error converting exports.run return value to a string.");
+		SANDBOX_THROW_ERROR_JS (this, this->utils_context.context);
+		sandbox_throw_error (this,
+			"Exception thrown while converting exports.run return value into a string.");
 	}
 
 	fprintf (stdout, "%s\n", JS_EncodeString (this->utils_context.context, output));
@@ -115,7 +117,7 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 
 	utils_stream = fopen (filepath, "r");
 	if (utils_stream == NULL) {
-		SANDBOX_THROW_ERROR (this, "Could not open utilities file.");
+		sandbox_throw_error (this, "Could not open utilities file.");
 	}
 
 	utils_input = sandbox_read_into (this, utils_stream, 1024, &utils_size);
@@ -126,24 +128,27 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 
 	if (!JS_DefineProperty(context, global, "exports", OBJECT_TO_JSVAL (exports),
                        JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
-		SANDBOX_THROW_ERROR (this, "Could not make new exports global.");
+		sandbox_throw_error (this, "Could not make new exports global.");
 	}
 
 	global_object = sandbox_globals_create (this, context);
 	
 	if (!JS_InitStandardClasses (context, global_object)) {
-		SANDBOX_THROW_ERROR (this,
+		sandbox_throw_error (this,
 			"Could not populate global object with standard globals.");
 	}
 
 	if (!JS_DefineProperty(context, global, "GlobalObject", OBJECT_TO_JSVAL (global_object),
                        JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
-		SANDBOX_THROW_ERROR (this, "Could not make global object.");
+		sandbox_throw_error (this, "Could not make global object.");
 	}
 
 	if (!JS_EvaluateScript (context, global, utils_input, utils_size-1,
 	                        "irc", 1, &retval)) {
-		SANDBOX_THROW_ERROR (this, "Could not execute utilities file.");
+
+		SANDBOX_THROW_ERROR_JS (this, context);
+		sandbox_throw_error (this, "Could not execute utilities file.");
+		
 	}
 
 	this->utils_exports = exports;
@@ -177,22 +182,21 @@ char *sandbox_read_into (Sandbox *this, FILE *src, unsigned int buffersize, int 
 	error:
 		free (desc);
 		if (this != NULL) {
-			SANDBOX_THROW_ERROR (this,
+			sandbox_throw_error (this,
 				"Error reading source or allocating buffer to store the script.");
 		}
 		return NULL;
 }
 
 
-SandboxError sandbox_throw_error (Sandbox *this, const char  *message,
-                                  const char *function, unsigned int line)
+SandboxError sandbox_throw_error (Sandbox *this, const char  *message)
 {
 	static const char* format = "{"
 		"\"data\": {},"
-		"\"error\": \"Runtime Error: %s: line %d, %s\","
+		"\"error\": \"Internal Error: SpiderMonkey sandbox, %s\","
 		"\"result\": \"undefined\" }\n";
 
-	fprintf (stdout, format, function, line, message);
+	fprintf (stdout, format, message);
 	fflush (stdout);
 	sandbox_destroy (this);
 	exit (1);
@@ -206,7 +210,7 @@ SandboxContext sandbox_context_create (Sandbox *this)
 
 	context = JS_NewContext (this->runtime, 8192);
 	if (context == NULL) {
-		SANDBOX_THROW_ERROR (this, "Could not create new context.");
+		sandbox_throw_error (this, "Could not create new context.");
 	}
 
 	JS_SetOptions (context,
@@ -232,11 +236,11 @@ JSObject* sandbox_globals_create (Sandbox *this, JSContext *context)
 	
 	global = JS_NewCompartmentAndGlobalObject (context, &global_class, NULL);
 	if (global == NULL) {
-		SANDBOX_THROW_ERROR (this, "Could not create global object.");
+		sandbox_throw_error (this, "Could not create global object.");
 	}
 
 	if (!JS_InitStandardClasses (context, global)) {
-		SANDBOX_THROW_ERROR (this,
+		sandbox_throw_error (this,
 			"Could not populate global object with standard globals.");
 	}
 	

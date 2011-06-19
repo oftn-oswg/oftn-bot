@@ -6,14 +6,14 @@ var SandboxUtils = require("./lib/sandbox/utils");
 var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
 
-var IRCBot   = require("./lib/irc").IRCBot;
+var Bot = require("./lib/irc");
 
 
 var JSBot = function(profile) {
 	this.sandbox = new Sandbox();
 	this.factoids = new FactoidServer(__dirname+'/lib/factoidserv/static/factoids.json');
 
-	IRCBot.call(this, profile);
+	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
 	this.set_command_identifier("!"); // Exclamation
 	
@@ -21,11 +21,11 @@ var JSBot = function(profile) {
 };
 
 
-Util.inherits(JSBot, IRCBot);
+Util.inherits(JSBot, Bot);
 
 
 JSBot.prototype.init = function() {
-	IRCBot.prototype.init.call(this);
+	Bot.prototype.init.call(this);
 
 	this.register_listener(/^(sm?|v8?|js?|>>?)>([^>].*)+/, this.execute_js);
 	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
