@@ -6,9 +6,7 @@ var SandboxUtils = require("./lib/sandbox/utils");
 var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
 
-var IRCLib   = require("./lib/irc");
-var IRCBot   = IRCLib.IRCBot;
-var IRCUtils = IRCLib.Utilities;
+var IRCBot   = require("./lib/irc").IRCBot;
 
 
 var JSBot = function(profile) {
@@ -33,24 +31,9 @@ JSBot.prototype.init = function() {
 	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
 	this.register_listener(/\bi(?:\u0027| wi)?ll try\b/i,
 		this.there_is_no_try);
-		
-	/*this.register_command("dick", function(cx, text) {
-		var reply = "8"+(Array(1+((Math.random()*9)|0)).join("="))+"D";
-		cx.channel.send(cx.intent.name+": "+reply);
-	}); //*/
-	
-	this.register_command("raw", function(cx, text) {
-		if (cx.sender.name === "eboyjr") {
-			cx.client.raw(text);
-		} else {
-			cx.channel.send(cx.sender.name +
-				": You need to be eboyjr to send raw commands.");
-		}
-	}, {allow_indentions: false, hidden: true});
 	
 	//this.register_command("ecma", this.ecma);
 	this.register_command("re", this.re);
-	//this.register_command("topic", this.topic);
 	this.register_command("quit", this.quit_command, {hidden: true});
 	this.register_command("lmgtfy", this.lmgtfy);
 	this.register_command("g", this.google);
@@ -173,7 +156,7 @@ JSBot.prototype.re = function(cx, msg) {
 			return;
 		}
 		
-		var texttomatch = IRCUtils.trim(msg.substr(0, msg.length-regexmatches[0].length));
+		var texttomatch = msg.slice(0, -regexmatches[0].length).trim();
 		var result = texttomatch.match(regexpobj);
 		if (result === null) {
 			cx.channel.send(cx.intent.name+": No matches found.");
@@ -192,16 +175,6 @@ JSBot.prototype.re = function(cx, msg) {
 		cx.channel.send(cx.sender.name+
 			": Invalid syntax || USAGE: `re Your text here /expression/flags || FLAGS: (g: global match, i: ignore case)");
 	}
-};
-
-
-JSBot.prototype.topic = function(cx) {
-	cx.channel.send(cx.intent.name+": "+cx.channel.topic);
-};
-
-
-JSBot.prototype.quit_command = function(cx) {
-	if (cx.sender.name == "eboyjr") this.quit();
 };
 
 
