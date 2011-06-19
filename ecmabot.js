@@ -3,7 +3,7 @@ var Util = require("util");
 var HTTP = require("http");
 var Sandbox = require("./lib/sandbox");
 var SandboxUtils = require("./lib/sandbox/utils");
-var FactoidServer = require("./lib/factoidserv").FactoidServer;
+var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
 
 var IRCLib   = require("./lib/irc");
@@ -11,21 +11,22 @@ var IRCBot   = IRCLib.IRCBot;
 var IRCUtils = IRCLib.Utilities;
 
 
-var V8Bot = function(profile) {
+var JSBot = function(profile) {
 	this.sandbox = new Sandbox();
 	this.factoids = new FactoidServer(__dirname+'/lib/factoidserv/static/factoids.json');
 
 	IRCBot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
 	this.set_command_identifier("!"); // Exclamation
-	this.load_ecma_ref();
+	
+	// this.load_ecma_ref();
 };
 
 
-Util.inherits(V8Bot, IRCBot);
+Util.inherits(JSBot, IRCBot);
 
 
-V8Bot.prototype.init = function() {
+JSBot.prototype.init = function() {
 	IRCBot.prototype.init.call(this);
 
 	this.register_listener(/^(sm?|v8?|js?|>>?)>([^>].*)+/, this.execute_js);
@@ -61,17 +62,17 @@ V8Bot.prototype.init = function() {
 };
 
 
-V8Bot.prototype.lmgtfy = function(cx, text) {
+JSBot.prototype.lmgtfy = function(cx, text) {
 	if (text) {
 		var reply = "http://www.lmgtfy.com/?q="+encodeURIComponent(text);
 		cx.channel.send(cx.intent.name+": "+reply);
 	}
 };
 
-V8Bot.prototype.google = function(cx, text) {
+JSBot.prototype.google = function(cx, text) {
 	FeelingLucky(text, function(data) {
 		if (data) {
-			cx.channel.send (cx.sender.name +
+			cx.channel.send (cx.intent.name +
 				":\x02 "+data.title+"\x0F \x032<"+data.url+">\x0F", true);
 		} else {
 			cx.channel.send (cx.sender.name + ": No search results found.");
@@ -80,7 +81,7 @@ V8Bot.prototype.google = function(cx, text) {
 };
 
 
-V8Bot.prototype.there_is_no_try = function(cx, text) {
+JSBot.prototype.there_is_no_try = function(cx, text) {
 	var hours = 1000*60*60;
 	var now = +new Date();
 
@@ -95,7 +96,7 @@ V8Bot.prototype.there_is_no_try = function(cx, text) {
 };
 
 
-V8Bot.prototype.do_beers = function(cx, text, nick, operation) {
+JSBot.prototype.do_beers = function(cx, text, nick, operation) {
 	/**
 	 * /(\S+)\s*(?:(\+\+|--)|=\s*(?:\1)\s*(\+|-)\s*1);?/
 	 * TODO: More advanced beer management
@@ -114,7 +115,7 @@ V8Bot.prototype.do_beers = function(cx, text, nick, operation) {
 };
 
 
-V8Bot.prototype.execute_js = function(cx, text, command, code) {
+JSBot.prototype.execute_js = function(cx, text, command, code) {
 	var engine;
 	switch (command) {
 	case ">>":
@@ -157,7 +158,7 @@ V8Bot.prototype.execute_js = function(cx, text, command, code) {
 };
 
 
-V8Bot.prototype.re = function(cx, msg) {
+JSBot.prototype.re = function(cx, msg) {
 	// Okay first we need to check for the regex literal at the end
 	// The regular expression to match a real js regex literal
 	// is too long, so we need to use a simpler one.
@@ -194,17 +195,17 @@ V8Bot.prototype.re = function(cx, msg) {
 };
 
 
-V8Bot.prototype.topic = function(cx) {
+JSBot.prototype.topic = function(cx) {
 	cx.channel.send(cx.intent.name+": "+cx.channel.topic);
 };
 
 
-V8Bot.prototype.quit_command = function(cx) {
+JSBot.prototype.quit_command = function(cx) {
 	if (cx.sender.name == "eboyjr") this.quit();
 };
 
 
-V8Bot.prototype.learn = function(cx, text) {
+JSBot.prototype.learn = function(cx, text) {
 
 	try {
 		var parsed = text.match(/^(alias)?\s*(.+?)\s*(=~?)\s*(.+)$/i);
@@ -255,7 +256,7 @@ V8Bot.prototype.learn = function(cx, text) {
 };
 
 
-V8Bot.prototype.forget = function(cx, text) {
+JSBot.prototype.forget = function(cx, text) {
 	try {
 		this.factoids.forget(text);
 		cx.channel.send(cx.sender.name + ": Forgot '"+text+"'.");
@@ -264,12 +265,12 @@ V8Bot.prototype.forget = function(cx, text) {
 	}
 };
 
-V8Bot.prototype.commands = function(cx, text) {
+JSBot.prototype.commands = function(cx, text) {
 	cx.channel.send (cx.sender.name + ": Valid commands are: "+this.get_commands().join(", "));
 };
 
 
-V8Bot.prototype.command_not_found = function(cx, text) {
+JSBot.prototype.command_not_found = function(cx, text) {
 
 	try {
 		cx.channel.send(cx.intent.name+": "+this.factoids.find(text, true));
@@ -288,7 +289,7 @@ V8Bot.prototype.command_not_found = function(cx, text) {
 };
 
 
-V8Bot.prototype.ecma = function(cx, text) {
+JSBot.prototype.ecma = function(cx, text) {
 	try {
 
 	if (typeof this.ecma_ref === "undefined") {
@@ -358,8 +359,8 @@ V8Bot.prototype.ecma = function(cx, text) {
 	} catch (e) { cx.channel.send(cx.sender.name+": "+e.name+": "+e.message); }
 };
 
-
-V8Bot.prototype.load_ecma_ref = function() {
+/*
+JSBot.prototype.load_ecma_ref = function() {
 	var filename = "/var/www/node/vbotjr/ecma-ref.js";
 	Util.puts("Loading ECMA-262 reference...");
 	var bot = this;
@@ -378,15 +379,7 @@ V8Bot.prototype.load_ecma_ref = function() {
 			bot.load_ecma_ref();
 		});
 	}
-};
+};*/
 
-
-(new V8Bot([{
-	host: "208.71.169.36",//"irc.freenode.net",
-	port: 6667,
-	nick: "jbotjr",
-	password: null,
-	user: "eboyjr",
-	real: "Bot for javascript channel",
-	channels: ["##javascript", "#jbotjr", "#inimino", "#v8bot", "#v8"]
-}])).init();
+var profile = require("./ecmabot-profile.js");
+(new JSBot(profile)).init();
