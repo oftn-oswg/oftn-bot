@@ -48,17 +48,17 @@ JSBot.prototype.init = function() {
 JSBot.prototype.lmgtfy = function(cx, text) {
 	if (text) {
 		var reply = "http://www.lmgtfy.com/?q="+encodeURIComponent(text);
-		cx.channel.send(cx.intent.name+": "+reply);
+		cx.channel.send_reply(cx.intent, reply);
 	}
 };
 
 JSBot.prototype.google = function(cx, text) {
 	FeelingLucky(text, function(data) {
 		if (data) {
-			cx.channel.send (cx.intent.name +
-				":\x02 "+data.title+"\x0F \x032<"+data.url+">\x0F", true);
+			cx.channel.send_reply (cx.intent, 
+				"\x02"+data.title+"\x0F \x032<"+data.url+">\x0F", {color: true});
 		} else {
-			cx.channel.send (cx.sender.name + ": No search results found.");
+			cx.channel.send_reply (cx.sender, "No search results found.");
 		}
 	});
 };
@@ -71,8 +71,7 @@ JSBot.prototype.there_is_no_try = function(cx, text) {
 	if (now > arguments.callee.last_invocation + 3*hours ||
 		typeof arguments.callee.last_invocation === "undefined") {
 
-		cx.channel.send(cx.sender.name +
-			": Do or do not; there is no try. --Yoda");
+		cx.channel.send_reply(cx.sender, "Do or do not; there is no try. --Yoda");
 		arguments.callee.last_invocation = now;
 
 	}
@@ -86,10 +85,10 @@ JSBot.prototype.do_beers = function(cx, text, nick, operation) {
 	 **/
 	if (operation === "++") {
 		if (nick.toLowerCase() !== "c") {
-			cx.channel.send(cx.sender.name + ": Even if " + nick +
+			cx.channel.send_reply(cx.sender, "Even if " + nick +
 				" deserves any beer, I don't have any to spare.");
 		} else {
-			cx.channel.send(cx.sender.name + ": C doesn't deserve beer.");
+			cx.channel.send_reply(cx.sender, "C doesn't deserve beer.");
 		}
 	} else {
 		cx.channel.send_action(
@@ -132,10 +131,10 @@ JSBot.prototype.execute_js = function(cx, text, command, code) {
 				reply += "; Console: "+result.data.console.join(", ");
 			}
 
-			this.send_truncated(cx.channel, reply, cx.intent.name+": ");
+			cx.channel.send_reply(cx.intent, reply, {truncate: true});
 		} catch (e) {
-			cx.channel.send(
-				cx.intent.name+": Unforseen Error: "+e.name+": "+e.message);
+			cx.channel.send_reply(
+				cx.intent, "Unforseen Error: "+e.name+": "+e.message);
 		}
 	}, this);
 };
@@ -152,14 +151,14 @@ JSBot.prototype.re = function(cx, msg) {
 			var regexpobj = new RegExp(regexmatches[1], regexmatches[2]);
 		} catch (e) {
 			/* We have an invalid regular expression */
-			cx.channel.send(cx.sender.name+": "+e.message);
+			cx.channel.send_reply(cx.sender, e.message);
 			return;
 		}
 		
 		var texttomatch = msg.slice(0, -regexmatches[0].length).trim();
 		var result = texttomatch.match(regexpobj);
 		if (result === null) {
-			cx.channel.send(cx.intent.name+": No matches found.");
+			cx.channel.send_reply(cx.intent, "No matches found.");
 			return;
 		}
 
@@ -169,11 +168,11 @@ JSBot.prototype.re = function(cx, msg) {
 				SandboxUtils.string_format(result[i]) :
 				"[undefined]");
 		}
-		this.send_truncated(cx.channel, "Matches: "+reply.join(", "),
-			cx.intent.name+": ");
+		
+		cx.channel.send_reply(cx.intent, "Matches: "+reply.join(", "), {truncate: true});
 	} else {
-		cx.channel.send(cx.sender.name+
-			": Invalid syntax || USAGE: `re Your text here /expression/flags || FLAGS: (g: global match, i: ignore case)");
+		cx.channel.send_reply(cx.sender,
+			"Invalid syntax || USAGE: `re Your text here /expression/flags || FLAGS: (g: global match, i: ignore case)");
 	}
 };
 
@@ -194,37 +193,33 @@ JSBot.prototype.learn = function(cx, text) {
 
 		if (alias) {
 			var key = this.factoids.alias(factoid, value);
-			cx.channel.send(cx.sender.name +
-				": Learned `"+factoid+"` => `"+key+"`.");
+			cx.channel.send_reply(cx.sender,
+				"Learned `"+factoid+"` => `"+key+"`.");
 			return;
 		}
 
 		/* Setting the text of a factoid */ 
 		if (operation === "=") {
 			this.factoids.learn(factoid, value);
-			cx.channel.send(cx.sender.name + ": Learned `"+factoid+"`.");
+			cx.channel.send_reply(cx.sender, "Learned `"+factoid+"`.");
 			return;
 
 		/* Replacing the text of a factoid based on regular expression */
 		} else if (operation === "=~") {
-			var regexparsed = value.match(/s\/((?:[^\\\/]|\\.)*)\/((?:[^\\\/]|\\.)*)\/([gi]*)$/);
-			if (!regexparsed) {
-				throw new SyntaxError("Syntax is `learn foo =~ s/expression/replacetext/gi`.");
-			}
-
-			var regex = new RegExp(regexparsed[1], regexparsed[3]);
+			var regexinfo = this.parse_regex_literal (value);
+			var regex = regexinfo[0];
 			var result = this.factoids.find(factoid, false)
-				.replace(regex, regexparsed[2].replace(/\\\//g, '/'));
+				.replace(regex, regexinfo[1]);
 
 			this.factoids.learn(factoid, result);
-			cx.channel.send(cx.sender.name+": Changed `"+factoid+
+			cx.channel.send_reply(cx.sender, "Changed `"+factoid+
 				"` to: "+result);
 			return;
 
 		}
 
 	} catch (e) {
-		cx.channel.send(cx.sender.name+": "+e);
+		cx.channel.send_reply(cx.sender, e);
 	}
 };
 
@@ -232,23 +227,23 @@ JSBot.prototype.learn = function(cx, text) {
 JSBot.prototype.forget = function(cx, text) {
 	try {
 		this.factoids.forget(text);
-		cx.channel.send(cx.sender.name + ": Forgot '"+text+"'.");
+		cx.channel.send_reply(cx.sender, "Forgot '"+text+"'.");
 	} catch(e) {
-		cx.channel.send(cx.sender.name + ": " + e);
+		cx.channel.send_reply(cx.sender, e);
 	}
 };
 
 JSBot.prototype.commands = function(cx, text) {
-	cx.channel.send (cx.sender.name + ": Valid commands are: "+this.get_commands().join(", "));
+	cx.channel.send_reply (cx.sender, "Valid commands are: "+this.get_commands().join(", "));
 };
 
 
 JSBot.prototype.command_not_found = function(cx, text) {
 
 	try {
-		cx.channel.send(cx.intent.name+": "+this.factoids.find(text, true));
+		cx.channel.send_reply(cx.intent, this.factoids.find(text, true));
 	} catch(e) {
-		var reply = [cx.sender.name+": '"+text+"' is not recognized."],
+		var reply = ["'"+text+"' is not recognized."],
 		    found = this.factoids.search(text);
 		
 		if (found.length) {
@@ -266,14 +261,14 @@ JSBot.prototype.ecma = function(cx, text) {
 	try {
 
 	if (typeof this.ecma_ref === "undefined") {
-		cx.channel.send(cx.sender.name + ": The ECMA-262 reference is not loaded.");
+		cx.channel.send_reply(cx.sender, "The ECMA-262 reference is not loaded.");
 		return;
 	}
 
 	var chain = text.replace(/[^A-Z0-9_.]/gi, '').split(".");
 	var len = chain.length;
 	if (!len) {
-		cx.channel.send(cx.sender.name + ": No arguments");
+		cx.channel.send_reply(cx.sender, "No arguments");
 		return;
 	}
 	var result;
@@ -283,8 +278,8 @@ JSBot.prototype.ecma = function(cx, text) {
 				result = this.ecma_ref[chain[i]];
 				continue newaccess;
 			}
-			cx.channel.send(
-				cx.sender.name + ": Unexpected '" + chain[i] +
+			cx.channel.send_reply(
+				cx.sender, "Unexpected '" + chain[i] +
 				"'; Expected built-in ECMA-262 object (" +
 				Object.keys(this.ecma_ref).sort().join(", ") +
 				")");
@@ -296,8 +291,8 @@ JSBot.prototype.ecma = function(cx, text) {
 				continue newaccess;
 			}
 		}
-		cx.channel.send(
-			cx.sender.name+": "+chain.splice(0, i+1).join(".")+" is not defined.");
+		cx.channel.send_reply(
+			cx.sender, chain.splice(0, i+1).join(".")+" is not defined.");
 		return;
 	}
 	var string = chain.join(".");
@@ -327,9 +322,9 @@ JSBot.prototype.ecma = function(cx, text) {
 		reply.push("Returns: "+result.returns+".");
 	}
 
-	cx.channel.send(cx.intent.name+": "+string+": "+reply.join(" || "));
+	cx.channel.send_reply(cx.intent, string+": "+reply.join(" || "));
 
-	} catch (e) { cx.channel.send(cx.sender.name+": "+e.name+": "+e.message); }
+	} catch (e) { cx.channel.send_reply(cx.sender, e); }
 };
 
 /*
