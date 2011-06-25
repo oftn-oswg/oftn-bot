@@ -28,7 +28,7 @@ int main (int argc, const char *argv[]) {
 
 Sandbox* sandbox_new ()
 {
-	Sandbox *this = malloc(sizeof(Sandbox));
+	Sandbox *this = malloc (sizeof (Sandbox));
 	if (this == NULL) {
 		sandbox_throw_error (NULL, "Could not allocate new sandbox.");
 	}
@@ -54,9 +54,9 @@ void sandbox_destroy (Sandbox *this)
 			JS_DestroyContext (this->utils_context.context);
 		}
 		if (this->runtime != NULL) {
-			JS_DestroyRuntime(this->runtime);
+			JS_DestroyRuntime (this->runtime);
 		}
-		JS_ShutDown();
+		JS_ShutDown ();
 
 		free (this);
 	}
@@ -65,6 +65,7 @@ void sandbox_destroy (Sandbox *this)
 
 void sandbox_run (Sandbox *this, const char *filepath)
 {
+	char *output_ch;
 	jsval input;
 	jsval returned;
 	JSString *output;
@@ -72,16 +73,16 @@ void sandbox_run (Sandbox *this, const char *filepath)
 
 	sandbox_load_utils (this, filepath);
 
-	execute = JS_NewFunction(this->utils_context.context,
+	execute = JS_NewFunction (this->utils_context.context,
 				sandbox_jsnative_execute, 1, 0, NULL, NULL);
 	if (execute == NULL) {
 		sandbox_throw_error (this,
 			"Out of memory while creating native execute function.");
 	}
 
-	input = OBJECT_TO_JSVAL(JS_GetFunctionObject (execute));
+	input = OBJECT_TO_JSVAL (JS_GetFunctionObject (execute));
 
-	if (!JS_CallFunctionName(this->utils_context.context,
+	if (!JS_CallFunctionName (this->utils_context.context,
 				this->utils_exports, "run", 1, &input, &returned)) {
 		
 		SANDBOX_THROW_ERROR_JS (this, this->utils_context.context);
@@ -95,9 +96,17 @@ void sandbox_run (Sandbox *this, const char *filepath)
 		sandbox_throw_error (this,
 			"Exception thrown while converting exports.run return value into a string.");
 	}
-
-	fprintf (stdout, "%s\n", JS_EncodeString (this->utils_context.context, output));
+	
+	output_ch = JS_EncodeString (this->utils_context.context, output);
+	if (output_ch == NULL) {
+		sandbox_throw_error (this,
+			"Invalid UTF-8. Could not encode.");
+	}
+	
+	fprintf (stdout, "%s\n", output_ch);
 	fflush (stdout);
+	
+	JS_free (this->utils_context.context, output_ch);
 }
 
 
@@ -126,7 +135,7 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 	global = this->utils_context.global;
 	exports = JS_NewObject (context, NULL, NULL, global);
 
-	if (!JS_DefineProperty(context, global, "exports", OBJECT_TO_JSVAL (exports),
+	if (!JS_DefineProperty (context, global, "exports", OBJECT_TO_JSVAL (exports),
                        JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
 		sandbox_throw_error (this, "Could not make new exports global.");
 	}
@@ -138,7 +147,7 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 			"Could not populate global object with standard globals.");
 	}
 
-	if (!JS_DefineProperty(context, global, "GlobalObject", OBJECT_TO_JSVAL (global_object),
+	if (!JS_DefineProperty (context, global, "GlobalObject", OBJECT_TO_JSVAL (global_object),
                        JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
 		sandbox_throw_error (this, "Could not make global object.");
 	}
@@ -161,7 +170,7 @@ char *sandbox_read_into (Sandbox *this, FILE *src, unsigned int buffersize, int 
 	char *desc;
 	char buffer[buffersize];
 
-	desc = malloc(buffersize);
+	desc = malloc (buffersize);
 	if (desc == NULL) { goto error; }
 
 	*desc = 0;
@@ -248,18 +257,18 @@ JSObject* sandbox_globals_create (Sandbox *this, JSContext *context)
 }
 
 
-JSBool sandbox_jsnative_execute(JSContext *cx, uintN argc, jsval *vp)
+JSBool sandbox_jsnative_execute (JSContext *cx, uintN argc, jsval *vp)
 {
 	JSObject *global_object;
 	static char *input_text = NULL;
 	static unsigned int input_size;
 	
-	jsval *argv = JS_ARGV(cx, vp);
+	jsval *argv = JS_ARGV (cx, vp);
 	jsval return_value = JSVAL_VOID;
 
 	JSBool success = JS_FALSE;
 
-	if (!JS_ValueToObject(cx, argv[0], &global_object)) {
+	if (!JS_ValueToObject (cx, argv[0], &global_object)) {
 		JS_THROW_SANDBOX_ERROR (cx, "Expected argument to be object.");
 		goto cleanup;
 	}
@@ -287,7 +296,7 @@ JSBool sandbox_jsnative_execute(JSContext *cx, uintN argc, jsval *vp)
 	success = JS_TRUE;
 
 	cleanup:
-		JS_SET_RVAL(cx, vp, return_value);
+		JS_SET_RVAL (cx, vp, return_value);
 		free (input_text);
 		return success;
 }

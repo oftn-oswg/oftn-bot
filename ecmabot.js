@@ -1,4 +1,5 @@
 var File = require('fs');
+var Path = require('path');
 var Util = require("util");
 var HTTP = require("http");
 var Sandbox = require("./lib/sandbox");
@@ -10,14 +11,12 @@ var Bot = require("./lib/irc");
 
 
 var JSBot = function(profile) {
-	this.sandbox = new Sandbox();
+	this.sandbox = new Sandbox(Path.join(__dirname, "lib/sandbox/utils.js"));
 	this.factoids = new FactoidServer(__dirname+'/lib/factoidserv/static/factoids.json');
 
 	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
 	this.set_command_identifier("!"); // Exclamation
-	
-	// this.load_ecma_ref();
 };
 
 
@@ -32,15 +31,30 @@ JSBot.prototype.init = function() {
 	this.register_listener(/\bi(?:\u0027| wi)?ll try\b/i,
 		this.there_is_no_try);
 	
-	//this.register_command("ecma", this.ecma);
-	this.register_command("re", this.re);
-	this.register_command("quit", this.quit_command, {hidden: true});
+	this.register_command("g", this.google,
+		{help: "Run this command with a search query to return the first Google result. Usage: !g kitten images"});
+		
+	this.register_command("re", this.re,
+		{help: "Usage: !re Your text here /expression/gi || FLAGS: (g: global match, i: ignore case)"});
+	
+	this.register_command("find", this.find);
+	
+	this.register_command("help", this.help);
+	
+	this.register_command("learn", this.learn,
+		{allow_intentions: false, help: "Add factoid to bot. Usage: !learn ( [alias] foo = bar | foo =~ s/expression/replace/gi )"});
+		
+	this.register_command("forget", this.forget,
+		{allow_intentions: false, help: "Remove factoid from bot. Usage: !forget foo"});
+	
 	this.register_command("lmgtfy", this.lmgtfy);
-	this.register_command("g", this.google);
-	this.register_command("learn", this.learn, {allow_intentions: false});
-	this.register_command("forget", this.forget, {allow_intentions: false});
+	
 	this.register_command("commands", this.commands);
+	
 	this.on('command_not_found', this.command_not_found);
+	
+	this.load_ecma_ref();
+	this.register_command("ecma", this.ecma, {help: "Lookup a section from the ECMAScript spec. Usage: !ecma null value"});
 	
 };
 
@@ -134,7 +148,7 @@ JSBot.prototype.execute_js = function(cx, text, command, code) {
 			cx.channel.send_reply(cx.intent, reply, {truncate: true});
 		} catch (e) {
 			cx.channel.send_reply(
-				cx.intent, "Unforseen Error: "+e.name+": "+e.message);
+				cx.intent, "Unforeseen Error: "+e.name+": "+e.message);
 		}
 	}, this);
 };
@@ -171,9 +185,19 @@ JSBot.prototype.re = function(cx, msg) {
 		
 		cx.channel.send_reply(cx.intent, "Matches: "+reply.join(", "), {truncate: true});
 	} else {
-		cx.channel.send_reply(cx.sender,
-			"Invalid syntax || USAGE: `re Your text here /expression/flags || FLAGS: (g: global match, i: ignore case)");
+		cx.channel.send_reply(cx.sender, this.get_command_help("re"));
 	}
+};
+
+
+JSBot.prototype.parse_regex_literal = function(text) {
+	var regexparsed = text.match(/s\/((?:[^\\\/]|\\.)*)\/((?:[^\\\/]|\\.)*)\/([gi]*)$/);
+	if (!regexparsed) {
+		throw new SyntaxError("Syntax is `s/expression/replacetext/gi`.");
+	}
+
+	var regex = new RegExp(regexparsed[1], regexparsed[3]);
+	return [regex, regexparsed[2].replace(/\\\//g, '/')];
 };
 
 
@@ -182,8 +206,7 @@ JSBot.prototype.learn = function(cx, text) {
 	try {
 		var parsed = text.match(/^(alias)?\s*(.+?)\s*(=~?)\s*(.+)$/i);
 		if (!parsed) {
-			throw new SyntaxError(
-				"Syntax is `learn ( [alias] foo = bar | foo =~ s/expression/replace/gi )`.");
+			throw new SyntaxError(this.get_command_help("learn"));
 		}
 
 		var alias = !!parsed[1];
@@ -238,12 +261,12 @@ JSBot.prototype.commands = function(cx, text) {
 };
 
 
-JSBot.prototype.command_not_found = function(cx, text) {
+JSBot.prototype.find = function(cx, text) {
 
 	try {
 		cx.channel.send_reply(cx.intent, this.factoids.find(text, true));
 	} catch(e) {
-		var reply = ["'"+text+"' is not recognized."],
+		var reply = ["No factoid named `"+text+"` exists."],
 		    found = this.factoids.search(text);
 		
 		if (found.length) {
@@ -252,10 +275,36 @@ JSBot.prototype.command_not_found = function(cx, text) {
 		}
 		
 		reply.push("See !commands for a list of commands.");
-		cx.sender.notice(reply.join(" "));
+		cx.channel.send_reply(cx.sender, reply.join(" "));
 	}
 };
 
+
+JSBot.prototype.help = function(cx, text) {
+
+	try {
+		if (!text) {
+			return this.command_not_found (cx, "help");
+		}
+		
+		cx.channel.send_reply(cx.intent, this.get_command_help(text));
+	} catch(e) {
+		cx.channel.send_reply(cx.sender, e);
+	}
+};
+
+
+JSBot.prototype.command_not_found = function(cx, text) {
+
+	try {
+		cx.channel.send_reply(cx.intent, this.factoids.find(text, true));
+	} catch(e) {
+		// Factoid not found, do nothing.
+	}
+};
+
+// JSON.stringify([].slice.call(document.querySelectorAll('#toc-full a')).map(function(v) {return {title: v.firstChild.textContent, id: v.href.replace(/.+#/, '')};}));
+// Use that to generate the required JSON from es5.github.com with Firefox
 
 JSBot.prototype.ecma = function(cx, text) {
 	try {
@@ -265,77 +314,35 @@ JSBot.prototype.ecma = function(cx, text) {
 		return;
 	}
 
-	var chain = text.replace(/[^A-Z0-9_.]/gi, '').split(".");
-	var len = chain.length;
-	if (!len) {
-		cx.channel.send_reply(cx.sender, "No arguments");
-		return;
-	}
-	var result;
-	newaccess: for (var i = 0; i < len; i++) {
-		if (i === 0) {
-			if (typeof this.ecma_ref[chain[i]] !== "undefined") {
-				result = this.ecma_ref[chain[i]];
-				continue newaccess;
-			}
-			cx.channel.send_reply(
-				cx.sender, "Unexpected '" + chain[i] +
-				"'; Expected built-in ECMA-262 object (" +
-				Object.keys(this.ecma_ref).sort().join(", ") +
-				")");
+	text = text.toLowerCase();
+	var ref = this.ecma_ref, ch = text.charCodeAt(0);
+	
+	// If text begins with a number, the search must match at the beginning of the string
+	var muststart = ch >= 48 && ch <= 57; 
+	
+	for (var i = 0, len = ref.length; i < len; i++) {
+		var item = ref[i], title = item.title.toLowerCase();
+		if (muststart ? title.substring(0, text.length) === text : ~title.indexOf(text)) {
+			cx.channel.send_reply(cx.intent,
+				"Found: " + item.title + " <http://es5.github.com/#" + item.id + ">");
 			return;
 		}
-		if (typeof result.properties !== "undefined") {
-			if (typeof result.properties[chain[i]] !== "undefined") {
-				result = result.properties[chain[i]];
-				continue newaccess;
-			}
-		}
-		cx.channel.send_reply(
-			cx.sender, chain.splice(0, i+1).join(".")+" is not defined.");
-		return;
-	}
-	var string = chain.join(".");
-	var reply  = [];
-
-	// Summary
-	if (typeof result.summary !== "undefined")
-		reply.push(result.summary);
-	else reply.push("No summary available.");
-
-	// Syntax
-	if (typeof result.syntax !== "undefined")
-		reply.push("Syntax: "+result.syntax);
-
-	// Parameters
-	if (typeof result.parameters !== "undefined") {
-		var parameters = [];
-		parameters.push("Parameters:");
-		for (var i in result.parameters) {
-			parameters.push(i+" = "+result.parameters[i]+";");
-		}
-		reply.push(parameters.join(" "));
 	}
 
-	// Returns
-	if (typeof result.returns !== "undefined") {
-		reply.push("Returns: "+result.returns+".");
-	}
-
-	cx.channel.send_reply(cx.intent, string+": "+reply.join(" || "));
+	throw new Error("Could not find text '"+text+"' in the ECMAScript 5.1 Table of Contents.");
 
 	} catch (e) { cx.channel.send_reply(cx.sender, e); }
 };
 
-/*
+
 JSBot.prototype.load_ecma_ref = function() {
-	var filename = "/var/www/node/vbotjr/ecma-ref.js";
+	var filename = Path.join(__dirname, "ecma-ref.json");
 	Util.puts("Loading ECMA-262 reference...");
 	var bot = this;
 	File.readFile(filename, function (err, data) {
 		if (err) Util.puts(Util.inspect(err));
 		try {
-			bot.ecma_ref = eval('('+data+')');
+			bot.ecma_ref = JSON.parse(data);
 		} catch (e) {
 			Util.puts("ECMA-262 Error: "+e.name+": "+e.message);
 		}
@@ -347,7 +354,7 @@ JSBot.prototype.load_ecma_ref = function() {
 			bot.load_ecma_ref();
 		});
 	}
-};*/
+};
 
 var profile = require("./ecmabot-profile.js");
 (new JSBot(profile)).init();
