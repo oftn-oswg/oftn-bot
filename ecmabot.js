@@ -3,7 +3,6 @@ var Path = require('path');
 var Util = require("util");
 var HTTP = require("http");
 var Sandbox = require("./lib/sandbox");
-var SandboxUtils = require("./lib/sandbox/utils");
 var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
 
@@ -11,8 +10,8 @@ var Bot = require("./lib/irc");
 
 
 var JSBot = function(profile) {
-	this.sandbox = new Sandbox(Path.join(__dirname, "lib/sandbox/utils.js"));
-	this.factoids = new FactoidServer(__dirname+'/lib/factoidserv/static/factoids.json');
+	this.sandbox = new Sandbox(Path.join(__dirname, "ecmabot-utils.js"));
+	this.factoids = new FactoidServer(Path.join(__dirname, "ecmabot-factoids.json"));
 
 	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
@@ -179,7 +178,7 @@ JSBot.prototype.re = function(cx, msg) {
 		var reply = [];
 		for (var i = 0, len = result.length; i < len; i++) {
 			reply.push(typeof result[i] !== "undefined" ?
-				SandboxUtils.string_format(result[i]) :
+				"'"+result[i]+"'" :
 				"[undefined]");
 		}
 		
@@ -336,7 +335,7 @@ JSBot.prototype.ecma = function(cx, text) {
 
 
 JSBot.prototype.load_ecma_ref = function() {
-	var filename = Path.join(__dirname, "ecma-ref.json");
+	var filename = Path.join(__dirname, "ecmabot-reference.json");
 	Util.puts("Loading ECMA-262 reference...");
 	var bot = this;
 	File.readFile(filename, function (err, data) {

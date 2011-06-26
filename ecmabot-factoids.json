@@ -1,0 +1,430 @@
+{
+	"wait": 30000,
+	"factoids": {
+		"json_encode": {
+			"value": "When you need to pass PHP variables to JavaScript, use the PHP method json_encode. For example: var info = (<?php echo json_encode($info); ?>);",
+			"popularity": 7
+		},
+		"w3schools": {
+			"value": "Errors, ommisions, deceit. They are NOT (despite their name) related to the W3C. Their code contains deprecated code, bad methodologies, IE-centric code and mistakes. Stop reading/pointing to them! http://w3fools.com/",
+			"popularity": 11
+		},
+		"iframe": {
+			"value": "To get the document element of the iframe, use: iframe.contentWindow.document; However, cross-domain access to an iframe is disallowed.",
+			"popularity": 8
+		},
+		"this": {
+			"value": "If a function is called on an object, x.y(), then `this` within `y` refers to `x`. If called directly: y(), `this` refers to `window`. `this` can be set explicitly by using y.call(thisArg, argument1, argument2, ...)",
+			"popularity": 5
+		},
+		"closures": {
+			"value": "For experienced JavaScripters: http://jibbering.com/faq/faq_notes/closures.html  For newbies and those who don't like big words: http://www.javascriptkit.com/javatutors/closures.shtml (very loose, take with a grain of salt)",
+			"popularity": 3
+		},
+		"cross-domain": {
+			"value": "The same-origin policy prevents access to most methods and properties across pages on different sites (even those inside iframes). Alternatives: A server-side proxy, the Dojo iframe trick, cross-origin resource sharing (http://www.w3.org/TR/cors/), and JSONP, a popular cross-domain alternative to XMLHttpRequest (Ajax). See `same.",
+			"popularity": 7
+		},
+		"closure": {
+			"alias": "closures"
+		},
+		"paste": {
+			"value": "Paste links, not code. http://jsfiddle.net/ and http://www.webdevout.net/test are great. Please do not use pastebin.com, the reasons are many. See !pastebin.",
+			"popularity": 13
+		},
+		"json": {
+			"value": "JavaScript Object Notation, see http://www.json.org/. Looks very similar to literal objects/values in JavaScript, except object keys and strings, which are always double-quoted.",
+			"popularity": 5
+		},
+		"code": {
+			"value": "Show some code. Code examples should be complete (sufficient to show the problem) and minimal (as short as possible while remaining complete). Go to http://jsfiddle.net/ or see `paste.",
+			"popularity": 18
+		},
+		"callee": {
+			"alias": "recursion"
+		},
+		"pastebin": {
+			"value": "Please do not use pastebin.com. There are problems with syntax highlighting and font sizes that make it hard to read, and copy/paste includes line numbers. Consider using http://jsfiddle.net/ which allows us to run the code in our browser to help with debugging.",
+			"popularity": 4
+		},
+		"harmony": {
+			"value": "ECMAScript Harmony is an upcoming revision to the ECMAScript standard. May in the future be renamed to ES6. Proposals yet-to-be-approved: http://wiki.ecmascript.org/doku.php?id=strawman:strawman",
+			"popularity": 3
+		},
+		"cornify": {
+			"value": "`^nn~ <http://www.cornify.com/>",
+			"popularity": 7
+		},
+		"ecmascript": {
+			"value": "ECMAScript (pronounced Ek-ma-script) is the written, non-proprietary standard of JavaScript. JavaScript is a Mozilla-specific dialect which adds some features. JScript is Microsoft's dialect.",
+			"popularity": 0
+		},
+		"scoping": {
+			"value": "https://developer.mozilla.org/en/JavaScript/Reference/Scope_Cheatsheet",
+			"popularity": 0
+		},
+		"var": {
+			"value": "Always declare variables with `var`, or you will pollute the globe. Using `var` will limit access to that variable to the current scope, whatever it is.",
+			"popularity": 9
+		},
+		"forms": {
+			"value": "Accessing form elements via JavaScript: Don't use document.formName.elementName. Use document.forms['formName'].elements['elementName'], document.getElementById() or document.getElementsByName() instead.",
+			"popularity": 1
+		},
+		"scope": {
+			"alias": "scoping"
+		},
+		"form": {
+			"alias": "forms"
+		},
+		"hoisting": {
+			"alias": "scoping"
+		},
+		"cors": {
+			"alias": "cross-domain"
+		},
+		"same origin": {
+			"alias": "cross-domain"
+		},
+		"jsonlint": {
+			"value": "JSONLint - The JSON Validator. - http://www.jsonlint.com/",
+			"popularity": 0
+		},
+		"jsonp": {
+			"alias": "cross-domain"
+		},
+		"reason": {
+			"value": "Please explain why you need to even do such a thing. What are you trying to accomplish? What is your final goal? You may find that you are approaching the problem the wrong way.",
+			"popularity": 1
+		},
+		"textContent": {
+			"value": "There is no single cross-browser way to get the inner text from an element (without HTML), so you need the following: var text = element.textContent || element.innerText;",
+			"popularity": 1
+		},
+		"innerHTML": {
+			"alias": "textContent"
+		},
+		"xy": {
+			"value": "The XY problem: You want to do X, but don't know how. You think you can solve it using Y, but don't know how to do that, either. You ask about Y, which is a strange thing to want to do. Just ask about X.",
+			"popularity": 5
+		},
+		"flxhr": {
+			"value": "flXHR [flĕkʹsər], (flex-er), is a cross-browser, XHR-compatible tool for cross-domain Ajax (Flash) communication. It utilizes an invisible flXHR.swf instance that acts as sort of a client-side proxy for requests. http://flxhr.flensed.com/",
+			"popularity": 1
+		},
+		"float2int": {
+			"value": "|0 is bitwise OR with 0 - a quick way to convert floats to integers",
+			"popularity": 0
+		},
+		"|0": {
+			"alias": "float2int"
+		},
+		"typeof": {
+			"value": "The typeof operator returns a string indicating the type of the unevaluated operand. Returns 'object', 'boolean', 'number', 'string', 'function', 'xml', or 'undefined'. Arrays return 'object'. Use: if (typeof variable !== \"undefined\") to check if a variable is defined.",
+			"popularity": 11
+		},
+		"comet": {
+			"value": "http://en.wikipedia.org/wiki/Comet_(programming)",
+			"popularity": 1
+		},
+		"rte": {
+			"value": "http://ckeditor.com/ http://tinymce.moxiecode.com/ http://www.themaninblue.com/experiment/widgEditor/ http://www.mozilla.org/editor/midasdemo/",
+			"popularity": 0
+		},
+		"prettyprint": {
+			"value": "Online JavaScript beautifier - http://jsbeautifier.org/",
+			"popularity": 0
+		},
+		"kirby": {
+			"value": "<(n‿n<) <(n‿n)> (>n‿n)>",
+			"popularity": 7
+		},
+		"eloquent": {
+			"value": "Eloquent JavaScript is a comprehensive introductory Web-based book with examples and a built-in interpreter. http://eloquentjavascript.net/index.html",
+			"popularity": 20
+		},
+		"tias": {
+			"value": "Try it and see, why dontcha?",
+			"popularity": 5
+		},
+		"css": {
+			"value": "Use Javascript to manipulate CSS stylesheets in a page. http://www.quirksmode.org/dom/w3c_css.html",
+			"popularity": 0
+		},
+		"recursion": {
+			"value": "see `recursion`",
+			"popularity": 6
+		},
+		"ask": {
+			"value": "Ask you question directly, you don't need to ask permission to ask a question! See also: http://www.catb.org/~esr/faqs/smart-questions.html",
+			"popularity": 1
+		},
+		"java": {
+			"value": "Remember, JavaScript is to Java as hamburger is to ham. We don't know Java, and if you're trying to apply your Java knowledge to JavaScript, it probably won't work. Try #java",
+			"popularity": 2
+		},
+		"let": {
+			"value": "The let statement provides a way to associate values with variables within the scope of a block, without affecting the values of like-named variables outside the block.",
+			"popularity": 0
+		},
+		"pm": {
+			"value": "Please investigate me with private messages. (Private messaging is not supported, so please use a Javascript interpreter; see `console)",
+			"popularity": 0
+		},
+		"select": {
+			"value": "To get the value of a <select> form field: var select = document.getElementById(\"select\"); var value = select.options[select.selectedIndex].value;",
+			"popularity": 1
+		},
+		"doesn't work": {
+			"value": "Look buddy, doesn't work is a strong statement. Does it sit on the couch all day? Is it making faces at you? Does it want more money? Is it sleeping with your girlfriend? Please be specific! Tell us what you want to happen, what is actually happening, and any error messages you find.",
+			"popularity": 16
+		},
+		"$": {
+			"value": "The `$` character has no special meaning in JavaScript, other than being allowed as a character in an variable name. It is used by some JavaScript libraries like jQuery, but traditionally used in machine generated JavaScript to avoid interference with other identifiers.",
+			"popularity": 4
+		},
+		"jquery": {
+			"value": "For help with jQuery-related problems, visit the #jquery channel.",
+			"popularity": 9
+		},
+		"mdc": {
+			"value": "The Mozilla Developer Network, a comprehensive, usable, and accurate resource for everyone developing for the Open Web. <https://developer.mozilla.org/en/JavaScript/>",
+			"popularity": 10
+		},
+		"mdn": {
+			"alias": "mdc"
+		},
+		"classes": {
+			"value": "There are *no* `classes` in JavaScript. JavaScript uses prototypal OO; objects are constructed directly, based on other objects, without a blueprint. Thinking of constructor functions as classes is *wrong*, and will confuse you in the long term.",
+			"popularity": 1
+		},
+		"debugging": {
+			"alias": "console"
+		},
+		"eval": {
+			"value": "The `eval` function is evil from both performance and design perspectives. If using `eval` is the answer, chances are you're asking the wrong question (although there are a few cases where it's useful). Read http://blogs.msdn.com/ericlippert/archive/2003/11/01/53329.aspx for more information.",
+			"popularity": 1
+		},
+		"property access": {
+			"value": "Property access: myobject.foo is just another way of saying myobject['foo']. This means that if property = 'foo', it's also the same as myobject[property].",
+			"popularity": 2
+		},
+		"hammertime": {
+			"value": "━━▊ ━━▊ ━━▊",
+			"popularity": 0
+		},
+		"wait": {
+			"value": "Don't feel ignored and repeat your question quickly; if nobody knows your answer, nobody will answer you. While you wait, try searching https://developer.mozilla.org/en/JavaScript or https://developer.mozilla.org/en/DOM || You might also consider reading: http://www.catb.org/~esr/faqs/smart-questions.html",
+			"popularity": 2
+		},
+		"encodeURIComponent": {
+			"value": "Always use `encodeURIComponent` to put query strings together. For example: \"foo=\"+encodeURIComponent(foo)+\"&bar=\"+encodeURIComponent(bar). Strings are encoded in UTF-8 format.",
+			"popularity": 1
+		},
+		"encodeURI": {
+			"alias": "encodeURIComponent"
+		},
+		"escape": {
+			"alias": "encodeURIComponent"
+		},
+		"document.write": {
+			"value": "document.wrong. Please use something more modern and less prone to doing confusing things.",
+			"popularity": 7
+		},
+		"cross-browser": {
+			"value": "QuirksMode.org is the prime source for browser compatibility information on the Internet. It is maintained by Peter-Paul Koch, mobile platform strategist in Amsterdam, the Netherlands. http://www.quirksmode.org/compatibility.html",
+			"popularity": 0
+		},
+		"quirksmode": {
+			"alias": "cross-browser"
+		},
+		"factoids": {
+			"value": "You can access my factoid database at http://eboyjr.homelinux.org:3000/",
+			"popularity": 0
+		},
+		"rimshot": {
+			"value": "Ba dun tshh... http://instantrimshot.com/classic/?sound=rimshot",
+			"popularity": 5
+		},
+		"sadtrombone": {
+			"value": "Wah wah wah waahhh... http://www.sadtrombone.com/",
+			"popularity": 0
+		},
+		"ugt": {
+			"value": "Universal Greeting Time (or UGT) is a convention that states when a user enters an IRC channel it is always morning and upon leaving it is always night, regardless of the actual physical locations of the users in the channel. http://www.total-knowledge.com/~ilya/mips/ugt.html",
+			"popularity": 0
+		},
+		"crickets": {
+			"value": "*chirp* *chirp* *chirp*... http://instantcrickets.com/",
+			"popularity": 0
+		},
+		"include": {
+			"value": "Include another JavaScript file programmatically with JavaScript: http://www.phpied.com/javascript-include/",
+			"popularity": 1
+		},
+		"jsfiddle": {
+			"alias": "code"
+		},
+		"db": {
+			"value": "Search through this bot's factoids at http://68.104.15.222:3000/",
+			"popularity": 5
+		},
+		"member access": {
+			"alias": "property access"
+		},
+		"ES5": {
+			"value": "ES5 is edition 5 of ECMA-262, the ECMAScript specification: http://es5.github.com/ http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-262.pdf",
+			"popularity": 0
+		},
+		"w3fools": {
+			"alias": "w3schools"
+		},
+		"innerText": {
+			"alias": "textContent"
+		},
+		"elliottcable": {
+			"value": "elliottcable is a meanie face",
+			"popularity": 1
+		},
+		"console": {
+			"value": "The console object will provide you with an easy way to check the values of some variables, instead of the blocking alert() function. See <http://getfirebug.com/logging>",
+			"popularity": 4
+		},
+		"debug": {
+			"value": "This channel is not here to debug your code. Use a debugger. Firefox: Firebug <http://www.getfirebug.com/> ;; Google Chrome, Safari: Developer Tools (Built-in) ;; IE: Debug Bar <http://www.debugbar.com/> ;; Opera: DragonFly <http://www.opera.com/dragonfly/>",
+			"popularity": 9
+		},
+		"semicolon": {
+			"value": "See <http://aresemicolonsnecessaryinjavascript.com/>",
+			"popularity": 3
+		},
+		"events": {
+			"value": "Javascript DOM: Introduction to Events <http://www.quirksmode.org/js/introevents.html>",
+			"popularity": 6
+		},
+		"botabuse": {
+			"value": "Please investigate me in a private message, so we can keep the channel clutter to a minimum. /msg jbotjr help",
+			"popularity": 1
+		},
+		"abuse": {
+			"alias": "botabuse"
+		},
+		"about": {
+			"value": "I'm an IRC bot written entirely in JavaScript using Node.js. Use the `>>` command to execute code with the Spidermonkey engine, and the `>>>` command to execute code with the V8 engine. Source: <https://github.com/eboyjr/vbotjr/>",
+			"popularity": 4
+		},
+		"help": {
+			"value": "In order to get help, paste the relevant portions JavaScript in a pastebin (see !paste), and tell us 1) what you want to happen, 2) what is actually happenning, and 3) any error messages you find (see !debug).",
+			"popularity": 18
+		},
+		"asi": {
+			"alias": "semicolon"
+		},
+		"robot attack unicorn": {
+			"value": "http://games.adultswim.com/robot-unicorn-attack-twitchy-online-game.html",
+			"popularity": 0
+		},
+		"bracket access": {
+			"value": "yourObject.foobar is just another way of saying yourObject['foobar']. So of course if varName = 'foobar', then it's also the same as yourObject[varName]",
+			"popularity": 1
+		},
+		"bracketaccess": {
+			"alias": "bracket access"
+		},
+		"bracket": {
+			"alias": "bracket access"
+		},
+		"[]": {
+			"alias": "bracket access"
+		},
+		"ops": {
+			"value": "HALP! [Use only in emergencies] Ops: GarethAdams buu Gozzy Boki Phrogz Woosta dorward Twey inimino",
+			"popularity": 3
+		},
+		"semicolons": {
+			"alias": "semicolon"
+		},
+		"str->num": {
+			"value": "parseFloat(str, 10), parseInt(str, 10), +str",
+			"popularity": 1
+		},
+		"string->num": {
+			"alias": "str->num"
+		},
+		"not working": {
+			"alias": "doesn't work"
+		},
+		"same": {
+			"value": "For XHR and cross-frame-interaction to work, this://this.this.and:this/ have to be the same.",
+			"popularity": 2
+		},
+		"resources": {
+			"value": "!eloquent, !es5, !mdc, !quirksmode",
+			"popularity": 3
+		},
+		"atwood's law": {
+			"value": "Any application that can be written in JavaScript, will eventually be written in JavaScript.",
+			"popularity": 0
+		},
+		"associative": {
+			"value": "Arrays in JavaScript are not associative arrays. x = []; x.foo = 1; will not work. Period.",
+			"popularity": 0
+		},
+		"es5": {
+			"value": "An annotated, hyperlinked, HTML view of Edition 5.1 of the ECMAScript Specification. <http://es5.github.com/>",
+			"popularity": 3
+		},
+		"node.js": {
+			"value": "Node.js is an event-driven I/O framework for the V8 JavaScript engine on Unix-like platforms. It is intended for writing scalable network programs such as web servers. For Node.js help, see #node.js",
+			"popularity": 1
+		},
+		"str->int": {
+			"value": "v8> [parseInt('1', 10), Number('1'), +'1', 1*'1', ~~'1', '1'>>0, '1'|0] // each item in the list is a way of doing string->int conversions. Items from ~~ onwards only work for 32bit integers.",
+			"popularity": 1
+		},
+		"!": {
+			"value": "I know, right!",
+			"popularity": 0
+		},
+		"!!": {
+			"value": "I know, right!",
+			"popularity": 0
+		},
+		"garden": {
+			"value": "JavaScript Garden is a growing collection of documentation about the most quirky parts of the JavaScript programming language. It gives advice to avoid common mistakes, subtle bugs, as well as performance issues and bad practices that non-expert JavaScript programmers may encounter on their endeavours into the depths of the language. <http://bonsaiden.github.com/JavaScript-Garden/>",
+			"popularity": 0
+		},
+		"numbers": {
+			"value": "The Number type has exactly 2^64 − 2^53 + 3 values, representing the double-precision 64-bit format IEEE 754 values as specified in the IEEE Standard for Binary Floating-Point Arithmetic, except that the 2^53 − 2 distinct “Not-a-Number” values of the IEEE Standard are represented as a single special NaN value.",
+			"popularity": 0
+		},
+		"objects": {
+			"value": "An Object is a collection of properties, usually named data properties which associate strings with any JavaScript value. See !enumeration.",
+			"popularity": 1
+		},
+		"enumeration": {
+			"value": "The mechanics and order of enumerating the properties is not specified. Properties of the object being enumerated may be deleted during enumeration.",
+			"popularity": 1
+		},
+		"undefined": {
+			"value": "The undefined type has exactly one value, called `undefined`. Any variable that has not been assigned a value has the value `undefined`.",
+			"popularity": 0
+		},
+		"booleans": {
+			"value": "The boolean type represents a logical entity having two values, called `true` and `false`.",
+			"popularity": 0
+		},
+		"minimal": {
+			"value": "A minimal test case should contain precisely the HTML and JavaScript necessary to demonstrate the problem, no more and no less.  If it is more than 32 lines, it is probably not a minimal test case.",
+			"popularity": 0
+		},
+		"psychic": {
+			"value": "You're asking a JavaScript question, but you're not showing us the right code. Please, show us the HTML/JS that the browser sees WHEN THE PROBLEM OCCURS. If you have content inserted by ajax, paste the code *with* that content. We're not psychic, dude. See also !minimal",
+			"popularity": 1
+		},
+		"dom": {
+			"value": "The DOM API allows you to interact with your document with JavaScript. <https://developer.mozilla.org/en/DOM>",
+			"popularity": 1
+		}
+	}
+}
