@@ -1,8 +1,4 @@
-// utils.js: Script used by all JS engines to interface with the v8bot.
-
-// Grab new global object, using GlobalObject if available, set by SpiderMonkey
-// It is not possible to use a normal object as a global object in SpiderMonkey
-var global = typeof GlobalObject !== "undefined" ? GlobalObject : {};
+// utils.js: Script used by all JS engines to interface with the bot.
 var consoledata = [];
 var timerdata = {};
 
@@ -14,7 +10,7 @@ global.console.log = function log() {
 };
 
 global.console.time = function time(name) {
-	timerdata[name || "default"] = Date.now();
+	timerdata[name || "default"] = +Date.now();
 };
 global.console.timeEnd = function timeEnd(name) {
 	name = name || "default";
@@ -22,26 +18,6 @@ global.console.timeEnd = function timeEnd(name) {
 };
 
 global.print = global.alert = global.console.log;
-
-/* fake version() */
-if (typeof GlobalObject !== "undefined") {
-	global.version = function version() { return "1.8.5"; };
-	
-	global.String.PAGE = 300;
-	global.String.prototype.page = function(page) {
-		page *= global.String.PAGE
-		return this.slice(page, global.String.PAGE+page);
-	};
-	Object.defineProperty(global.String.prototype, "pages", {
-		get: function() {
-			return Math.ceil(this.length < global.String.PAGE || this.length/global.String.PAGE)
-		}, enumerable: true, configurable: true
-	});
-	
-} else {
-	global.version = function version() { return process.versions.v8; };
-}
-
 
 function constant_multiply(n) {
 	n |= 0;
@@ -101,6 +77,14 @@ global.obfuscate = function obfuscate(val) {
 		return s.charAt(0)+Array.prototype.slice.call(s, 1, -1).reverse().join("")+s.charAt(s.length-1);
 	});
 };
+
+global.McCarthy91 = function McCarthy91(n) {
+	if (n > 100) return n - 10;
+	return McCarthy91(McCarthy91(n + 11));
+};
+
+global.utils_array_is_instanceof_Array = function() { return [] instanceof Array; };
+global.utils_Array = Array;
 
 global.strip_color = function strip_color(text) {
 	text = String(text);
@@ -346,7 +330,7 @@ var utils = {
 exports.run = function(execute) {
 	var result, error;
 	try {
-		result = execute(global);
+		result = execute();
 	} catch(e) {
 		if (typeof e.name !== "undefined" &&
 			typeof e.message !== "undefined") {

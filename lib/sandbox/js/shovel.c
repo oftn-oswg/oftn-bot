@@ -141,13 +141,8 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 	}
 
 	global_object = sandbox_globals_create (this, context);
-	
-	if (!JS_InitStandardClasses (context, global_object)) {
-		sandbox_throw_error (this,
-			"Could not populate global object with standard globals.");
-	}
 
-	if (!JS_DefineProperty (context, global, "GlobalObject", OBJECT_TO_JSVAL (global_object),
+	if (!JS_DefineProperty (context, global, "global", OBJECT_TO_JSVAL (global_object),
                        JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
 		sandbox_throw_error (this, "Could not make global object.");
 	}
@@ -223,8 +218,8 @@ SandboxContext sandbox_context_create (Sandbox *this)
 	}
 
 	JS_SetOptions (context,
-		JSOPTION_VAROBJFIX | JSOPTION_JIT | JSOPTION_METHODJIT | JSOPTION_DONT_REPORT_UNCAUGHT);
-	JS_SetVersion (context, JSVERSION_LATEST);
+		JSOPTION_VAROBJFIX | JSOPTION_DONT_REPORT_UNCAUGHT);
+	JS_SetVersion (context, JSVERSION_ECMA_5);
 
 	sc.context = context;
 	sc.global = sandbox_globals_create (this, context);
@@ -259,25 +254,23 @@ JSObject* sandbox_globals_create (Sandbox *this, JSContext *context)
 
 JSBool sandbox_jsnative_execute (JSContext *cx, uintN argc, jsval *vp)
 {
-	JSObject *global_object;
+	JSObject *global;
 	static char *input_text = NULL;
 	static unsigned int input_size;
 	
-	jsval *argv = JS_ARGV (cx, vp);
 	jsval return_value = JSVAL_VOID;
+	jsval global_jsval;
 
 	JSBool success = JS_FALSE;
-
-	if (!JS_ValueToObject (cx, argv[0], &global_object)) {
-		JS_THROW_SANDBOX_ERROR (cx, "Expected argument to be object.");
+	
+	if (!JS_GetProperty (cx, JS_GetGlobalObject (cx), "global", &global_jsval)) {
 		goto cleanup;
 	}
-
-	if (global_object == NULL) {
-		JS_THROW_SANDBOX_ERROR (cx, "Expected argument to be object.");
+	
+	if (!JS_ValueToObject (cx, global_jsval, &global)) {
 		goto cleanup;
 	}
-
+	
 	if (input_text == NULL) {
 		input_text = sandbox_read_into (NULL, stdin, 512, &input_size);
 	}
@@ -288,7 +281,7 @@ JSBool sandbox_jsnative_execute (JSContext *cx, uintN argc, jsval *vp)
 	}
 
 	if (!JS_EvaluateScript (cx,
-	                   global_object, input_text, input_size-1,
+	                   global, input_text, input_size-1,
 	                   "irc", 1, &return_value)) {
 		goto cleanup;
 	}

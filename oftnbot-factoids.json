@@ -11,7 +11,7 @@
 		},
 		"projects": {
 			"value": "List of projects: !AndroIDE, !cencio, !signale, !suit, and !voice-search",
-			"popularity": 16
+			"popularity": 17
 		},
 		"voice-search": {
 			"value": "Voice Search is a Google Chrome extension that provides a method to search by speaking. https://github.com/oftn/voice-search/",
@@ -71,10 +71,6 @@
 		"suit-toolkit": {
 			"alias": "suit-canvas-toolkit"
 		},
-		"ping": {
-			"value": "Ping! Oh.. wait.. pang! Err.. damnit.",
-			"popularity": 5
-		},
 		"suit": {
 			"alias": "suit-canvas-toolkit"
 		},
@@ -86,14 +82,6 @@
 			"value": "A slick user-interface toolkit created in JavaScript for use with the canvas element. <https://github.com/oftn/suit-canvas-toolkit/> Demo: <http://oftn.org/projects/suit/>",
 			"popularity": 0
 		},
-		"winner": {
-			"value": "jeannicolas ",
-			"popularity": 0
-		},
-		"botsnack": {
-			"value": "conversion gel (haha spoiling more and more of portal 2 for ec)",
-			"popularity": 2
-		},
 		"help": {
 			"value": "Use the `>>` command for the SpiderMonkey interpreter, and the `>>>` command for the V8 interpreter.",
 			"popularity": 14
@@ -103,20 +91,12 @@
 			"popularity": 14
 		},
 		"board": {
-			"value": "ΩF:∅ Foundation Board of Directors: cloudhead, eboyjr, sephr (2x), elliottcable, gkatsev, mynyml, inimino, drudge, and yrashk",
-			"popularity": 1
+			"value": "ΩF:∅ Foundation Board of Directors: cloudhead, eboyjr, sephr (2x), gkatsev, mynyml, inimino, drudge, and yrashk",
+			"popularity": 2
 		},
 		"UJD": {
 			"value": "UNIX/Julian Date (more info: http://yreality.net/UJD)",
 			"popularity": 5
-		},
-		"time": {
-			"value": "See !sol and look at the numbers after the ſ character.",
-			"popularity": 1
-		},
-		"date": {
-			"value": "See !sol and look at the numbers before the ſ character.",
-			"popularity": 1
 		},
 		"Judofyr": {
 			"value": "http://judofyr.net (b‐sol: 323 ſ)",
@@ -126,25 +106,9 @@
 			"value": "Universal Greeting Time. Created in #mipslinux, it is a rule that states that whenever somebody enters an IRC channel it is always morning, and it is always late when the person leaves. The local time of any other people in the channel, including the greeter, is irrelevant. http://www.total-knowledge.com/~ilya/mips/ugt.html",
 			"popularity": 1
 		},
-		"locks": {
-			"value": "you know locks? damn, sorry man.",
-			"popularity": 5
-		},
 		"love": {
 			"value": "A strong positive emotion of regard and affection, of the kind humans sometimes express toward one another and computational knowledge engines express toward the internet.",
 			"popularity": 1
-		},
-		"whisol": {
-			"value": "About 1cſ.",
-			"popularity": 1
-		},
-		"elliottcable.loathes": {
-			"value": "generated code, long hair on men",
-			"popularity": 0
-		},
-		"xcode.4": {
-			"value": "Typical response to trying to use Xcode 4: “ I hate my life. I hate everything. FUCK THE WORLD.”",
-			"popularity": 0
 		},
 		"etherpadjs": {
 			"value": "javascript:(function(){var a=location,b=/\\d+/.exec(a)[0],c=document.createElement,d=document,e=c.call(d,\"iframe\"),f=c.call(d,\"script\");f.src=a.origin+\"/ep/pad/export/\"+b+\"/latest?format=txt\",d.body.appendChild(e),e.style.display=\"none\",e.contentWindow.document.head.appendChild(f)})()",
@@ -154,68 +118,17 @@
 			"value": "<(n_n<) <(n_n)> (>n_n)>",
 			"popularity": 3
 		},
-		"qyy6": {
-			"value": "The QYY6 pose is a frightening picture of elliottcable wearing a dress <http://d.pr/qyy6>",
-			"popularity": 0
-		},
-		"elliottcable": {
-			"value": "http://d.pr/J3PF",
-			"popularity": 0
-		},
-		"pose": {
-			"alias": "qyy6"
-		},
-		";d": {
-			"value": "http://d.pr/qyy6",
-			"popularity": 5
-		},
-		":3": {
-			"value": "http://d.pr/W2LH",
-			"popularity": 3
-		},
-		"micahjohnston": {
-			"value": "http://d.pr/ZIek",
-			"popularity": 3
-		},
-		"mascot": {
-			"value": "http://d.pr/zVS8",
-			"popularity": 0
-		},
-		"loop": {
-			"value": "!loop @ oftn-bot",
-			"popularity": 2
-		},
 		"recursion": {
-			"value": "!learn recursion",
+			"value": "See !recursion",
 			"popularity": 1
 		},
 		"test": {
 			"value": "Test failed.",
 			"popularity": 26
 		},
-		"alpha1415": {
-			"value": "it's the stuff I did yesterday along with the stuff I did today",
-			"popularity": 11
-		},
-		"\"random crap\"": {
-			"value": "elliottcable is silly",
-			"popularity": 1
-		},
 		"specgen": {
 			"value": "Anolis <http://anolis.gsnedders.com/>",
 			"popularity": 1
-		},
-		"cloud9": {
-			"value": "The ΩF:∅ Cloud9 Ide is located at <http://eboyjr.oftn.org:8000/> (Only available if oftn-bot is in the channel)",
-			"popularity": 0
-		},
-		"d:<": {
-			"value": "http://d.pr/YzoF",
-			"popularity": 0
-		},
-		":#": {
-			"value": "<http://ell.io/Nal4>",
-			"popularity": 0
 		},
 		"modes": {
 			"value": "<http://webtoman.com/opera/panel/ircdmodes.html>",
@@ -237,71 +150,16 @@
 			"value": "http://sephr.com/about",
 			"popularity": 3
 		},
-		"unfollow": {
-			"value": "<http://fuckyeahinsanitywolf.tumblr.com/post/2390053124>",
-			"popularity": 1
-		},
-		"lol": {
-			"value": "lol",
-			"popularity": 1
-		},
-		"lol:": {
-			"value": "test",
-			"popularity": 0
-		},
 		"leaving": {
 			"value": "How horrible! I don't know what I'll do with myself without you, eboyjr or sephr!",
 			"popularity": 2
-		},
-		"paws": {
-			"value": "http://www.youtube.com/watch?v=6PKQE8FM2Uw",
-			"popularity": 4
-		},
-		"spherecat1": {
-			"value": "A cat who hangs in the channel and types by rolling around on his keyboard and hopping to press a key. <http://www.gtfo.ro/wp-content/uploads/2010/11/spherecat.jpg>, <http://lolcats.com/images/u/07/31/lolcatsdotcombzfw7npbqomijkc9.jpg>",
-			"popularity": 3
-		},
-		"alexgordon": {
-			"value": "http://ell.io/1hUz6P",
-			"popularity": 0
-		},
-		"nou": {
-			"value": "eboyjr will come in a second to parse that last sentence right quick and change the first noun to the senders' name",
-			"popularity": 4
-		},
-		"rut": {
-			"value": "blub",
-			"popularity": 2
-		},
-		"blub": {
-			"value": "rut",
-			"popularity": 2
-		},
-		"link of the day": {
-			"value": "http://en.wikipedia.org/wiki/Flip-flop_%28electronics%29",
-			"popularity": 0
-		},
-		"lotd": {
-			"alias": "link of the day"
-		},
-		"sleep": {
-			"value": "a mythical state of being",
-			"popularity": 0
 		},
 		"androide": {
 			"value": "An IDE for Android.",
 			"popularity": 0
 		},
-		"twss": {
-			"value": "THAT'S WHAT SHE SAID!... !rimshot",
-			"popularity": 1
-		},
 		"irc modes": {
 			"value": "<http://webtoman.com/opera/panel/ircdmodes.html>",
-			"popularity": 0
-		},
-		"c'mon": {
-			"value": "CMON!",
 			"popularity": 0
 		},
 		"bot": {
@@ -319,41 +177,23 @@
 		"ωf:∅": {
 			"alias": "oftn"
 		},
-		"executions": {
-			"value": "http://alessonislearned.com/cmx/lesson022.gif",
-			"popularity": 1
-		},
-		"this": {
-			"value": "http://tumblrsworstblog.tumblr.com/post/6593182598",
-			"popularity": 2
-		},
-		"genius": {
-			"value": "http://tumblrsworstblog.tumblr.com/post/6510067788",
+		"source": {
+			"value": "The source of oftn-bot can be found at: <https://github.com/oftn/oftn-bot>",
 			"popularity": 0
-		},
-		"also.this": {
-			"value": "http://tumblrsworstblog.tumblr.com/post/6434264742",
-			"popularity": 1
-		},
-		"hats": {
-			"value": "http://www.teamfortress.com/classless/hidden/hats/",
-			"popularity": 0
-		},
-		"nice things": {
-			"value": "But not you.",
-			"popularity": 1
 		},
 		"!": {
-			"value": "I know, right!",
-			"popularity": 1
-		},
-		"!!": {
-			"value": "I know, right!",
+			"value": "I know right!",
 			"popularity": 0
 		},
-		"nope": {
-			"value": "http://youtu.be/gvdf5n-zI14",
-			"popularity": 7
+		"!!": {
+			"alias": "!"
+		},
+		"!!!": {
+			"alias": "!"
+		},
+		"metafar": {
+			"value": "A branch of conversation started with a metaphor which strays too far and becomes irrelevant from its original purpose.",
+			"popularity": 0
 		}
 	}
 }

@@ -211,7 +211,7 @@
 		},
 		"hammertime": {
 			"value": "━━▊ ━━▊ ━━▊",
-			"popularity": 0
+			"popularity": 1
 		},
 		"wait": {
 			"value": "Don't feel ignored and repeat your question quickly; if nobody knows your answer, nobody will answer you. While you wait, try searching https://developer.mozilla.org/en/JavaScript or https://developer.mozilla.org/en/DOM || You might also consider reading: http://www.catb.org/~esr/faqs/smart-questions.html",

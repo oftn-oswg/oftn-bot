@@ -21,7 +21,6 @@ var ΩF_0Bot = function(profile) {
 	
 	this.start_github_server(9370);
 	this.github_context = null;
-	
 };
 
 

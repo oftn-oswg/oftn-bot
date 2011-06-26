@@ -7,7 +7,7 @@ This is the repository for both of the IRC bots oftn-bot (in #oftn on freenode) 
 Features
 --------
 
-* Managages bot commands with an easy API
+* Manages bot commands with an easy API
 * Support for "intents" which is when you append "@ user" after a bot command, so the bot can reply to that person
 * Context object provides information about bot command invocations, including:
   * Who invoked the command
