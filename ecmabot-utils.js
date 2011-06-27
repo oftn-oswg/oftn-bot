@@ -65,8 +65,7 @@ var utils = {
 			case "object":
 			
 				// Only way to get internal [[Class]] property
-				var type = Object.prototype.toString.call(value);
-				type = type.slice(8, -1);
+				var type = Object.prototype.toString.call(value).slice(8, -1);
 				switch (type) {
 					case "Date":
 						return "(object) " +
@@ -198,6 +197,17 @@ var utils = {
 		});
 	}
 };
+
+// The built-ins in this context should not be changed.
+Object.freeze(Function.prototype);
+Object.freeze(Boolean.prototype);
+Object.freeze(Object.prototype);
+Object.freeze(RegExp.prototype);
+Object.freeze(String.prototype);
+Object.freeze(Array.prototype);
+Object.freeze(Date.prototype);
+Object.freeze(Object);
+Object.freeze(Array);
 
 /**
  * The main run function.

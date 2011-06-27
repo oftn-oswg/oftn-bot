@@ -112,7 +112,7 @@
 		},
 		"etherpadjs": {
 			"value": "javascript:(function(){var a=location,b=/\\d+/.exec(a)[0],c=document.createElement,d=document,e=c.call(d,\"iframe\"),f=c.call(d,\"script\");f.src=a.origin+\"/ep/pad/export/\"+b+\"/latest?format=txt\",d.body.appendChild(e),e.style.display=\"none\",e.contentWindow.document.head.appendChild(f)})()",
-			"popularity": 3
+			"popularity": 4
 		},
 		"kirby": {
 			"value": "<(n_n<) <(n_n)> (>n_n)>",

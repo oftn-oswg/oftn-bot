@@ -258,6 +258,8 @@ JSBool sandbox_jsnative_execute (JSContext *cx, uintN argc, jsval *vp)
 	static char *input_text = NULL;
 	static unsigned int input_size;
 	
+	JSCrossCompartmentCall *crosscall;
+	
 	jsval return_value = JSVAL_VOID;
 	jsval global_jsval;
 
@@ -279,12 +281,20 @@ JSBool sandbox_jsnative_execute (JSContext *cx, uintN argc, jsval *vp)
 		JS_THROW_SANDBOX_ERROR (cx, "Could not read input script.");
 		goto cleanup;
 	}
+	
+	crosscall = JS_EnterCrossCompartmentCall (cx, global);
+	if (!crosscall) {
+		JS_THROW_SANDBOX_ERROR (cx, "Could not enter a cross compartment call.");
+		goto cleanup;
+	}
 
 	if (!JS_EvaluateScript (cx,
 	                   global, input_text, input_size-1,
 	                   "irc", 1, &return_value)) {
 		goto cleanup;
 	}
+	
+	JS_LeaveCrossCompartmentCall (crosscall);
 
 	success = JS_TRUE;
 
