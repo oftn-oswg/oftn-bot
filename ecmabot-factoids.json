@@ -141,7 +141,7 @@
 		},
 		"eloquent": {
 			"value": "Eloquent JavaScript is a comprehensive introductory Web-based book with examples and a built-in interpreter. http://eloquentjavascript.net/index.html",
-			"popularity": 20
+			"popularity": 21
 		},
 		"tias": {
 			"value": "Try it and see, why dontcha?",
@@ -229,7 +229,7 @@
 		},
 		"document.write": {
 			"value": "document.wrong. Please use something more modern and less prone to doing confusing things.",
-			"popularity": 7
+			"popularity": 8
 		},
 		"cross-browser": {
 			"value": "QuirksMode.org is the prime source for browser compatibility information on the Internet. It is maintained by Peter-Paul Koch, mobile platform strategist in Amsterdam, the Netherlands. http://www.quirksmode.org/compatibility.html",
@@ -315,7 +315,7 @@
 		},
 		"help": {
 			"value": "In order to get help, paste the relevant portions JavaScript in a pastebin (see !paste), and tell us 1) what you want to happen, 2) what is actually happenning, and 3) any error messages you find (see !debug).",
-			"popularity": 18
+			"popularity": 19
 		},
 		"asi": {
 			"alias": "semicolon"
@@ -425,6 +425,13 @@
 		"dom": {
 			"value": "The DOM API allows you to interact with your document with JavaScript. <https://developer.mozilla.org/en/DOM>",
 			"popularity": 1
+		},
+		"textcontent": {
+			"value": "There is no single cross-browser way to get the text from an element, so you need the following: var mytext = element.textContent || element.innerText; To set the text, you can do: element.textContent = element.innerText = mytext;",
+			"popularity": 0
+		},
+		"innertext": {
+			"alias": "textcontent"
 		}
 	}
 }

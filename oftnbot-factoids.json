@@ -87,8 +87,8 @@
 			"popularity": 14
 		},
 		"todo": {
-			"value": "Pastebin truncated code for 1 hour. <http://paste.oftn.org> :: Add !learn unalias foo & bar :: !moderation, see: https://gist.github.com/c3946165e9a61d9f8003",
-			"popularity": 14
+			"value": "Pastebin truncated code for 1 hour. <http://paste.oftn.org> :: Add !learn unalias foo & bar :: !moderation, see: https://gist.github.com/c3946165e9a61d9f8003 :: Copy thrown errors from sandbox compartment to utils compartment to prevent sigsegv's.",
+			"popularity": 15
 		},
 		"board": {
 			"value": "ΩF:∅ Foundation Board of Directors: cloudhead, eboyjr, sephr (2x), gkatsev, mynyml, inimino, drudge, and yrashk",
@@ -124,7 +124,7 @@
 		},
 		"test": {
 			"value": "Test failed.",
-			"popularity": 26
+			"popularity": 27
 		},
 		"specgen": {
 			"value": "Anolis <http://anolis.gsnedders.com/>",
@@ -179,7 +179,7 @@
 		},
 		"source": {
 			"value": "The source of oftn-bot can be found at: <https://github.com/oftn/oftn-bot>",
-			"popularity": 0
+			"popularity": 2
 		},
 		"!": {
 			"value": "I know right!",
@@ -193,7 +193,7 @@
 		},
 		"metafar": {
 			"value": "A branch of conversation started with a metaphor which strays too far and becomes irrelevant from its original purpose.",
-			"popularity": 0
+			"popularity": 1
 		}
 	}
 }

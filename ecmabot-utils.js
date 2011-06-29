@@ -134,32 +134,67 @@ var utils = {
 		})(value, depth);
 	},
 	/**
-	 * Format string value so it is readable. This replaces control
-	 * characters with their hex equivalent in Javascript notation.
-	 * Quotes are not escaped for readability. Only double quotes are placed
-	 * around it, so it's easy to see that it is a string.
+	 * Format string value so it is readable. This replaces unprintable
+	 * characters with equivalents JavaScript can parse.
+	 * Quotes are escaped, but the surrounding quotes are chosen so that the
+	 * least escaping has to be done.
 	 **/
 	string_format: function(value) {
-		return "'"+value.replace(/[\u0000-\u001f\u007f-\u009f\ufffe-\uffff]/g,
-			function(v) {
-			var escaped, code = v.charCodeAt(0);
+		
+		// First we need to find which quote character to use by comparing the
+		// number of times each occurs in the string.
+		
+		var quotes_dbl = (value.match(/"/g) || []).length;
+		var quotes_sgl = (value.match(/'/g) || []).length;
+		var quote = quotes_sgl <= quotes_dbl ? "'" : '"';
+		var quote_code = quote.charCodeAt(0);
+		
+		// Next, we create a new array of substrings which contain escaped or
+		// unescaped strings.
+		
+		var i = 0, code, code2, len = value.length, result = "";
+		while (i < len) {
+			code = value.charCodeAt(i++);
 			switch (code) {
-			case 0: escaped = "\\0"; break;
-			case 7: escaped = "\\a"; break;
-			case 8: escaped = "\\b"; break;
-			case 9: escaped = "\\t"; break;
-			case 10: escaped = "\\n"; break;
-			case 11: escaped = "\\v"; break;
-			case 12: escaped = "\\f"; break;
-			case 13: escaped = "\\r"; break;
-			case 27: escaped = "\\e"; break;
+			case 8:  result += "\\b"; break;
+			case 9:  result += "\\t"; break;
+			case 10: result += "\\n"; break;
+			case 11: result += "\\v"; break;
+			case 12: result += "\\f"; break;
+			case 13: result += "\\r"; break;
+			case 34: /* double quote */
+			case 39: /* single quote */
+				result += 
+					(code === quote_code ? '\\' : '') +
+						String.fromCharCode(code); break;
+			case 92: result += "\\\\"; break;
 			default:
-				escaped = "\\" + (code>=256?"u":"x") + (code<=16?"0":"") +
-					code.toString(16).toUpperCase();
-				break;
+				if ((code < 32) || (code > 0xfffd) ||
+					(code >= 0x7f && code <= 0x9f) ||
+					(code >= 0xDC00 && code <= 0xDFFF)) {
+					result += "\\u" + 
+						(code <= 0xf ? "000" :
+							(code <= 0xff ? "00" :
+								(code <= 0xfff ? "0" : ""))) + code.toString(16).toUpperCase();
+				} else if (code >= 0xD800 && code <= 0xDBFF) {
+					if (len < 1) {
+						result += "\\u"+code.toString(16).toUpperCase();
+					} else {
+						code2 = value.charCodeAt(i++);
+						if ((code2 < 0xDC00) || (code2 > 0xDFFF)) {
+							result += "\\u"+code.toString(16).toUpperCase();
+							i--;
+						} else {
+							result += String.fromCharCode(code, code2);
+						}
+					}
+				} else {
+					result += String.fromCharCode(code);
+				}
 			}
-			return escaped;
-		})+"'";
+		}
+		
+		return quote+result+quote;
 	},
 	type_is_obvious: function(value) {
 		switch (typeof value) {
