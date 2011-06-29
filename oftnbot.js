@@ -38,7 +38,7 @@ Util.inherits(ΩF_0Bot, Bot);
 	this.register_command("g", this.google);
 	this.register_command("do", function(context, text) {
 		
-		if (context.sender.name === "eboyjr") {
+		if (context.channel.userlist[context.sender.name].operator) {
 			var client = context.client, result;
 			try {
 				result = eval (text);
@@ -46,9 +46,11 @@ Util.inherits(ΩF_0Bot, Bot);
 				result = e;
 			}
 			if (typeof result !== "undefined") {
-				context.channel.send (require("./lib/sandbox/utils").pretty_print(result).substr(0, 400));
+				context.channel.send (require("./oftnbot-utils.js").pretty_print(result).substr(0, 400));
 			}
 			return;
+		} else {
+			context.channel.send_reply(context.sender, "You must be an operator to use this command.");
 		}
 	}, {allow_intentions: false, hidden: true});
 
