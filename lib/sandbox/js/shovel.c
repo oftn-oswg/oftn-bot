@@ -261,7 +261,8 @@ JSBool sandbox_jsnative_execute (JSContext *cx, uintN argc, jsval *vp)
 	JSCrossCompartmentCall *crosscall;
 	
 	jsval return_value = JSVAL_VOID;
-	jsval global_jsval;
+	jsval global_jsval = JSVAL_VOID;
+	jsval exception = JSVAL_VOID;
 
 	JSBool success = JS_FALSE;
 	
@@ -288,13 +289,17 @@ JSBool sandbox_jsnative_execute (JSContext *cx, uintN argc, jsval *vp)
 		goto cleanup;
 	}
 
-	if (!JS_EvaluateScript (cx,
-	                   global, input_text, input_size-1,
-	                   "irc", 1, &return_value)) {
+	JS_EvaluateScript (cx, global, input_text, input_size-1,
+	                   "irc", 1, &return_value);
+
+	if (JS_GetPendingException (cx, &exception)) {
+		JS_ClearPendingException (cx);
+		JS_LeaveCrossCompartmentCall (crosscall);
+		JS_SetPendingException (cx, exception);
 		goto cleanup;
+	} else {
+		JS_LeaveCrossCompartmentCall (crosscall);
 	}
-	
-	JS_LeaveCrossCompartmentCall (crosscall);
 
 	success = JS_TRUE;
 

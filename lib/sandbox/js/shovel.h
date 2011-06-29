@@ -5,13 +5,13 @@
 	{ \
 		jsval exc; \
 		JSString *excstr; \
-		if (JS_GetPendingException(context, &exc)) { \
-			JS_ClearPendingException(context); \
-			excstr = JS_ValueToString(context, exc); \
+		if (JS_GetPendingException (context, &exc)) { \
+			JS_ClearPendingException (context); \
+			excstr = JS_ValueToString (context, exc); \
 			if (excstr == NULL) { \
 				sandbox_throw_error (sandbox, "Second exception thrown when converting first exception into a string."); \
 			} \
-			sandbox_throw_error (sandbox, JS_EncodeString(context, excstr)); \
+			sandbox_throw_error (sandbox, JS_EncodeString (context, excstr)); \
 		} \
 	}
 
