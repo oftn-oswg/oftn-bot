@@ -230,12 +230,16 @@ JSBot.prototype.learn = function(cx, text) {
 		} else if (operation === "=~") {
 			var regexinfo = this.parse_regex_literal (value);
 			var regex = regexinfo[0];
-			var result = this.factoids.find(factoid, false)
-				.replace(regex, regexinfo[1]);
+			var old = this.factoids.find(factoid, false);
+			var result = old.replace(regex, regexinfo[1]);
 
-			this.factoids.learn(factoid, result);
-			cx.channel.send_reply(cx.sender, "Changed `"+factoid+
-				"` to: "+result);
+			if (old === result) {
+				cx.channel.send_reply(cx.sender, "Nothing changed.");
+			} else {
+				this.factoids.learn(factoid, result);
+				cx.channel.send_reply(cx.sender, "Changed `"+factoid+
+					"` to: "+result);
+			}
 			return;
 
 		}

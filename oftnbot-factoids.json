@@ -87,7 +87,7 @@
 			"popularity": 14
 		},
 		"todo": {
-			"value": "Pastebin truncated code for 1 hour. <http://paste.oftn.org> :: Add !learn unalias foo & bar :: !moderation, see: https://gist.github.com/c3946165e9a61d9f8003 :: Copy thrown errors from sandbox compartment to utils compartment to prevent sigsegv's.",
+			"value": "Pastebin truncated code for 1 hour. <http://paste.oftn.org> :: Add !learn unalias foo & bar :: !moderation, see: https://gist.github.com/c3946165e9a61d9f8003",
 			"popularity": 15
 		},
 		"board": {
