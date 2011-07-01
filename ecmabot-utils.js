@@ -19,6 +19,8 @@ global.console.timeEnd = function timeEnd(name) {
 
 global.print = global.alert = global.console.log;
 
+global.version = typeof version === "undefined" ? "unknown" : version;
+
 
 /**
  * Pretty-prints a Javascript value for viewing.

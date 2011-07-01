@@ -117,10 +117,13 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 	JSObject *global;
 	FILE *utils_stream;
 	char *utils_input;
+	const char *version_ch;
 	int utils_size;
 
 	JSObject *exports;
 	JSObject *global_object;
+
+	JSString *version;
 
 	this->utils_context = sandbox_context_create (this);
 
@@ -136,14 +139,25 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 	exports = JS_NewObject (context, NULL, NULL, global);
 
 	if (!JS_DefineProperty (context, global, "exports", OBJECT_TO_JSVAL (exports),
-                       JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
+	                        JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
 		sandbox_throw_error (this, "Could not make new exports global.");
 	}
+
+	version_ch = JS_VersionToString (JS_GetVersion (context));
+	if (version_ch) {
+		version = JS_NewStringCopyZ (context, version_ch);
+		if (version) {
+			JS_DefineProperty (context, global, "version",
+			                   STRING_TO_JSVAL (version),
+			                   JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT);
+		}
+	}
+
 
 	global_object = sandbox_globals_create (this, context);
 
 	if (!JS_DefineProperty (context, global, "global", OBJECT_TO_JSVAL (global_object),
-                       JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
+	                        JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
 		sandbox_throw_error (this, "Could not make global object.");
 	}
 

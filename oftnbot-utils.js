@@ -19,6 +19,8 @@ global.console.timeEnd = function timeEnd(name) {
 
 global.print = global.alert = global.console.log;
 
+global.version = typeof version === "undefined" ? "unknown" : version;
+
 function constant_multiply(n) {
 	n |= 0;
 	if (n === 0) return '0';
