@@ -24,15 +24,18 @@ Util.inherits(JSBot, Bot);
 
 JSBot.prototype.init = function() {
 	Bot.prototype.init.call(this);
-
+	
 	this.register_listener(/^(sm?|v8?|js?|>>?)>([^>].*)+/, this.execute_js);
 	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
 	this.register_listener(/\bi(?:\u0027| wi)?ll try\b/i,
 		this.there_is_no_try);
 	
-	this.register_command("g", this.google,
-		{help: "Run this command with a search query to return the first Google result. Usage: !g kitten images"});
-		
+	this.register_command("g", this.google, {
+		help: "Run this command with a search query to return the first Google result. Usage: !g kitten images"});
+	
+	this.register_command("mdc", this.mdc, {
+		help: "Search the Mozilla Developer Network. Usage: !mdc bitwise operators"});
+	
 	this.register_command("re", this.re,
 		{help: "Usage: !re Your text here /expression/gi || FLAGS: (g: global match, i: ignore case)"});
 	
@@ -46,8 +49,6 @@ JSBot.prototype.init = function() {
 	this.register_command("forget", this.forget,
 		{allow_intentions: false, help: "Remove factoid from bot. Usage: !forget foo"});
 	
-	this.register_command("lmgtfy", this.lmgtfy);
-	
 	this.register_command("commands", this.commands);
 	
 	this.on('command_not_found', this.command_not_found);
@@ -57,13 +58,6 @@ JSBot.prototype.init = function() {
 	
 };
 
-
-JSBot.prototype.lmgtfy = function(cx, text) {
-	if (text) {
-		var reply = "http://www.lmgtfy.com/?q="+encodeURIComponent(text);
-		cx.channel.send_reply(cx.intent, reply);
-	}
-};
 
 JSBot.prototype.google = function(cx, text) {
 	FeelingLucky(text, function(data) {
@@ -260,7 +254,10 @@ JSBot.prototype.forget = function(cx, text) {
 };
 
 JSBot.prototype.commands = function(cx, text) {
-	cx.channel.send_reply (cx.sender, "Valid commands are: "+this.get_commands().join(", "));
+	var commands = this.get_commands();
+	cx.channel.send_reply (cx.sender,
+		"Valid commands are: " +
+		this.__command_ident + commands.join(", " + this.__command_ident));
 };
 
 
@@ -269,7 +266,7 @@ JSBot.prototype.find = function(cx, text) {
 	try {
 		cx.channel.send_reply(cx.intent, this.factoids.find(text, true));
 	} catch(e) {
-		var reply = ["No factoid named `"+text+"` exists."],
+		var reply = ["No factoid/command named `"+text+"`."],
 		    found = this.factoids.search(text);
 		
 		if (found.length) {
@@ -297,8 +294,21 @@ JSBot.prototype.help = function(cx, text) {
 };
 
 
+JSBot.prototype.mdc = function(cx, text) {
+	if (!text) {
+		return this.command_not_found (cx, "mdc");
+	}
+
+	this.google (cx, "site:developer.mozilla.org "+text);
+};
+
+
 JSBot.prototype.command_not_found = function(cx, text) {
 
+	if (cx.priv) {
+		return this.find(cx, text);
+	}
+	
 	try {
 		cx.channel.send_reply(cx.intent, this.factoids.find(text, true));
 	} catch(e) {

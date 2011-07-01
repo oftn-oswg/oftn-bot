@@ -310,8 +310,7 @@
 			"alias": "botabuse"
 		},
 		"about": {
-			"value": "I'm an IRC bot written entirely in JavaScript using Node.js. Use the `>>` command to execute code with the Spidermonkey engine, and the `>>>` command to execute code with the V8 engine. Source: <https://github.com/eboyjr/vbotjr/>",
-			"popularity": 4
+			"value": "I'm written entirely in JavaScript using Node.js. See under my covers at Github: <https://github.com/oftn/oftn-bot>"
 		},
 		"help": {
 			"value": "In order to get help, paste the relevant portions JavaScript in a pastebin (see !paste), and tell us 1) what you want to happen, 2) what is actually happenning, and 3) any error messages you find (see !debug).",
@@ -432,6 +431,9 @@
 		},
 		"innertext": {
 			"alias": "textcontent"
+		},
+		"usage": {
+			"value": "You may use me to run tiny JavaScript snippets. I will execute your code and show you the result of the last statement. You may also use the console functions like console.log, console.time, and console.timeEnd. Use `>>` to execute with SpiderMonkey and `>>>` to execute with V8."
 		}
 	}
 }

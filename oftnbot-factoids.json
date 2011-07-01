@@ -66,7 +66,7 @@
 		},
 		"rimshot": {
 			"value": "[Ba dun tshh.](http://instantrimshot.com/audio/rimshot.mp3)",
-			"popularity": 13
+			"popularity": 14
 		},
 		"suit-toolkit": {
 			"alias": "suit-canvas-toolkit"
@@ -85,10 +85,6 @@
 		"help": {
 			"value": "Use the `>>` command for the SpiderMonkey interpreter, and the `>>>` command for the V8 interpreter.",
 			"popularity": 14
-		},
-		"todo": {
-			"value": "Pastebin truncated code for 1 hour. <http://paste.oftn.org> :: Add !learn unalias foo & bar :: !moderation, see: https://gist.github.com/c3946165e9a61d9f8003",
-			"popularity": 15
 		},
 		"board": {
 			"value": "ΩF:∅ Foundation Board of Directors: cloudhead, eboyjr, sephr (2x), gkatsev, mynyml, inimino, drudge, and yrashk",
@@ -124,7 +120,7 @@
 		},
 		"test": {
 			"value": "Test failed.",
-			"popularity": 27
+			"popularity": 28
 		},
 		"specgen": {
 			"value": "Anolis <http://anolis.gsnedders.com/>",
@@ -179,7 +175,7 @@
 		},
 		"source": {
 			"value": "The source of oftn-bot can be found at: <https://github.com/oftn/oftn-bot>",
-			"popularity": 2
+			"popularity": 3
 		},
 		"!": {
 			"value": "I know right!",
@@ -194,6 +190,14 @@
 		"metafar": {
 			"value": "A branch of conversation started with a metaphor which strays too far and becomes irrelevant from its original purpose.",
 			"popularity": 1
+		},
+		"binaryxml": {
+			"value": "The binary XML protocol. Allows the sending of binary information in valid XML. Example: <binary><byte><zero/><one/><one/><zero/><one/><zero/><zero/></one/></byte></binary>",
+			"popularity": 1
+		},
+		"sadtrombone": {
+			"value": "[Wah wah wah wahhhhhhhh](http://www.sadtrombone.com)",
+			"popularity": 0
 		}
 	}
 }

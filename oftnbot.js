@@ -278,7 +278,10 @@ Util.inherits(ΩF_0Bot, Bot);
 
 
 ΩF_0Bot.prototype.commands = function(cx, text) {
-	cx.channel.send_reply (cx.sender, "Valid commands are: "+this.get_commands().join(", "));
+	var commands = this.get_commands();
+	cx.channel.send_reply (cx.sender,
+		"Valid commands are: " +
+		this.__command_ident + commands.join(", " + this.__command_ident));
 };
 
 
