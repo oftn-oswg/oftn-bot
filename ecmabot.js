@@ -30,36 +30,49 @@ JSBot.prototype.init = function() {
 	this.register_listener(/\bi(?:\u0027| wi)?ll try\b/i,
 		this.there_is_no_try);
 	
-	this.register_command("g", this.google, {
+	this.register_command("g", this.g, {
 		help: "Run this command with a search query to return the first Google result. Usage: !g kitten images"});
 	
-	this.register_command("mdc", this.mdc, {
-		help: "Search the Mozilla Developer Network. Usage: !mdc bitwise operators"});
+	this.register_command("google", this.google, {
+		help: "Returns a link to a Google search page of the search term. Usage: !google opencourseware computational complexity"});
 	
-	this.register_command("re", this.re,
-		{help: "Usage: !re Your text here /expression/gi || FLAGS: (g: global match, i: ignore case)"});
+	this.register_command("mdn", this.mdn, {
+		help: "Search the Mozilla Developer Network. Usage: !mdn bitwise operators"});
+		
+	this.register_command("ecma", this.ecma, {
+		help: "Lookup a section from the ECMAScript spec. Usage: !ecma null value"});
+	
+	this.register_command("re", this.re, {
+		help: "Usage: !re Your text here /expression/gi || FLAGS: (g: global match, i: ignore case)"});
 	
 	this.register_command("find", this.find);
 	
 	this.register_command("help", this.help);
 	
-	this.register_command("learn", this.learn,
-		{allow_intentions: false, help: "Add factoid to bot. Usage: !learn ( [alias] foo = bar | foo =~ s/expression/replace/gi )"});
+	this.register_command("learn", this.learn, {
+		allow_intentions: false,
+		help: "Add factoid to bot. Usage: !learn ( [alias] foo = bar | foo =~ s/expression/replace/gi )"});
 		
-	this.register_command("forget", this.forget,
-		{allow_intentions: false, help: "Remove factoid from bot. Usage: !forget foo"});
+	this.register_command("forget", this.forget, {
+		allow_intentions: false,
+		help: "Remove factoid from bot. Usage: !forget foo"});
 	
 	this.register_command("commands", this.commands);
 	
 	this.on('command_not_found', this.command_not_found);
 	
 	this.load_ecma_ref();
-	this.register_command("ecma", this.ecma, {help: "Lookup a section from the ECMAScript spec. Usage: !ecma null value"});
 	
 };
 
 
-JSBot.prototype.google = function(cx, text) {
+JSBot.prototype.g = function(cx, text) {
+
+	if (!text) {
+		cx.channel.send_reply (cx.sender, this.get_command_help("g"));
+		return;
+	}
+	
 	FeelingLucky(text, function(data) {
 		if (data) {
 			cx.channel.send_reply (cx.intent, 
@@ -68,6 +81,17 @@ JSBot.prototype.google = function(cx, text) {
 			cx.channel.send_reply (cx.sender, "No search results found.");
 		}
 	});
+};
+
+
+JSBot.prototype.google = function(cx, text) {
+
+	if (!text) {
+		cx.channel.send_reply (cx.sender, this.get_command_help("google"));
+		return;
+	}
+	
+	cx.channel.send_reply (cx.intent, "Google search: \""+text+"\" <http://www.google.com/search?q="+encodeURIComponent(text)+">");
 };
 
 
@@ -294,9 +318,9 @@ JSBot.prototype.help = function(cx, text) {
 };
 
 
-JSBot.prototype.mdc = function(cx, text) {
+JSBot.prototype.mdn = function(cx, text) {
 	if (!text) {
-		return this.command_not_found (cx, "mdc");
+		return this.command_not_found (cx, "mdn");
 	}
 
 	this.google (cx, "site:developer.mozilla.org "+text);

@@ -198,6 +198,18 @@
 		"sadtrombone": {
 			"value": "[Wah wah wah wahhhhhhhh](http://www.sadtrombone.com)",
 			"popularity": 0
+		},
+		"nope": {
+			"value": "http://www.youtube.com/watch?v=gvdf5n-zI14"
+		},
+		"yeah": {
+			"value": "http://www.youtube.com/watch?v=H6OtFKNDPUc&feature=related"
+		},
+		"damnit": {
+			"value": "http://www.youtube.com/watch?v=CjhrIsSCcjs&feature=related"
+		},
+		"scream": {
+			"value": "http://www.youtube.com/watch?feature=player_detailpage&v=a3I5h7UaOuk#t=14s"
 		}
 	}
 }
