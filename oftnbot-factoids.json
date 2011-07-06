@@ -178,8 +178,7 @@
 			"popularity": 3
 		},
 		"!": {
-			"value": "I know right!",
-			"popularity": 0
+			"value": "ikr!"
 		},
 		"!!": {
 			"alias": "!"
@@ -210,6 +209,9 @@
 		},
 		"scream": {
 			"value": "http://www.youtube.com/watch?feature=player_detailpage&v=a3I5h7UaOuk#t=14s"
+		},
+		"subwoofer": {
+			"value": "TWO OF THEM. http://ihasahotdog.files.wordpress.com/2009/06/funny-dog-pictures-sub-woofers.jpg"
 		}
 	}
 }

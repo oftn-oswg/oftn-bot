@@ -7,6 +7,7 @@ var Sandbox = require("./lib/sandbox");
 var QueryStr = require('querystring');
 var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
+var Spelling = require("./lib/spelling");
 
 var Bot = require("./lib/irc");
 
@@ -21,6 +22,8 @@ var ΩF_0Bot = function(profile) {
 	
 	this.start_github_server(9370);
 	this.github_context = null;
+	
+	this.spelling = new Spelling(File.readFileSync("/usr/share/dict/american-english-small", "ascii"));
 };
 
 
@@ -34,6 +37,7 @@ Util.inherits(ΩF_0Bot, Bot);
 	this.register_command("topic", this.topic);
 	this.register_command("learn", this.learn, {allow_intentions: false});
 	this.register_command("forget", this.forget, {allow_intentions: false});
+	this.register_command("spell", this.spell);
 	this.register_command("commands", this.commands);
 	this.register_command("g", this.google);
 	this.register_command("do", function(context, text) {
@@ -120,7 +124,7 @@ Util.inherits(ΩF_0Bot, Bot);
 				var data = JSON.parse(json);
 				if (len = data.commits.length) {
 					for (var i = 0; i < len; i++) {
-						result.push("\x036* "+data.repository.name+"\x0F "+data.commits[i].message+" \x032<"+data.commits[i].url.slice(0, -33)+">\x0F\x031 "+data.commits[i].author.name+"\x0F");
+						result.push("\x036* "+data.repository.name+"\x0F "+data.commits[i].message+" \x032<"+data.commits[i].url.slice(0, -33)+">\x0F\x031 "+data.commits[i].author.username+"\x0F");
 					}
 				}
 			} catch (e) {
@@ -282,6 +286,23 @@ Util.inherits(ΩF_0Bot, Bot);
 	cx.channel.send_reply (cx.sender,
 		"Valid commands are: " +
 		this.__command_ident + commands.join(", " + this.__command_ident));
+};
+
+
+ΩF_0Bot.prototype.spell = function(cx, text) {
+	if (text) {
+		text = text.split(/\s+/)[0];
+		var correct = this.spelling.correct(text);
+		if (correct === true) {
+			cx.channel.send_reply (cx.intent, text + " is a word.");
+		} else if (correct === null) {
+			cx.channel.send_reply (cx.intent, "Not found.");
+		} else {
+			cx.channel.send_reply (cx.intent, correct.join(", "));
+		}
+	} else {
+		cx.channel.send_reply (cx.sender, "Usage: !spell werd");
+	}
 };
 
 
