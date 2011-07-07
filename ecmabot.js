@@ -38,6 +38,7 @@ JSBot.prototype.init = function() {
 	
 	this.register_command("mdn", this.mdn, {
 		help: "Search the Mozilla Developer Network. Usage: !mdn bitwise operators"});
+	this.register_command("mdc", "mdn");
 		
 	this.register_command("ecma", this.ecma, {
 		help: "Lookup a section from the ECMAScript spec. Usage: !ecma null value"});
@@ -318,12 +319,12 @@ JSBot.prototype.help = function(cx, text) {
 };
 
 
-JSBot.prototype.mdn = function(cx, text) {
+JSBot.prototype.mdn = function(cx, text, command) {
 	if (!text) {
-		return this.command_not_found (cx, "mdn");
+		return this.command_not_found (cx, command);
 	}
 
-	this.google (cx, "site:developer.mozilla.org "+text);
+	this.g (cx, "site:developer.mozilla.org "+text);
 };
 
 
