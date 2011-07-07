@@ -18,7 +18,7 @@ var ΩF_0Bot = function(profile) {
 
 	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
-	this.set_command_identifier("!"); // Exclamation
+	this.set_trigger("!"); // Exclamation
 	
 	this.start_github_server(9370);
 	this.github_context = null;
@@ -47,14 +47,15 @@ Util.inherits(ΩF_0Bot, Bot);
 			try {
 				result = eval (text);
 			} catch (e) {
-				result = e;
+				context.channel.send (e);
+				return;
 			}
 			if (typeof result !== "undefined") {
 				context.channel.send (require("./oftnbot-utils.js").pretty_print(result).substr(0, 400));
 			}
 			return;
 		} else {
-			context.channel.send_reply(context.sender, "You must be an operator to use this command.");
+			context.sender.notice("You must be an operator to use my !do command.");
 		}
 	}, {allow_intentions: false, hidden: true});
 
@@ -78,6 +79,11 @@ Util.inherits(ΩF_0Bot, Bot);
 		setTimeout(function() {
 			cx.channel.send_reply(cx.sender, "Ping took "+(millisecs/1000|0)+" seconds");
 		}, millisecs);
+	});
+	
+	this.register_command("lag", function(cx) {
+		var lag_time = cx.client.lag_time;
+		cx.channel.send_reply(cx.intent, "Current lag time is: " + (lag_time/1000) + " seconds.");
 	});
 	
 	this.on('command_not_found', this.command_not_found);
@@ -283,9 +289,9 @@ Util.inherits(ΩF_0Bot, Bot);
 
 ΩF_0Bot.prototype.commands = function(cx, text) {
 	var commands = this.get_commands();
+	var trigger = this.__trigger;
 	cx.channel.send_reply (cx.sender,
-		"Valid commands are: " +
-		this.__command_ident + commands.join(", " + this.__command_ident));
+		"Valid commands are: " + trigger + commands.join(", " + trigger));
 };
 
 

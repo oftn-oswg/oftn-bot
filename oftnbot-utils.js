@@ -390,7 +390,7 @@ exports.run = function(execute) {
 			error = e;
 			error.name = e.name; // Weird bug
 		} else {
-			error = {name: "Uncaught value", message: utils.pretty_print(e)};
+			error = {name: "Value escaped", message: utils.pretty_print(e)};
 		}
 	}
 	return utils.generate(result, error, global);
