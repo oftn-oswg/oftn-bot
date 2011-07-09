@@ -25,8 +25,10 @@ Util.inherits(JSBot, Bot);
 JSBot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 	
-	this.register_listener(/^(sm?|v8?|js?|>>?)>([^>].*)+/, this.execute_js);
+	this.register_listener(/^((?:sm?|v8?|js?|>>?)>)([^>].*)+/, this.execute_js);
+	
 	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
+	
 	this.register_listener(/\bi(?:\u0027| wi)?ll try\b/i,
 		this.there_is_no_try);
 	
@@ -67,79 +69,88 @@ JSBot.prototype.init = function() {
 };
 
 
-JSBot.prototype.g = function(cx, text) {
+JSBot.prototype.g = function(context, text) {
 
 	if (!text) {
-		cx.channel.send_reply (cx.sender, this.get_command_help("g"));
+		context.channel.send_reply (context.sender, this.get_command_help("g"));
 		return;
 	}
 	
 	FeelingLucky(text, function(data) {
 		if (data) {
-			cx.channel.send_reply (cx.intent, 
+			context.channel.send_reply (context.intent, 
 				"\x02"+data.title+"\x0F \x032<"+data.url+">\x0F", {color: true});
 		} else {
-			cx.channel.send_reply (cx.sender, "No search results found.");
+			context.channel.send_reply (context.sender, "No search results found.");
 		}
 	});
 };
 
 
-JSBot.prototype.google = function(cx, text) {
+JSBot.prototype.google = function(context, text) {
 
 	if (!text) {
-		cx.channel.send_reply (cx.sender, this.get_command_help("google"));
+		context.channel.send_reply (context.sender, this.get_command_help("google"));
 		return;
 	}
 	
-	cx.channel.send_reply (cx.intent, "Google search: \""+text+"\" <http://www.google.com/search?q="+encodeURIComponent(text)+">");
+	context.channel.send_reply (context.intent, "Google search: \""+text+"\" <http://www.google.com/search?q="+encodeURIComponent(text)+">");
 };
 
 
-JSBot.prototype.there_is_no_try = function(cx, text) {
+JSBot.prototype.there_is_no_try = function(context, text) {
 	var hours = 1000*60*60;
 	var now = +new Date();
 
 	if (now > arguments.callee.last_invocation + 3*hours ||
 		typeof arguments.callee.last_invocation === "undefined") {
 
-		cx.channel.send_reply(cx.sender, "Do or do not; there is no try. --Yoda");
+		context.channel.send_reply(context.sender, "Do or do not; there is no try. --Yoda");
 		arguments.callee.last_invocation = now;
 
 	}
 };
 
 
-JSBot.prototype.do_beers = function(cx, text, nick, operation) {
+JSBot.prototype.do_beers = function(context, text, nick, operation) {
 	/**
 	 * /(\S+)\s*(?:(\+\+|--)|=\s*(?:\1)\s*(\+|-)\s*1);?/
 	 * TODO: More advanced beer management
 	 **/
 	if (operation === "++") {
 		if (nick.toLowerCase() !== "c") {
-			cx.channel.send_reply(cx.sender, "Even if " + nick +
+			context.channel.send_reply(context.sender, "Even if " + nick +
 				" deserves any beer, I don't have any to spare.");
 		} else {
-			cx.channel.send_reply(cx.sender, "C doesn't deserve beer.");
+			context.channel.send_reply(context.sender, "C doesn't deserve beer.");
 		}
 	} else {
-		cx.channel.send_action(
+		context.channel.send_action(
 			"steals a beer a from " + nick + ", since we're taking 'em.");
 	}
 };
 
 
-JSBot.prototype.execute_js = function(cx, text, command, code) {
+JSBot.prototype.execute_js = function(context, text, command, code) {
 	var engine;
+	
+	/* This should be temporary. */
+	if (!context.priv) {
+		if (command === "v8>" && context.channel.userlist["v8bot"]) {
+			return;
+		}
+		if (command === "js>" && context.channel.userlist["gbot2"]) {
+			return;
+		}
+	}
+	
 	switch (command) {
-	case ">>":
-		engine = "v8"; break;
-	case ">":
-		engine = "js"; break;
+	case ">>>":
+	case "v>":
+	case "v8>":
+		engine = Sandbox.V8; break;
 	default:
-	//case "v8": case "v":
-	//case "sm": case "s": case "js": case "j":
-		return;
+		engine = Sandbox.SpiderMonkey; break;
 	}
 	this.sandbox.run(engine, 2000, code, function(result) {
 		var reply;
@@ -163,16 +174,16 @@ JSBot.prototype.execute_js = function(cx, text, command, code) {
 				reply += "; Console: "+result.data.console.join(", ");
 			}
 
-			cx.channel.send_reply(cx.intent, reply, {truncate: true});
+			context.channel.send_reply(context.intent, reply, {truncate: true});
 		} catch (e) {
-			cx.channel.send_reply(
-				cx.intent, "Unforeseen Error: "+e.name+": "+e.message);
+			context.channel.send_reply(
+				context.intent, "Unforeseen Error: "+e.name+": "+e.message);
 		}
 	}, this);
 };
 
 
-JSBot.prototype.re = function(cx, msg) {
+JSBot.prototype.re = function(context, msg) {
 	// Okay first we need to check for the regex literal at the end
 	// The regular expression to match a real js regex literal
 	// is too long, so we need to use a simpler one.
@@ -183,14 +194,14 @@ JSBot.prototype.re = function(cx, msg) {
 			var regexpobj = new RegExp(regexmatches[1], regexmatches[2]);
 		} catch (e) {
 			/* We have an invalid regular expression */
-			cx.channel.send_reply(cx.sender, e.message);
+			context.channel.send_reply(context.sender, e.message);
 			return;
 		}
 		
 		var texttomatch = msg.slice(0, -regexmatches[0].length).trim();
 		var result = texttomatch.match(regexpobj);
 		if (result === null) {
-			cx.channel.send_reply(cx.intent, "No matches found.");
+			context.channel.send_reply(context.intent, "No matches found.");
 			return;
 		}
 
@@ -201,9 +212,9 @@ JSBot.prototype.re = function(cx, msg) {
 				"[undefined]");
 		}
 		
-		cx.channel.send_reply(cx.intent, "Matches: "+reply.join(", "), {truncate: true});
+		context.channel.send_reply(context.intent, "Matches: "+reply.join(", "), {truncate: true});
 	} else {
-		cx.channel.send_reply(cx.sender, this.get_command_help("re"));
+		context.channel.send_reply(context.sender, this.get_command_help("re"));
 	}
 };
 
@@ -219,12 +230,12 @@ JSBot.prototype.parse_regex_literal = function(text) {
 };
 
 
-JSBot.prototype.learn = function(cx, text) {
+JSBot.prototype.learn = function(context, text, command) {
 
 	try {
 		var parsed = text.match(/^(alias)?\s*(.+?)\s*(=~?)\s*(.+)$/i);
 		if (!parsed) {
-			throw new SyntaxError(this.get_command_help("learn"));
+			return context.channel.send_reply(context.sender, this.get_command_help(command));
 		}
 
 		var alias = !!parsed[1];
@@ -234,7 +245,7 @@ JSBot.prototype.learn = function(cx, text) {
 
 		if (alias) {
 			var key = this.factoids.alias(factoid, value);
-			cx.channel.send_reply(cx.sender,
+			context.channel.send_reply(context.sender,
 				"Learned `"+factoid+"` => `"+key+"`.");
 			return;
 		}
@@ -242,7 +253,7 @@ JSBot.prototype.learn = function(cx, text) {
 		/* Setting the text of a factoid */ 
 		if (operation === "=") {
 			this.factoids.learn(factoid, value);
-			cx.channel.send_reply(cx.sender, "Learned `"+factoid+"`.");
+			context.channel.send_reply(context.sender, "Learned `"+factoid+"`.");
 			return;
 
 		/* Replacing the text of a factoid based on regular expression */
@@ -253,10 +264,10 @@ JSBot.prototype.learn = function(cx, text) {
 			var result = old.replace(regex, regexinfo[1]);
 
 			if (old === result) {
-				cx.channel.send_reply(cx.sender, "Nothing changed.");
+				context.channel.send_reply(context.sender, "Nothing changed.");
 			} else {
 				this.factoids.learn(factoid, result);
-				cx.channel.send_reply(cx.sender, "Changed `"+factoid+
+				context.channel.send_reply(context.sender, "Changed `"+factoid+
 					"` to: "+result);
 			}
 			return;
@@ -264,32 +275,37 @@ JSBot.prototype.learn = function(cx, text) {
 		}
 
 	} catch (e) {
-		cx.channel.send_reply(cx.sender, e);
+		context.channel.send_reply(context.sender, e);
 	}
 };
 
 
-JSBot.prototype.forget = function(cx, text) {
+JSBot.prototype.forget = function(context, text, comment) {
+
+	if (!text) {
+		return context.channel.send_reply(context.sender, this.get_command_help(command));
+	}
+	
 	try {
 		this.factoids.forget(text);
-		cx.channel.send_reply(cx.sender, "Forgot '"+text+"'.");
+		context.channel.send_reply(context.sender, "Forgot '"+text+"'.");
 	} catch(e) {
-		cx.channel.send_reply(cx.sender, e);
+		context.channel.send_reply(context.sender, e);
 	}
 };
 
-JSBot.prototype.commands = function(cx, text) {
+JSBot.prototype.commands = function(context, text) {
 	var commands = this.get_commands();
-	cx.channel.send_reply (cx.sender,
-		"Valid commands are: " +
-		this.__command_ident + commands.join(", " + this.__command_ident));
+	var trigger = this.__trigger;
+	context.channel.send_reply (context.intent,
+		"Valid commands are: " + trigger + commands.join(", " + trigger));
 };
 
 
-JSBot.prototype.find = function(cx, text) {
+JSBot.prototype.find = function(context, text) {
 
 	try {
-		cx.channel.send_reply(cx.intent, this.factoids.find(text, true));
+		context.channel.send_reply(context.intent, this.factoids.find(text, true));
 	} catch(e) {
 		var reply = ["No factoid/command named `"+text+"`."],
 		    found = this.factoids.search(text);
@@ -300,42 +316,42 @@ JSBot.prototype.find = function(cx, text) {
 		}
 		
 		reply.push("See !commands for a list of commands.");
-		cx.channel.send_reply(cx.sender, reply.join(" "));
+		context.channel.send_reply(context.sender, reply.join(" "));
 	}
 };
 
 
-JSBot.prototype.help = function(cx, text) {
+JSBot.prototype.help = function(context, text) {
 
 	try {
 		if (!text) {
-			return this.command_not_found (cx, "help");
+			return this.command_not_found (context, "help");
 		}
 		
-		cx.channel.send_reply(cx.intent, this.get_command_help(text));
+		context.channel.send_reply(context.intent, this.get_command_help(text));
 	} catch(e) {
-		cx.channel.send_reply(cx.sender, e);
+		context.channel.send_reply(context.sender, e);
 	}
 };
 
 
-JSBot.prototype.mdn = function(cx, text, command) {
+JSBot.prototype.mdn = function(context, text, command) {
 	if (!text) {
-		return this.command_not_found (cx, command);
+		return this.command_not_found (context, command);
 	}
 
-	this.g (cx, "site:developer.mozilla.org "+text);
+	this.g (context, "site:developer.mozilla.org "+text);
 };
 
 
-JSBot.prototype.command_not_found = function(cx, text) {
+JSBot.prototype.command_not_found = function(context, text) {
 
-	if (cx.priv) {
-		return this.find(cx, text);
+	if (context.priv) {
+		return this.find(context, text);
 	}
 	
 	try {
-		cx.channel.send_reply(cx.intent, this.factoids.find(text, true));
+		context.channel.send_reply(context.intent, this.factoids.find(text, true));
 	} catch(e) {
 		// Factoid not found, do nothing.
 	}
@@ -344,11 +360,11 @@ JSBot.prototype.command_not_found = function(cx, text) {
 // JSON.stringify([].slice.call(document.querySelectorAll('#toc-full a')).map(function(v) {return {title: v.firstChild.textContent, id: v.href.replace(/.+#/, '')};}));
 // Use that to generate the required JSON from es5.github.com with Firefox
 
-JSBot.prototype.ecma = function(cx, text) {
+JSBot.prototype.ecma = function(context, text) {
 	try {
 
 	if (typeof this.ecma_ref === "undefined") {
-		cx.channel.send_reply(cx.sender, "The ECMA-262 reference is not loaded.");
+		context.channel.send_reply(context.sender, "The ECMA-262 reference is not loaded.");
 		return;
 	}
 
@@ -361,7 +377,7 @@ JSBot.prototype.ecma = function(cx, text) {
 	for (var i = 0, len = ref.length; i < len; i++) {
 		var item = ref[i], title = item.title.toLowerCase();
 		if (muststart ? title.substring(0, text.length) === text : ~title.indexOf(text)) {
-			cx.channel.send_reply(cx.intent,
+			context.channel.send_reply(context.intent,
 				"Found: " + item.title + " <http://es5.github.com/#" + item.id + ">");
 			return;
 		}
@@ -369,7 +385,7 @@ JSBot.prototype.ecma = function(cx, text) {
 
 	throw new Error("Could not find text '"+text+"' in the ECMAScript 5.1 Table of Contents.");
 
-	} catch (e) { cx.channel.send_reply(cx.sender, e); }
+	} catch (e) { context.channel.send_reply(context.sender, e); }
 };
 
 

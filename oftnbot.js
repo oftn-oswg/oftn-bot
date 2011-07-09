@@ -1,20 +1,21 @@
-var File = require("fs");
-var URL = require("url");
-var Util = require("util");
-var HTTP = require("http");
-var Path = require("path");
+var fs = require("fs");
+var url = require("url");
+var util = require("util");
+var http = require("http");
+var path = require("path");
+var querystring = require('querystring');
+
+var Bot = require("./lib/irc");
+
 var Sandbox = require("./lib/sandbox");
-var QueryStr = require('querystring');
 var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
 var Spelling = require("./lib/spelling");
 
-var Bot = require("./lib/irc");
-
 
 var ΩF_0Bot = function(profile) {
-	this.sandbox = new Sandbox(Path.join(__dirname, "oftnbot-utils.js"));
-	this.factoids = new FactoidServer(Path.join(__dirname, "oftnbot-factoids.json"));
+	this.sandbox = new Sandbox(path.join(__dirname, "oftnbot-utils.js"));
+	this.factoids = new FactoidServer(path.join(__dirname, "oftnbot-factoids.json"));
 
 	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
@@ -23,16 +24,16 @@ var ΩF_0Bot = function(profile) {
 	this.start_github_server(9370);
 	this.github_context = null;
 	
-	this.spelling = new Spelling(File.readFileSync("/usr/share/dict/american-english-small", "ascii"));
+	this.spelling = new Spelling(fs.readFileSync("/usr/share/dict/american-english-small", "ascii"));
 };
 
 
-Util.inherits(ΩF_0Bot, Bot);
+util.inherits(ΩF_0Bot, Bot);
 
 ΩF_0Bot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 
-	this.register_listener(/^(sm?|v8?|js?|>>?)>([^>].*)+/, this.execute_js);
+	this.register_listener(/^((?:sm?|v8?|js?|>>?)>)([^>].*)+/, this.execute_js);
 	
 	this.register_command("topic", this.topic);
 	this.register_command("learn", this.learn, {allow_intentions: false});
@@ -92,6 +93,47 @@ Util.inherits(ΩF_0Bot, Bot);
 		this.github_context = client;
 	});
 	
+	
+	var queue = [];
+	this.register_command("queue", function(context, text) {
+		var command, match, reply, arraymethod;
+		
+		try {
+			match = text.match(/(\w+)\s*(.*)/);
+			if (!match) {
+				throw new SyntaxError(this.get_command_help("queue"));
+			}
+			
+			command = match[1];
+			text = match[2];
+			
+			switch (command) {
+			case "prefix":
+			case "affix":
+				arraymethod = (command === "prefix") ? "unshift" : "push";
+				queue[arraymethod]([context.sender, text]);
+				break;
+				
+			case "unprefix":
+			case "unaffix":
+				arraymethod = (command === "unprefix") ? "shift" : "pop";
+				reply = queue[arraymethod]();
+				if (reply) {
+					context.channel.send_reply (
+						context.intent, "<"+reply[0].name+"> "+reply[1]);
+				} else {
+					throw new Error("The queue is empty.");
+				}
+				break;
+			default:
+				throw new SyntaxError(this.get_command_help("queue"));
+			}
+			
+		} catch(error) {
+			context.channel.send_reply (context.sender, error);
+		}
+	}, {help: "Simple queue for IRC text. Usage: !queue prefix <text>, !queue unprefix, !queue affix <text>, !queue unaffix"});
+	
 };
 
 
@@ -108,11 +150,11 @@ Util.inherits(ΩF_0Bot, Bot);
 
 ΩF_0Bot.prototype.start_github_server = function(port) {
 
-	HTTP.createServer(function (request, response) {
+	http.createServer(function (request, response) {
 		var chunks = [], channel;
 		
-		// Get the channel to send messages in from the URL
-		channel = URL.parse(request.url).pathname.replace(/[^A-Z0-9\.]/ig, '').replace(/\./g, '#');
+		// Get the channel to send messages in from the url
+		channel = url.parse(request.url).pathname.replace(/[^A-Z0-9\.]/ig, '').replace(/\./g, '#');
 		if (!channel) {
 			channel = "oftn";
 		}
@@ -125,7 +167,7 @@ Util.inherits(ΩF_0Bot, Bot);
 		
 		// When the request has finished coming in.
 		request.on("end", function() {
-			var json = QueryStr.parse(chunks.join("")).payload, result = [], len;
+			var json = querystring.parse(chunks.join("")).payload, result = [], len;
 			try {
 				var data = JSON.parse(json);
 				if (len = data.commits.length) {
@@ -133,9 +175,7 @@ Util.inherits(ΩF_0Bot, Bot);
 						result.push("\x036* "+data.repository.name+"\x0F "+data.commits[i].message+" \x032<"+data.commits[i].url.slice(0, -33)+">\x0F\x031 "+data.commits[i].author.username+"\x0F");
 					}
 				}
-			} catch (e) {
-				result.push(e);
-			}
+			} catch (e) {}
 			if (result.length) {
 				if (this.github_context) {
 					var chnl = this.github_context.get_channel(channel);
@@ -148,7 +188,7 @@ Util.inherits(ΩF_0Bot, Bot);
 		}.bind(this));
 	  
 	}.bind(this)).listen(port);
-	Util.puts("Github server running at port: "+port);
+	util.puts("Github server running at port: "+port);
 };
 
 ΩF_0Bot.prototype.google = function(cx, text) {
@@ -166,14 +206,12 @@ Util.inherits(ΩF_0Bot, Bot);
 ΩF_0Bot.prototype.execute_js = function(cx, text, command, code) {
 	var engine;
 	switch (command) {
-	case ">>":
-	case "v8": case "v":
-		engine = "v8"; break;
-	case ">":
-	case "sm": case "s": case "js": case "j":
-		engine = "js"; break;
+	case ">>>":
+	case "v>":
+	case "v8>":
+		engine = Sandbox.V8; break;
 	default:
-		return;
+		engine = Sandbox.SpiderMonkey; break;
 	}
 	this.sandbox.run(engine, 2000, code, function(result) {
 		var reply;
@@ -290,7 +328,7 @@ Util.inherits(ΩF_0Bot, Bot);
 ΩF_0Bot.prototype.commands = function(cx, text) {
 	var commands = this.get_commands();
 	var trigger = this.__trigger;
-	cx.channel.send_reply (cx.sender,
+	cx.channel.send_reply (cx.intent,
 		"Valid commands are: " + trigger + commands.join(", " + trigger));
 };
 

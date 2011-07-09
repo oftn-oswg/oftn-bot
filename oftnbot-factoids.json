@@ -2,8 +2,7 @@
 	"wait": 30000,
 	"factoids": {
 		"number": {
-			"value": "Our standard number is 9370. Our non-standard number is 2.",
-			"popularity": 2
+			"value": "Our official standard number is 9370. Our official standard non-standard number is 2."
 		},
 		"website": {
 			"value": "The ΩF:∅ website is a portal to all things ΩF:∅, and it is located at <http://oftn.org/>",
@@ -159,8 +158,7 @@
 			"popularity": 0
 		},
 		"bot": {
-			"value": "I am an autistic boy locked in the basement of the ΩF:∅ headquarters, who performs simple tasks for IRC users.",
-			"popularity": 2
+			"value": "I am most certainly not a small African child who has been brainwashed into thinking that responding to your bullshit commands is all there is to life. Most certainly not."
 		},
 		"hanlon's razor": {
 			"value": "Never attribute to malice that which is adequately explained by stupidity.",
@@ -215,6 +213,21 @@
 		},
 		"nuke.it": {
 			"value": "Nuke it from orbit. ’s the only way to be sure. http://youtu.be/2s1MspmfEwg"
+		},
+		"stack": {
+			"value": "what is an execution, if it is also a list? ⁓"
+		},
+		"elliottcable.note-to-self": {
+			"value": "buy a wig ⁓"
+		},
+		"jux": {
+			"value": "A juxtaposition handler execution in the Paws programming language."
+		},
+		"oftn-bot": {
+			"value": "Small African child who has been taught that responding to oftn-bot commands is all there is to life."
+		},
+		"jeannicolas": {
+			"value": "bewbs"
 		}
 	}
 }
