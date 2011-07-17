@@ -53,8 +53,7 @@
 			"alias": "reddit"
 		},
 		"eboyjr": {
-			"value": "ΩF:∅ lackey, master coder. Email: eboyjr14@gmail.com :: Timezone: Pacific",
-			"popularity": 6
+			"value": "Co-founder of ΩF:∅ and creator of the world's best Paws implementation [PawsMonkey, Cencio] (b‐sol: 8 719 ſ)"
 		},
 		"collab": {
 			"value": "For real-time collaboration, we use Gobby 0.5. The server is eboyjr.oftn.org, run by eboyjr. If that's not available, we use <http://oftn.titanpad.com/>.",
@@ -78,8 +77,7 @@
 			"popularity": 1
 		},
 		"suit-canvas-toolkit": {
-			"value": "A slick user-interface toolkit created in JavaScript for use with the canvas element. <https://github.com/oftn/suit-canvas-toolkit/> Demo: <http://oftn.org/projects/suit/>",
-			"popularity": 0
+			"value": "A slick user-interface toolkit created in JavaScript for use with the canvas element. <https://github.com/oftn/suit-js/> Demo: <http://oftn.org/projects/suit/>"
 		},
 		"help": {
 			"value": "Use the `>>` command for the SpiderMonkey interpreter, and the `>>>` command for the V8 interpreter.",
@@ -89,37 +87,24 @@
 			"value": "ΩF:∅ Foundation Board of Directors: cloudhead, eboyjr, sephr (2x), gkatsev, mynyml, inimino, drudge, and yrashk",
 			"popularity": 2
 		},
-		"UJD": {
-			"value": "UNIX/Julian Date (more info: http://yreality.net/UJD)",
-			"popularity": 5
-		},
-		"Judofyr": {
-			"value": "http://judofyr.net (b‐sol: 323 ſ)",
-			"popularity": 1
-		},
-		"UGT": {
-			"value": "Universal Greeting Time. Created in #mipslinux, it is a rule that states that whenever somebody enters an IRC channel it is always morning, and it is always late when the person leaves. The local time of any other people in the channel, including the greeter, is irrelevant. http://www.total-knowledge.com/~ilya/mips/ugt.html",
-			"popularity": 1
+		"ugt": {
+			"value": "Universal Greeting Time. Created in #mipslinux, it is a rule that states that whenever somebody enters an IRC channel it is always morning, and it is always late when the person leaves. The local time of any other people in the channel, including the greeter, is irrelevant. http://www.total-knowledge.com/~ilya/mips/ugt.html"
 		},
 		"love": {
-			"value": "A strong positive emotion of regard and affection, of the kind humans sometimes express toward one another and computational knowledge engines express toward the internet.",
-			"popularity": 1
+			"value": "A strong positive emotion of regard and affection, of the kind humans sometimes express toward one another and computational knowledge engines express toward the internet."
 		},
 		"etherpadjs": {
 			"value": "javascript:(function(){var a=location,b=/\\d+/.exec(a)[0],c=document.createElement,d=document,e=c.call(d,\"iframe\"),f=c.call(d,\"script\");f.src=a.origin+\"/ep/pad/export/\"+b+\"/latest?format=txt\",d.body.appendChild(e),e.style.display=\"none\",e.contentWindow.document.head.appendChild(f)})()",
 			"popularity": 4
 		},
 		"kirby": {
-			"value": "<(n_n<) <(n_n)> (>n_n)>",
-			"popularity": 3
+			"value": "<(n_n<) <(n_n)> (>n_n)>"
 		},
 		"recursion": {
-			"value": "See !recursion",
-			"popularity": 1
+			"value": "See !recursion"
 		},
 		"test": {
-			"value": "Test failed.",
-			"popularity": 28
+			"value": "Test failed."
 		},
 		"specgen": {
 			"value": "Anolis <http://anolis.gsnedders.com/>",
@@ -158,22 +143,17 @@
 			"popularity": 0
 		},
 		"bot": {
-			"value": "I am most certainly not a small African child who has been brainwashed into thinking that responding to your bullshit commands is all there is to life. Most certainly not."
+			"value": "elliottcable is a bot + + + + + does the robot <http://pawschan.tumblr.com/post/4967461441/bot>"
 		},
 		"hanlon's razor": {
 			"value": "Never attribute to malice that which is adequately explained by stupidity.",
-			"popularity": 0
-		},
-		"typetips": {
-			"value": "Like tooltips, except for showing the data type of a variable in your source code. You can roll over any identifier and see what it is.",
 			"popularity": 0
 		},
 		"ωf:∅": {
 			"alias": "oftn"
 		},
 		"source": {
-			"value": "The source of oftn-bot can be found at: <https://github.com/oftn/oftn-bot>",
-			"popularity": 3
+			"value": "My source can be found at: <https://github.com/oftn/oftn-bot> (pawsbot.js)"
 		},
 		"!": {
 			"value": "ikr!"
@@ -189,15 +169,52 @@
 			"popularity": 1
 		},
 		"binaryxml": {
-			"value": "The binary XML protocol. Allows the sending of binary information in valid XML. Example: <binary><byte><zero/><one/><one/><zero/><one/><zero/><zero/></one/></byte></binary>",
-			"popularity": 1
+			"value": "The binary XML protocol. Allows the sending of binary information in valid XML. Example: <binary><byte width=\"8\"><zero/><one/><one/><zero/><one/><zero/><zero/></one/></byte></binary>"
 		},
 		"sadtrombone": {
-			"value": "[Wah wah wah wahhhhhhhh](http://www.sadtrombone.com)",
-			"popularity": 0
+			"value": "[Wah wah wah wahhhhhhhh](http://www.sadtrombone.com)"
+		},
+		"firefly": {
+			"value": "Lazy as hell. Email: firefly@firefly.nu :: Timezone: UTC+1"
+		},
+		"maniacle laugh": {
+			"value": "muahhahahahahaha... *snicker*"
+		},
+		"screenshot": {
+			"value": "Screenshots! (or it didn't happen)"
+		},
+		"opera": {
+			"value": "O-wha-huh? 'opera' is not recognized. See !commands for a list of commands."
+		},
+		"o/": {
+			"value": "o/ ⃰"
+		},
+		"\\o": {
+			"value": "o/ ⃰\\o"
+		},
+		"cock": {
+			"value": "cock → elliottcable"
+		},
+		"cable": {
+			"value": "< devyn> cable is the shiz"
+		},
+		"elliottcable..notes..jane": {
+			"value": "responds well to physical affection. experiment with increased application."
+		},
+		"boobs": {
+			"value": "<http://pawschan.tumblr.com/post/7609154795/boobs>"
+		},
+		"ujd": {
+			"value": "UNIX/Julian Date (more info: http://yreality.net/UJD)"
+		},
+		"judofyr": {
+			"value": "http://judofyr.net (b‐sol: 323 ſ)"
+		},
+		"typetips": {
+			"value": "Like tooltips, except for showing the data type of a variable in your source code. You can roll over any identifier and see what it is."
 		},
 		"nope": {
-			"value": "http://www.youtube.com/watch?v=gvdf5n-zI14"
+			"value": "http://youtu.be/gvdf5n-zI14"
 		},
 		"yeah": {
 			"value": "http://www.youtube.com/watch?v=H6OtFKNDPUc&feature=related"
@@ -217,17 +234,107 @@
 		"stack": {
 			"value": "what is an execution, if it is also a list? ⁓"
 		},
-		"elliottcable.note-to-self": {
-			"value": "buy a wig ⁓"
-		},
 		"jux": {
 			"value": "A juxtaposition handler execution in the Paws programming language."
 		},
-		"oftn-bot": {
-			"value": "Small African child who has been taught that responding to oftn-bot commands is all there is to life."
-		},
 		"jeannicolas": {
 			"value": "bewbs"
+		},
+		"yep": {
+			"alias": "yeah"
+		},
+		"yope": {
+			"alias": "yeah"
+		},
+		"things.that.are.not.done.in.paws": {
+			"value": "0) Distribution"
+		},
+		"done": {
+			"value": "Congratulations! But.. will it compile? :S"
+		},
+		":d": {
+			"value": "http://ell.io/qyy6"
+		},
+		"gggu": {
+			"value": "http://ell.io/gggu"
+		},
+		"fuck.my.shins": {
+			"value": "elliottcable is effectively Darth Vader. http://flickr.com/photos/elliottcable/sets/72157627098380256"
+		},
+		"challenge": {
+			"value": "The current challenge is to be one of the first to complete the im-Paws-sible task of creating a psuedo-language similar enough to Paws to pass muster. The reward for 1ˢᵗ place is $600, 2ⁿᵈ is $300, and 3ʳᵈ wins $150."
+		},
+		"sad": {
+			"value": "'sad' is not recognized. I am a soulless robot. See !commands for a list of commands."
+		},
+		"elliottcable": {
+			"value": "elliottcable created the Paws project, and Paws’ nuclear linguistic semantics. <http://ell.io/tt> [Paws.c, Paws.js, P₃, Fullness] (b‐sol: 7 161 ſ)"
+		},
+		"pants": {
+			"value": "<http://pawschan.tumblr.com/post/5667000801>"
+		},
+		"offtopic": {
+			"value": "→ ##Paws, off‐topic :3"
+		},
+		"ontopic": {
+			"value": "→ #Paws.Nucleus, on‐topic :3"
+		},
+		"doctype": {
+			"value": "The standard ΩF:∅ DOCTYPE is <!DOCTYPE html>"
+		},
+		"i lied": {
+			"value": "When elliottcable says “I lied,” it usually means he fucked up. #secret"
+		},
+		"prophile": {
+			"value": "? [\\1] (b‐sol: 7 730 ſ)"
+		},
+		"devyn": {
+			"value": "? (???) (b‐sol: 9 648 ſ)"
+		},
+		"elliott": {
+			"alias": "elliottcable"
+		},
+		"ec": {
+			"alias": "elliottcable"
+		},
+		"devin": {
+			"alias": "eboyjr"
+		},
+		"user factoids": {
+			"value": "Format: \"Information <URIs> [Projects] (extraneous data)\" extraneous data, colonspace-assigned, commaspace-separated"
+		},
+		"lame": {
+			"value": "you're lame :("
+		},
+		"dp": {
+			"value": "DOUBLE PENETRATION!!!"
+		},
+		"derp": {
+			"alias": "sephr"
+		},
+		"jew": {
+			"value": "JEW JEW JEW JULIA JEW JEWOWAH JEW JEW-DEE JEW JEW-UH! http://ell.io/7WhD"
+		},
+		"what the fucking fuck": {
+			"value": "ʕ•̫͡•ʕ*̫͡*ʕ•͓͡•ʔ-̫͡-ʕ•̫͡•ʔ*̫͡*ʔ-̫͡-ʔ"
+		},
+		"pornfast": {
+			"value": "Porn-fast! It’s like breakfast except … made of porn!"
+		},
+		"xyzzy": {
+			"value": "Nothing happens"
+		},
+		"berri": {
+			"value": "berri is … berri! <http://berryx.com/> (b‐sol: 8 861 ſ)"
+		},
+		"paws viewer": {
+			"value": "Paws source code viewer from PawsMonkey by eboyjr: <http://eboyjr.oftn.org:8080/files/source/paws-monkey/demo/>"
+		},
+		"halp": {
+			"value": "Hey smart people, HALP! elliottcable, battlecollie, micahjohnston"
+		},
+		"common": {
+			"value": "ΩF:∅ 'common' repository: <https://github.com/oftn/common/>"
 		}
 	}
 }

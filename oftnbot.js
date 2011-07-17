@@ -6,25 +6,35 @@ var path = require("path");
 var querystring = require('querystring');
 
 var Bot = require("./lib/irc");
+var Client = require("./lib/irc/client");
 
 var Sandbox = require("./lib/sandbox");
 var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
-var Spelling = require("./lib/spelling");
+
+var Shared = require("./shared");
 
 
 var ΩF_0Bot = function(profile) {
+	Bot.call(this, profile);
+	
 	this.sandbox = new Sandbox(path.join(__dirname, "oftnbot-utils.js"));
 	this.factoids = new FactoidServer(path.join(__dirname, "oftnbot-factoids.json"));
 
-	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
 	this.set_trigger("!"); // Exclamation
 	
 	this.start_github_server(9370);
 	this.github_context = null;
 	
-	this.spelling = new Spelling(fs.readFileSync("/usr/share/dict/american-english-small", "ascii"));
+	this.second = new Client({
+		name: "Second",
+		host: "208.71.169.36",//"irc.freenode.net",
+		nick: "oftn-bot2",
+		user: "oftn-bot",
+		real: "The official ΩF:0 bot.",
+	});
+	this.second.connect();
 };
 
 
@@ -33,14 +43,14 @@ util.inherits(ΩF_0Bot, Bot);
 ΩF_0Bot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 
-	this.register_listener(/^((?:sm?|v8?|js?|>>?)>)([^>].*)+/, this.execute_js);
+	this.register_listener(/^((?:sm?|v8?|js?|>>?)>)([^>].*)+/, Shared.execute_js);
 	
-	this.register_command("topic", this.topic);
-	this.register_command("learn", this.learn, {allow_intentions: false});
-	this.register_command("forget", this.forget, {allow_intentions: false});
-	this.register_command("spell", this.spell);
-	this.register_command("commands", this.commands);
-	this.register_command("g", this.google);
+	this.register_command("topic", Shared.topic);
+	this.register_command("learn", Shared.learn, {allow_intentions: false});
+	this.register_command("forget", Shared.forget, {allow_intentions: false});
+	this.register_command("commands", Shared.commands);
+	this.register_command("g", Shared.google);
+	
 	this.register_command("do", function(context, text) {
 		
 		if (context.channel.userlist[context.sender.name].operator) {
@@ -59,92 +69,79 @@ util.inherits(ΩF_0Bot, Bot);
 			context.sender.notice("You must be an operator to use my !do command.");
 		}
 	}, {allow_intentions: false, hidden: true});
+	
+	this.countdown_timer = null;
 
-	this.register_command("countdown", function(cx, text) {
-		var arg = parseInt(text);
-		if (isNaN(arg)) { arg = 3; }
-		arg = Math.max(0, Math.min(arg, 5));
-		var i = setInterval(function() {
-			if (arg > 0) {
-				cx.channel.send(arg+"...");
+	this.register_command("countdown", function(context, text) {
+	
+		var length, decrement, self = this;
+		
+		if (text === "stop") { return clearInterval(this.countdown_timer); }
+		
+		length = parseFloat(text, 10);
+		decrement = length / (length | 0);
+		if (isNaN(length)) { length = 3; }
+		
+		length = Math.max(0, length);
+		
+		this.countdown_timer = setInterval(function() {
+			if (length > 0) {
+				context.channel.send(String((length*1000|0)/1000)+"...");
 			} else {
-				cx.channel.send("Go!");
-				clearInterval(i);
+				context.channel.send("Go!");
+				clearInterval(self.countdown_timer);
 			}
-			arg--;
+			length -= decrement;
 		}, 1000);
 	});
 	
-	this.register_command("ping", function(cx) {
-		var millisecs = Math.random()*3600000|0;
-		setTimeout(function() {
-			cx.channel.send_reply(cx.sender, "Ping took "+(millisecs/1000|0)+" seconds");
-		}, millisecs);
+	this.on('invite', function(user, channel) {
+		channel.join();
 	});
 	
-	this.register_command("lag", function(cx) {
-		var lag_time = cx.client.lag_time;
-		cx.channel.send_reply(cx.intent, "Current lag time is: " + (lag_time/1000) + " seconds.");
-	});
-	
-	this.on('command_not_found', this.command_not_found);
+	this.on('command_not_found', Shared.find);
 	
 	this.on('connect', function(client) {
 		this.github_context = client;
 	});
 	
-	
-	var queue = [];
+	this.queue = [];
 	this.register_command("queue", function(context, text) {
-		var command, match, reply, arraymethod;
-		
-		try {
-			match = text.match(/(\w+)\s*(.*)/);
-			if (!match) {
-				throw new SyntaxError(this.get_command_help("queue"));
-			}
-			
-			command = match[1];
-			text = match[2];
-			
-			switch (command) {
-			case "prefix":
-			case "affix":
-				arraymethod = (command === "prefix") ? "unshift" : "push";
-				queue[arraymethod]([context.sender, text]);
-				break;
-				
-			case "unprefix":
-			case "unaffix":
-				arraymethod = (command === "unprefix") ? "shift" : "pop";
-				reply = queue[arraymethod]();
-				if (reply) {
-					context.channel.send_reply (
-						context.intent, "<"+reply[0].name+"> "+reply[1]);
-				} else {
-					throw new Error("The queue is empty.");
-				}
-				break;
-			default:
-				throw new SyntaxError(this.get_command_help("queue"));
-			}
-			
-		} catch(error) {
-			context.channel.send_reply (context.sender, error);
+		this.queue.push([context.sender, text]);
+	});
+	this.register_command("dequeue", function(context, text) {
+		var item = (text !== "peek") ? this.queue.shift() : this.queue[0];
+		if (item) {
+			context.channel.send ("<"+item[0].name+"> "+item[1]);
+		} else {
+			context.channel.send_reply (context.sender, "The queue is empty.");
 		}
-	}, {help: "Simple queue for IRC text. Usage: !queue prefix <text>, !queue unprefix, !queue affix <text>, !queue unaffix"});
+	});
 	
-};
+	this.queue = {};
+	this.register_command("queue", function(context, text) {
+		var who = context.intent.name;
+		if (!this.queue[who]) this.queue[who] = [];
+		this.queue[who].push([context.sender, text]);
+	});
+	this.register_command("dequeue", function(context, text) {
+		var who = context.intent.name;
+		if (!this.queue[who]) this.queue[who] = [];
+		var item = (text == "peek") ? this.queue[who][0] : this.queue[who].shift();
+		if (item) {
+			context.channel.send_reply (context.intent, "<"+item[0].name+"> "+item[1]);
+		} else {
+			context.channel.send_reply (context.sender, "The queue is empty.");
+		}
+	});
+	
+	
+	this.register_command("sayas", function(context, text) {
+		var who = text.split(/\s+/g)[0];
+		Client.prototype.nick.call(this.second, who);
+		this.second.get_channel("##Paws").send(text.substr(who.length).trim());
+	});
 
-
-ΩF_0Bot.prototype.parse_regex_literal = function(text) {
-	var regexparsed = text.match(/s\/((?:[^\\\/]|\\.)*)\/((?:[^\\\/]|\\.)*)\/([gi]*)$/);
-	if (!regexparsed) {
-		throw new SyntaxError("Syntax is `s/expression/replacetext/gi`.");
-	}
-
-	var regex = new RegExp(regexparsed[1], regexparsed[3]);
-	return [regex, regexparsed[2].replace(/\\\//g, '/')];
 };
 
 
@@ -191,184 +188,6 @@ util.inherits(ΩF_0Bot, Bot);
 	util.puts("Github server running at port: "+port);
 };
 
-ΩF_0Bot.prototype.google = function(cx, text) {
-	FeelingLucky(text, function(data) {
-		if (data) {
-			cx.channel.send_reply (cx.intent, 
-				"\x02"+data.title+"\x0F \x032<"+data.url+">\x0F", {color: true});
-		} else {
-			cx.channel.send_reply (cx.sender, "No search results found.");
-		}
-	});
-};
-
-
-ΩF_0Bot.prototype.execute_js = function(cx, text, command, code) {
-	var engine;
-	switch (command) {
-	case ">>>":
-	case "v>":
-	case "v8>":
-		engine = Sandbox.V8; break;
-	default:
-		engine = Sandbox.SpiderMonkey; break;
-	}
-	this.sandbox.run(engine, 2000, code, function(result) {
-		var reply;
-
-		try {
-			/* If theres an error, show that.
-			   If not, show the type along with the result */
-			if (result.error !== null) {
-				reply = result.error;
-			} else {
-				if (result.data.type !== "undefined") {
-					reply = (result.data.obvioustype ? "" :
-						"("+result.data.type+") ") + result.result;
-				} else {
-					reply = "undefined";
-				}
-			}
-			
-			if (Array.isArray(result.data.console) && result.data.console.length) {
-				// Add console log output
-				reply += "; Console: "+result.data.console.join(", ");
-			}
-
-			cx.channel.send_reply(cx.intent, reply, {truncate: true});
-		} catch (e) {
-			cx.channel.send_reply(
-				cx.intent, "Unforeseen Error: "+e.name+": "+e.message);
-		}
-	}, this);
-};
-
-
-ΩF_0Bot.prototype.topic = function(cx, text) {
-	try {
-		if (text) {
-			var regexinfo = this.parse_regex_literal(text);
-			var regex = regexinfo[0];
-		
-			var topic = cx.channel.topic.replace(regex, regexinfo[1]);
-			if (topic === cx.channel.topic) throw new Error("Nothing changed.");
-		
-			cx.client.get_user("ChanServ").send("TOPIC "+cx.channel.name+" "+topic.replace(/\n/g, ''));
-			//cx.channel.set_topic(topic);
-		} else {
-			cx.channel.send_reply(cx.intent, cx.channel.topic);
-		}
-	} catch (e) {
-		cx.channel.send_reply(cx.sender, e);
-	}
-};
-
-
-ΩF_0Bot.prototype.learn = function(cx, text) {
-
-	try {
-		var parsed = text.match(/^(alias)?\s*(.+?)\s*(=~?)\s*(.+)$/i);
-		if (!parsed) {
-			throw new SyntaxError(
-				"Syntax is `learn ( [alias] foo = bar | foo =~ s/expression/replace/gi )`.");
-		}
-
-		var alias = !!parsed[1];
-		var factoid = parsed[2];
-		var operation = parsed[3];
-		var value = parsed[4];
-
-		if (alias) {
-			var key = this.factoids.alias(factoid, value);
-			cx.channel.send_reply(cx.sender,
-				"Learned `"+factoid+"` => `"+key+"`.");
-			return;
-		}
-
-		/* Setting the text of a factoid */ 
-		if (operation === "=") {
-			this.factoids.learn(factoid, value);
-			cx.channel.send_reply(cx.sender, "Learned `"+factoid+"`.");
-			return;
-
-		/* Replacing the text of a factoid based on regular expression */
-		} else if (operation === "=~") {
-			var regexinfo = this.parse_regex_literal (value);
-			var regex = regexinfo[0];
-			var old = this.factoids.find(factoid, false);
-			var result = old.replace(regex, regexinfo[1]);
-
-			if (old === result) {
-				cx.channel.send_reply(cx.sender, "Nothing changed.");
-			} else {
-				this.factoids.learn(factoid, result);
-				cx.channel.send_reply(cx.sender, "Changed `"+factoid+
-					"` to: "+result);
-			}
-			return;
-
-		}
-
-	} catch (e) {
-		cx.channel.send_reply(cx.sender, e);
-	}
-};
-
-
-ΩF_0Bot.prototype.forget = function(cx, text) {
-	try {
-		this.factoids.forget(text);
-		cx.channel.send_reply(cx.sender, "Forgot '"+text+"'.");
-	} catch(e) {
-		cx.channel.send_reply(cx.sender, e);
-	}
-};
-
-
-ΩF_0Bot.prototype.commands = function(cx, text) {
-	var commands = this.get_commands();
-	var trigger = this.__trigger;
-	cx.channel.send_reply (cx.intent,
-		"Valid commands are: " + trigger + commands.join(", " + trigger));
-};
-
-
-ΩF_0Bot.prototype.spell = function(cx, text) {
-	if (text) {
-		text = text.split(/\s+/)[0];
-		var correct = this.spelling.correct(text);
-		if (correct === true) {
-			cx.channel.send_reply (cx.intent, text + " is a word.");
-		} else if (correct === null) {
-			cx.channel.send_reply (cx.intent, "Not found.");
-		} else {
-			cx.channel.send_reply (cx.intent, correct.join(", "));
-		}
-	} else {
-		cx.channel.send_reply (cx.sender, "Usage: !spell werd");
-	}
-};
-
-
-ΩF_0Bot.prototype.command_not_found = function(cx, text) {
-
-	try {
-		cx.channel.send_reply(cx.intent, this.factoids.find(text, true));
-	} catch(e) {
-		console.log(e.name, e.message);
-	
-		var reply = ["'"+text+"' is not recognized."],
-		    found = this.factoids.search(text);
-		
-		if (found.length) {
-			if (found.length > 1) found[found.length-1] = "or "+found[found.length-1];
-			reply.push("Did you mean: "+found.join(", ")+"?");
-		}
-		
-		reply.push("See !commands for a list of commands.");
-		cx.channel.send_reply(cx.intent, reply.join(" "));
-	}
-};
 
 var profile = require("./oftnbot-profile.js");
 new ΩF_0Bot(profile).init();

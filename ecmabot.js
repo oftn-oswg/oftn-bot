@@ -1,17 +1,19 @@
-var File = require('fs');
-var Path = require('path');
-var Util = require("util");
-var HTTP = require("http");
+var file = require('fs');
+var path = require('path');
+var util = require("util");
+var http = require("http");
+
 var Sandbox = require("./lib/sandbox");
 var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
 
 var Bot = require("./lib/irc");
+var Shared = require("./shared");
 
 
 var JSBot = function(profile) {
-	this.sandbox = new Sandbox(Path.join(__dirname, "ecmabot-utils.js"));
-	this.factoids = new FactoidServer(Path.join(__dirname, "ecmabot-factoids.json"));
+	this.sandbox = new Sandbox(path.join(__dirname, "ecmabot-utils.js"));
+	this.factoids = new FactoidServer(path.join(__dirname, "ecmabot-factoids.json"));
 
 	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
@@ -19,20 +21,20 @@ var JSBot = function(profile) {
 };
 
 
-Util.inherits(JSBot, Bot);
+util.inherits(JSBot, Bot);
 
 
 JSBot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 	
-	this.register_listener(/^((?:sm?|v8?|js?|>>?)>)([^>].*)+/, this.execute_js);
+	this.register_listener(/^((?:sm?|v8?|js?|>>?)>)([^>].*)+/, Shared.execute_js);
 	
 	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
 	
 	this.register_listener(/\bi(?:\u0027| wi)?ll try\b/i,
 		this.there_is_no_try);
 	
-	this.register_command("g", this.g, {
+	this.register_command("g", Shared.google, {
 		help: "Run this command with a search query to return the first Google result. Usage: !g kitten images"});
 	
 	this.register_command("google", this.google, {
@@ -48,42 +50,24 @@ JSBot.prototype.init = function() {
 	this.register_command("re", this.re, {
 		help: "Usage: !re Your text here /expression/gi || FLAGS: (g: global match, i: ignore case)"});
 	
-	this.register_command("find", this.find);
+	this.register_command("find", Shared.find);
 	
 	this.register_command("help", this.help);
 	
-	this.register_command("learn", this.learn, {
+	this.register_command("learn", Shared.learn, {
 		allow_intentions: false,
 		help: "Add factoid to bot. Usage: !learn ( [alias] foo = bar | foo =~ s/expression/replace/gi )"});
 		
-	this.register_command("forget", this.forget, {
+	this.register_command("forget", Shared.forget, {
 		allow_intentions: false,
 		help: "Remove factoid from bot. Usage: !forget foo"});
 	
-	this.register_command("commands", this.commands);
+	this.register_command("commands", Shared.commands);
 	
 	this.on('command_not_found', this.command_not_found);
 	
 	this.load_ecma_ref();
 	
-};
-
-
-JSBot.prototype.g = function(context, text) {
-
-	if (!text) {
-		context.channel.send_reply (context.sender, this.get_command_help("g"));
-		return;
-	}
-	
-	FeelingLucky(text, function(data) {
-		if (data) {
-			context.channel.send_reply (context.intent, 
-				"\x02"+data.title+"\x0F \x032<"+data.url+">\x0F", {color: true});
-		} else {
-			context.channel.send_reply (context.sender, "No search results found.");
-		}
-	});
 };
 
 
@@ -131,58 +115,6 @@ JSBot.prototype.do_beers = function(context, text, nick, operation) {
 };
 
 
-JSBot.prototype.execute_js = function(context, text, command, code) {
-	var engine;
-	
-	/* This should be temporary. */
-	if (!context.priv) {
-		if (command === "v8>" && context.channel.userlist["v8bot"]) {
-			return;
-		}
-		if (command === "js>" && context.channel.userlist["gbot2"]) {
-			return;
-		}
-	}
-	
-	switch (command) {
-	case ">>>":
-	case "v>":
-	case "v8>":
-		engine = Sandbox.V8; break;
-	default:
-		engine = Sandbox.SpiderMonkey; break;
-	}
-	this.sandbox.run(engine, 2000, code, function(result) {
-		var reply;
-
-		try {
-			/* If theres an error, show that.
-			   If not, show the type along with the result */
-			if (result.error !== null) {
-				reply = result.error;
-			} else {
-				if (result.data.type !== "undefined") {
-					reply = (result.data.obvioustype ? "" :
-						"("+result.data.type+") ") + result.result;
-				} else {
-					reply = "undefined";
-				}
-			}
-			
-			if (Array.isArray(result.data.console) && result.data.console.length) {
-				// Add console log output
-				reply += "; Console: "+result.data.console.join(", ");
-			}
-
-			context.channel.send_reply(context.intent, reply, {truncate: true});
-		} catch (e) {
-			context.channel.send_reply(
-				context.intent, "Unforeseen Error: "+e.name+": "+e.message);
-		}
-	}, this);
-};
-
-
 JSBot.prototype.re = function(context, msg) {
 	// Okay first we need to check for the regex literal at the end
 	// The regular expression to match a real js regex literal
@@ -219,107 +151,6 @@ JSBot.prototype.re = function(context, msg) {
 };
 
 
-JSBot.prototype.parse_regex_literal = function(text) {
-	var regexparsed = text.match(/s\/((?:[^\\\/]|\\.)*)\/((?:[^\\\/]|\\.)*)\/([gi]*)$/);
-	if (!regexparsed) {
-		throw new SyntaxError("Syntax is `s/expression/replacetext/gi`.");
-	}
-
-	var regex = new RegExp(regexparsed[1], regexparsed[3]);
-	return [regex, regexparsed[2].replace(/\\\//g, '/')];
-};
-
-
-JSBot.prototype.learn = function(context, text, command) {
-
-	try {
-		var parsed = text.match(/^(alias)?\s*(.+?)\s*(=~?)\s*(.+)$/i);
-		if (!parsed) {
-			return context.channel.send_reply(context.sender, this.get_command_help(command));
-		}
-
-		var alias = !!parsed[1];
-		var factoid = parsed[2];
-		var operation = parsed[3];
-		var value = parsed[4];
-
-		if (alias) {
-			var key = this.factoids.alias(factoid, value);
-			context.channel.send_reply(context.sender,
-				"Learned `"+factoid+"` => `"+key+"`.");
-			return;
-		}
-
-		/* Setting the text of a factoid */ 
-		if (operation === "=") {
-			this.factoids.learn(factoid, value);
-			context.channel.send_reply(context.sender, "Learned `"+factoid+"`.");
-			return;
-
-		/* Replacing the text of a factoid based on regular expression */
-		} else if (operation === "=~") {
-			var regexinfo = this.parse_regex_literal (value);
-			var regex = regexinfo[0];
-			var old = this.factoids.find(factoid, false);
-			var result = old.replace(regex, regexinfo[1]);
-
-			if (old === result) {
-				context.channel.send_reply(context.sender, "Nothing changed.");
-			} else {
-				this.factoids.learn(factoid, result);
-				context.channel.send_reply(context.sender, "Changed `"+factoid+
-					"` to: "+result);
-			}
-			return;
-
-		}
-
-	} catch (e) {
-		context.channel.send_reply(context.sender, e);
-	}
-};
-
-
-JSBot.prototype.forget = function(context, text, comment) {
-
-	if (!text) {
-		return context.channel.send_reply(context.sender, this.get_command_help(command));
-	}
-	
-	try {
-		this.factoids.forget(text);
-		context.channel.send_reply(context.sender, "Forgot '"+text+"'.");
-	} catch(e) {
-		context.channel.send_reply(context.sender, e);
-	}
-};
-
-JSBot.prototype.commands = function(context, text) {
-	var commands = this.get_commands();
-	var trigger = this.__trigger;
-	context.channel.send_reply (context.intent,
-		"Valid commands are: " + trigger + commands.join(", " + trigger));
-};
-
-
-JSBot.prototype.find = function(context, text) {
-
-	try {
-		context.channel.send_reply(context.intent, this.factoids.find(text, true));
-	} catch(e) {
-		var reply = ["No factoid/command named `"+text+"`."],
-		    found = this.factoids.search(text);
-		
-		if (found.length) {
-			if (found.length > 1) found[found.length-1] = "or "+found[found.length-1];
-			reply.push("Did you mean: "+found.join(", ")+"?");
-		}
-		
-		reply.push("See !commands for a list of commands.");
-		context.channel.send_reply(context.sender, reply.join(" "));
-	}
-};
-
 
 JSBot.prototype.help = function(context, text) {
 
@@ -337,10 +168,10 @@ JSBot.prototype.help = function(context, text) {
 
 JSBot.prototype.mdn = function(context, text, command) {
 	if (!text) {
-		return this.command_not_found (context, command);
+		return Shared.find (context, command);
 	}
 
-	this.g (context, "site:developer.mozilla.org "+text);
+	Shared.google (context, "site:developer.mozilla.org "+text);
 };
 
 
@@ -390,21 +221,21 @@ JSBot.prototype.ecma = function(context, text) {
 
 
 JSBot.prototype.load_ecma_ref = function() {
-	var filename = Path.join(__dirname, "ecmabot-reference.json");
-	Util.puts("Loading ECMA-262 reference...");
+	var filename = path.join(__dirname, "ecmabot-reference.json");
+	util.puts("Loading ECMA-262 reference...");
 	var bot = this;
-	File.readFile(filename, function (err, data) {
-		if (err) Util.puts(Util.inspect(err));
+	file.readFile(filename, function (err, data) {
+		if (err) util.puts(util.inspect(err));
 		try {
 			bot.ecma_ref = JSON.parse(data);
 		} catch (e) {
-			Util.puts("ECMA-262 Error: "+e.name+": "+e.message);
+			util.puts("ECMA-262 Error: "+e.name+": "+e.message);
 		}
 	});
 	if (typeof this.ecma_ref_watching === "undefined") {
 		this.ecma_ref_watching = true;
-		File.watchFile(filename, function (curr, prev) {
-			Util.puts("ECMA-262 reference file has changed.");
+		file.watchFile(filename, function (curr, prev) {
+			util.puts("ECMA-262 reference file has changed.");
 			bot.load_ecma_ref();
 		});
 	}

@@ -434,6 +434,9 @@
 		},
 		"usage": {
 			"value": "You may use me to run tiny JavaScript snippets. I will execute your code and show you the result of the last statement. You may also use the console functions like console.log, console.time, and console.timeEnd. Use `>>` to execute with SpiderMonkey and `>>>` to execute with V8."
+		},
+		"sex": {
+			"value": "[~sex] updatedb; locate; talk; date; cd; strip; look; touch; finger; unzip; uptime; gawk; head; emerge --oneshot condom; mount; fsck; gasp; more; yes; yes; yes; more; umount; emerge -C condom; make clean;  sleep;"
 		}
 	}
 }
