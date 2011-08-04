@@ -79,6 +79,10 @@ var Shared = module.exports = {
 	},
 	
 	learn: function(context, text) {
+	
+		if (!context.priv) {
+			return context.channel.send_reply(context.sender, "Must PM the bot to learn factoids");
+		}
 
 		try {
 			var parsed = text.match(/^(alias)?\s*(.+?)\s*(=~?)\s*(.+)$/i);
@@ -149,38 +153,61 @@ var Shared = module.exports = {
 	find: function(context, text) {
 
 		try {
-			context.channel.send_reply(context.intent, this.factoids.find(text, true));
+			context.channel.send_reply(context.intent, this.factoids.find(text, true), {color: true});
 		} catch(e) {
 		
-			var reply = ["'"+text+"' is not recognized."],
+			var reply = ["Could not find `"+text+"`."],
 				found = this.factoids.search(text);
 		
+			found = found.map(function(item) {
+				return "\x033"+item+"\x0F";
+			});
+			
 			if (found.length) {
-				if (found.length > 1) found[found.length-1] = "or "+found[found.length-1];
-				reply.push("Did you mean: "+found.join(", ")+"?");
+				reply = ["Found:"];
+				if (found.length > 1) found[found.length-1] = "and "+found[found.length-1];
+				reply.push(found.join(found.length-2 ? ", " : " "));
 			}
-		
-			reply.push("See " + this.__trigger + "commands for a list of commands.");
-			context.channel.send_reply(context.intent, reply.join(" "));
+			
+			context.channel.send_reply(context.intent, reply.join(" "), {color: true});
 		}
 	},
 	
 	topic: function(context, text) {
+	
 		try {
+		
 			if (text) {
+	
+				if (text === "revert") {
+					var oldtopic = context.channel.oldtopic;
+					if (oldtopic) {
+						set_topic (oldtopic);
+						return;
+					} else {
+						throw new Error("No topic to revert to.");
+					}
+				}
+				
 				var regexinfo = parse_regex_literal(text);
 				var regex = regexinfo[0];
 		
 				var topic = context.channel.topic.replace(regex, regexinfo[1]);
 				if (topic === context.channel.topic) throw new Error("Nothing changed.");
 		
-				context.client.get_user("ChanServ").send("TOPIC "+context.channel.name+" "+topic.replace(/\n/g, ''));
+				set_topic (topic.replace(/\n/g, ' '));
 				//context.channel.set_topic(topic);
 			} else {
 				context.channel.send_reply(context.intent, context.channel.topic);
 			}
 		} catch (e) {
 			context.channel.send_reply(context.sender, e);
+		}
+		
+		function set_topic (topic) {
+			context.channel.oldtopic = context.channel.topic;
+			context.client.get_user("ChanServ")
+				.send("TOPIC "+context.channel.name+" "+topic);
 		}
 	}
 
