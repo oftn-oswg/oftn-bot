@@ -28,7 +28,7 @@ var Shared = module.exports = {
 	
 	
 	execute_js: function(context, text, command, code) {
-		var engine;
+		var engine, person = context.sender;
 	
 		/* This should be temporary. */
 		if (!context.priv) {
@@ -41,6 +41,10 @@ var Shared = module.exports = {
 		}
 	
 		switch (command) {
+		case "|>": /* Multi-line input */
+			person.js = person.js || {timeout: null, code: []};
+			person.js.code.push (code);
+			return;
 		case ">>>":
 		case "v>":
 		case "v8>":
@@ -48,6 +52,13 @@ var Shared = module.exports = {
 		default:
 			engine = Sandbox.SpiderMonkey; break;
 		}
+
+		if (person.js && person.js.code.length) {
+			code = person.js.code.join("\n") + "\n" + code;
+			person.js.code.length = 0;
+			clearTimeout (person.js.timeout);
+		}
+
 		this.sandbox.run(engine, 2000, code, function(result) {
 			var reply;
 

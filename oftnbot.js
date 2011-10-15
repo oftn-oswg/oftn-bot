@@ -14,6 +14,7 @@ var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
 
 var Shared = require("./shared");
+var Profile = require("./oftnbot-profile");
 
 String.prototype.repeat = function(i) {
 	var d = '', t = this;
@@ -47,9 +48,7 @@ util.inherits(ΩF_0Bot, Bot);
 ΩF_0Bot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 
-	this.register_listener(/^((?:sm?|v8?|js?|>>?)>)([^>].*)+/, Shared.execute_js);
-	this.register_listener(/^::(.*)/, this.execute_paws);
-	
+	this.register_listener(/^((?:sm?|v8?|js?|>>?|\|)>)([^>].*)+/, Shared.execute_js);
 	this.register_command("topic", Shared.topic);
 	this.register_command("find", Shared.find);
 	this.register_command("learn", Shared.learn, {allow_intentions: false});
@@ -57,9 +56,7 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("commands", Shared.commands);
 	this.register_command("g", Shared.google);
 
-	this.register_command("sol", this.sol);
-	
-	this.password = "I solemnly swear that I am up to no good.";
+	this.password = "I solemnly swear that I am up to no evil";
 	
 	this.register_command("access", function(context, text) {
 		if (context.priv && text === this.password) {
@@ -70,17 +67,6 @@ util.inherits(ΩF_0Bot, Bot);
 		}
 	}, {hidden: true});
 
-	this.register_command("best", function(context, text) {
-		text = text.toUpperCase();
-		var word = text.match(/[\s\x0F]*(\w+)$/);
-		if (word) {
-			word = word[1];
-		} else {
-			word = text;
-		}
-		context.channel.send (text.replace(/\s+/g, '') + " IS BEST"+word);
-	});
-	
 	this.register_listener(/^\x0F\x0F(.+)/, function(context, text, code) {
 			var result;
 			
@@ -117,26 +103,21 @@ util.inherits(ΩF_0Bot, Bot);
 	
 		var length, decrement, self = this;
 		
-		if (text === "stop") {
-			return clearInterval(this.countdown_timer);
+		clearInterval(this.countdown_timer);
+		
+		length = 3;
+		
+		if (text !== "stop") { 
+			this.countdown_timer = setInterval(function() {
+				if (length) {
+					context.channel.send(String(length+"..."));
+				} else {
+					context.channel.send("Go!");
+					clearInterval(self.countdown_timer);
+				}
+				length--;
+			}, 1000);
 		}
-		
-		length = parseFloat(text, 10);
-		if (isNaN(length)) { length = 3; }
-		
-		decrement = length / Math.abs(Math.round(length));
-		if (!isFinite(decrement)) decrement = length;
-		
-		clearInterval (this.countdown_timer);
-		this.countdown_timer = setInterval(function() {
-			if (length > 0.1 || length < -0.1) {
-				context.channel.send(String((length*1000|0)/1000)+"...");
-			} else {
-				context.channel.send("Go!");
-				clearInterval(self.countdown_timer);
-			}
-			length -= decrement;
-		}, 1000);
 	});
 	
 	this.on('invite', function(user, channel) {
@@ -149,76 +130,35 @@ util.inherits(ΩF_0Bot, Bot);
 		this.github_context = client;
 	});
 	
-	this.queue = [];
-	this.register_command("queue", function(context, text) {
-		this.queue.push([context.sender, text]);
-	});
-	this.register_command("dequeue", function(context, text) {
-		var item = (text !== "peek") ? this.queue.shift() : this.queue[0];
-		if (item) {
-			context.channel.send ("<"+item[0].name+"> "+item[1]);
-		} else {
-			context.channel.send_reply (context.sender, "The queue is empty.");
-		}
-	});
-	
-	this.queue = {};
-	this.register_command("queue", function(context, text) {
-		var who = context.intent.name;
-		if (!this.queue[who]) this.queue[who] = [];
-		this.queue[who].push([context.sender, text]);
-	});
-	this.register_command("dequeue", function(context, text) {
-		var who = context.intent.name;
-		if (!this.queue[who]) this.queue[who] = [];
-		var item = (text == "peek") ? this.queue[who][0] : this.queue[who].shift();
-		if (item) {
-			context.channel.send_reply (context.intent, "<"+item[0].name+"> "+item[1]);
-		} else {
-			context.channel.send_reply (context.sender, "The queue is empty.");
-		}
-	});
-	
-	this.register_listener(/^::/, function(c) {
-		c.channel.send_reply(c.intent,
-			"Paws code executed sucessfully. (no output)");
-	});
-	
-	
-	var kicked = {};
-	
-	this.register_command ("kick", function(context, text) {
-		var channel = context.channel, userlist, client = context.client;
-	
-		if (context.priv) {
-			return channel.send_reply (context.sender, "Must be in the channel to !kick.");
-		}
-		
-		if (kicked[context.sender.name] === text.toLowerCase())
-			return channel.send_reply (context.sender, "Thou shall not seeketh revenge.");
-	
-		userlist = channel.userlist;
-		if (text.toLowerCase () === "everyone") {
-			return channel.send_reply (context.sender, "Ha! Do I *look* like alexgordon?");
-		} else if (userlist.hasOwnProperty(text)) {
-			kicked[text.toLowerCase()] = context.sender.name;
-			client.raw (
-				"KICK "+context.channel.name+" "+text+
-				" :Probably because you were being an idiot.");
-		} else {
-			return channel.send_reply (context.sender, "No one named `"+text+"` in the channel.");
-		}
-	});
-	
-	
-	this.register_command("twister", function(context) {
-		context.channel.send(
-			rand(["Left ", "Right "]) +
-			rand(["foot on ", "hand on "]) +
-			rand(["red!", "yellow!", "green!", "blue!"]));
-		
-		function rand(a) {
-			return a[Math.random()*a.length|0];
+	this.register_command("choc", function(context) {
+		var userlist = context.channel.userlist;
+
+		try {
+			if (context.priv) throw new Error("Cannot use command in private.");
+
+			var authorized = ["alexgordon", "jeannicolas", "eboyjr", "locks"];
+			if (!~authorized.indexOf(context.sender.name)) {
+				throw new Error("You are not authorized to use this command.");
+			}
+
+			var client = http.createClient(80, "chocolatapp.com");
+			var request = client.request ("GET",
+				Profile.choc_invite,
+				{ "host": "chocolatapp.com" });
+
+			request.addListener("response", function(response) {
+				response.setEncoding("utf8");
+				var url = '';
+				response.addListener('data', function(data) { url += data; });
+				response.addListener('end', function() {
+					// Send url
+					context.channel.send_reply (context.intent, "An invite URL has been sent to you. Please check your private messages.");
+					context.intent.send (url);
+				});
+			});
+			request.end();
+		} catch (e) {
+			context.channel.send_reply (context.sender, e);
 		}
 	});
 
@@ -249,7 +189,10 @@ util.inherits(ΩF_0Bot, Bot);
 				var data = JSON.parse(json);
 				if (len = data.commits.length) {
 					for (var i = 0; i < len; i++) {
-						result.push("\x036* "+data.repository.name+"\x0F "+data.commits[i].message+" \x032<"+data.commits[i].url.slice(0, -33)+">\x0F\x031 "+data.commits[i].author.username+"\x0F");
+						var author = data.commits[i].author;
+						author = author.username || author.login || author.name || author.email;
+						var commitmsg = data.commits[i].message.replace(/[\r\n]/g, ' ').replace(/^(.{64}).+$/, '$1…');
+						result.push("\x036* "+data.repository.name+"\x0F "+commitmsg+" \x032<"+data.commits[i].url.slice(0, -33)+">\x0F\x0310 "+author+"\x0F");
 					}
 				}
 			} catch (e) {}
@@ -268,50 +211,6 @@ util.inherits(ΩF_0Bot, Bot);
 	util.puts("Github server running at port: "+port);
 };
 
-
-ΩF_0Bot.prototype.execute_paws = function(context, text, code) {
-	var Runtime = require("/home/eboyjr/paws-monkey/src/Runtime.js");
-	var Parser = require("/home/eboyjr/paws-monkey/src/Parser.js");
-	var AST = require("/home/eboyjr/paws-monkey/src/AST.js");
-	
-	var runtime = new Runtime;
-	var parser = new Parser(runtime, code.replace(/;/g, '\n'));
-	var ast;
-	
-	try {
-		context.channel.send_reply (context.intent, tree(parser.parse()), {color: true});
-	} catch (e) {
-		context.channel.send_reply (context.intent, String(e));
-	}
-	
-	
-	function tree (ast, stmt) {
-		var frag;
-		if (ast instanceof AST.Leaf) {
-			if (ast.value === "<a dog>") ast.value = "(A mutha fuckin' dog!)";
-			return "\x032\x1F"+ast.value+"\x0F";
-		}
-		
-		frag = [];
-	
-		for (var i = 0, len = ast.nodes.length; i < len; i++) {
-			frag.push(tree(ast.nodes[i], ast instanceof AST.Juxtaposition));
-		}
-		
-		if (ast instanceof AST.Juxtaposition) {
-		
-			return (stmt ? "\x033(\x0F" : "") +
-				frag.join(" ") +
-				(stmt ? "\x033)\x0F" : "");
-				
-		} else {
-			return "\x036{\x0F " + frag.join("; ") + " \x036}\x0F";
-		}
-	}
-
-};
-
-
 ΩF_0Bot.prototype.find = function(context, text) {
 
 	if (context.priv) {
@@ -325,53 +224,4 @@ util.inherits(ΩF_0Bot, Bot);
 	}
 };
 
-function Flags(text) {
-    var m = text.match(/^-([^ ]+)( (.+))?/);
-    if (m) {
-	var s = m[1].split("");
-	return {all: s, flags: s.reduce(function(o,i) { o[i] = true; return o; }, {}), args: m[2] ? m[3] : undefined};
-    } else {
-	return null;
-    }
-}
-
-ΩF_0Bot.prototype.sol = function (context, text) {
-    if (text) {
-	var f = Flags(text);
-	if (f) {
-	    if (f.flags.r && f.all.length == 2) {
-		if (f.flags.s && f.args) {
-		    // to relative gregorian from relative sol
-		    return context.channel.send_reply(context.intent, Sol.parseSol(f.args, false).toStupidString());
-		} else if (f.flags.g && f.args) {
-		    // to relative sol from relative gregorian
-		    return context.channel.send_reply(context.intent, Sol.parseStupid(f.args, false).toString());
-		}
-	    } else if (f.flags.a && f.all.length == 2) {
-		if (f.flags.s && f.args) {
-		    // add a relative UJD to the current time and return the result in gregorian time
-		    return context.channel.send_reply(context.intent, new Sol(new Sol().floating + Sol.parseSol(f.args).floating).toStupidString());
-		} else if (f.flags.g && f.args) {
-		    // add a relative gregorian time to the current time and return the result as a UJD
-		    return context.channel.send_reply(context.intent, new Sol(new Sol().floating + Sol.parseStupid(f.args).floating).toString());
-		}
-	    } else if (f.all.length == 1) {
-		if (f.flags.s && f.args) {
-		    // to absolute gregorian from absolute sol
-		    return context.channel.send_reply(context.intent, Sol.parseSol(f.args, true).toStupidString());
-		} else if (f.flags.g && f.args) {
-		    // to absolute sol from absolute gregorian
-		    return context.channel.send_reply(context.intent, Sol.parseStupid(f.args, true).toString());
-		}
-	    }
-	}
-	context.channel.send_reply(context.sender,
-				   "Usage: !sol [-s[ra] | -g[ra]]. -s: from UJD. -g: from Gregorian. -r: specify relativity. -a: add to current time.");
-    } else {
-	// current time in UJD
-	context.channel.send_reply(context.intent, new Sol().toString());
-    }
-};
-
-var profile = require("./oftnbot-profile.js");
-new ΩF_0Bot(profile).init();
+new ΩF_0Bot(Profile).init();

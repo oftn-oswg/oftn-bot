@@ -2,15 +2,16 @@
 	"wait": 30000,
 	"factoids": {
 		"number": {
-			"value": "Our official standard number is 9370. Our official standard non-standard number is 2."
+			"value": "Our unofficial standard number is 9370. Our official non-standard number is 2.",
+			"popularity": 4
 		},
 		"website": {
 			"value": "The ΩF:∅ website is a portal to all things ΩF:∅, and it is located at <http://oftn.org/>",
 			"popularity": 3
 		},
 		"projects": {
-			"value": "List of projects: !AndroIDE, !cencio, !signale, !suit, and !voice-search",
-			"popularity": 17
+			"value": "List of projects: !AndroIDE, !cencio, !coca, !signale, !suit, and !voice-search",
+			"popularity": 21
 		},
 		"voice-search": {
 			"value": "Voice Search is a Google Chrome extension that provides a method to search by speaking. https://github.com/oftn/voice-search/",
@@ -18,9 +19,6 @@
 		},
 		"organization": {
 			"alias": "oftn"
-		},
-		"corp": {
-			"alias": "corporation"
 		},
 		"people": {
 			"value": "The people associated with the ΩF:∅ Organization is listed at <http://oftn.org/people/>",
@@ -38,11 +36,11 @@
 		},
 		"eboyjr": {
 			"value": "Co-founder of ΩF:∅ and creator of the world's best Paws implementation [PawsMonkey, Cencio] (b‐sol: 8 719 ſ) He's also a black furry rapper.",
-			"popularity": 2
+			"popularity": 6
 		},
 		"collab": {
 			"value": "For real-time collaboration, we use Gobby 0.5. The server is eboyjr.oftn.org, run by eboyjr. If that's not available, we use <http://oftn.titanpad.com/>.",
-			"popularity": 5
+			"popularity": 7
 		},
 		"gobby": {
 			"alias": "collab"
@@ -66,7 +64,7 @@
 		},
 		"help": {
 			"value": "Use the `>>` command for the SpiderMonkey interpreter, and the `>>>` command for the V8 interpreter.",
-			"popularity": 15
+			"popularity": 18
 		},
 		"board": {
 			"value": "ΩF:∅ Foundation Board of Directors: cloudhead, eboyjr, sephr (2x), gkatsev, mynyml, inimino, drudge, and yrashk",
@@ -75,23 +73,20 @@
 		"ugt": {
 			"value": "Universal Greeting Time. Created in #mipslinux, it is a rule that states that whenever somebody enters an IRC channel it is always morning, and it is always late when the person leaves. The local time of any other people in the channel, including the greeter, is irrelevant. http://www.total-knowledge.com/~ilya/mips/ugt.html"
 		},
-		"love": {
-			"alias": "hate"
-		},
 		"etherpadjs": {
 			"value": "javascript:(function(){var a=location,b=/\\d+/.exec(a)[0],c=document.createElement,d=document,e=c.call(d,\"iframe\"),f=c.call(d,\"script\");f.src=a.origin+\"/ep/pad/export/\"+b+\"/latest?format=txt\",d.body.appendChild(e),e.style.display=\"none\",e.contentWindow.document.head.appendChild(f)})()",
 			"popularity": 4
 		},
 		"kirby": {
-			"value": "<(^_^<) <(^_^)> (>^_^)>",
-			"popularity": 1
+			"value": "<(^-^<) <(^-^)> (>^-^)>",
+			"popularity": 4
 		},
 		"recursion": {
 			"value": "See !recursion"
 		},
 		"test": {
-			"value": "Test failed.",
-			"popularity": 29
+			"value": "Error: Failure while printing test status.",
+			"popularity": 61
 		},
 		"specgen": {
 			"value": "Anolis <http://anolis.gsnedders.com/>",
@@ -99,27 +94,27 @@
 		},
 		"modes": {
 			"value": "<http://webtoman.com/opera/panel/ircdmodes.html>",
-			"popularity": 0
+			"popularity": 1
 		},
 		"cencio": {
 			"value": "A new, compiled programming language, designed to be easy, close to the system, and to support high-level features.",
-			"popularity": 0
+			"popularity": 1
 		},
 		"signale": {
-			"value": "A new thing to do stuff.. with an evented client/server architecture.",
-			"popularity": 0
+			"value": "An old thing to do stuff.. with an evented client/server architecture.",
+			"popularity": 1
 		},
 		"eli": {
 			"value": "http://eligrey.com/about",
 			"popularity": 2
 		},
 		"sephr": {
-			"value": "http://sephr.com/about",
-			"popularity": 4
+			"value": "http://sephr.com/about (also he's the CEO of ΩF:∅)",
+			"popularity": 10
 		},
 		"leaving": {
 			"value": "How horrible! I don't know what I'll do with myself without you, eboyjr or sephr!",
-			"popularity": 3
+			"popularity": 4
 		},
 		"androide": {
 			"value": "An IDE for Android. People working on it: sephr, gkatsev, and not eboyjr."
@@ -128,21 +123,17 @@
 			"value": "<http://webtoman.com/opera/panel/ircdmodes.html>",
 			"popularity": 0
 		},
-		"bot": {
-			"value": "elliottcable is a bot + + + + + does the robot <http://pawschan.tumblr.com/post/4967461441/bot>",
-			"popularity": 22
-		},
 		"hanlon's razor": {
 			"value": "Never attribute to malice that which is adequately explained by stupidity.",
 			"popularity": 0
 		},
 		"source": {
 			"value": "My source can be found at: <https://github.com/oftn/oftn-bot>",
-			"popularity": 2
+			"popularity": 3
 		},
 		"!": {
-			"value": "ikr!",
-			"popularity": 4
+			"value": "uh, i know right!",
+			"popularity": 58
 		},
 		"!!": {
 			"alias": "!"
@@ -164,783 +155,91 @@
 			"value": "Lazy as hell. Email: firefly@firefly.nu :: Timezone: UTC+1"
 		},
 		"maniacle laugh": {
-			"value": "muahhahahahahaha... *snicker*"
+			"value": "muahhahahahahaha... *snicker*",
+			"popularity": 1
 		},
 		"screenshot": {
 			"value": "Screenshots! (or it didn't happen)"
 		},
-		"opera": {
-			"value": "O-wha-huh? 'opera' is not recognized. See !commands for a list of commands."
-		},
-		"o/": {
-			"value": "o/ ⃰",
-			"popularity": 7
-		},
-		"\\o": {
-			"value": "o/ ⃰\\o",
-			"popularity": 4
-		},
-		"cock": {
-			"value": "cock → elliottcable"
-		},
-		"cable": {
-			"value": "< devyn> cable is the shiz"
-		},
-		"elliottcable..notes..jane": {
-			"value": "responds well to physical affection. experiment with increased application."
-		},
-		"boobs": {
-			"value": "<http://pawschan.tumblr.com/post/7609154795/boobs>"
-		},
-		"ujd": {
-			"value": "UNIX/Julian Date (more info: http://yreality.net/UJD)"
-		},
-		"judofyr": {
-			"value": "http://judofyr.net (b‐sol: 323 ſ)"
-		},
-		"typetips": {
-			"value": "Like tooltips, except for showing the data type of a variable in your source code. You can roll over any identifier and see what it is."
-		},
-		"nope": {
-			"value": "http://youtu.be/gvdf5n-zI14",
-			"popularity": 6
-		},
-		"yeah": {
-			"value": "http://youtu.be/H6OtFKNDPUc"
-		},
-		"damnit": {
-			"value": "http://www.youtube.com/watch?v=CjhrIsSCcjs&feature=related"
-		},
-		"scream": {
-			"value": "http://www.youtube.com/watch?feature=player_detailpage&v=a3I5h7UaOuk#t=14s"
-		},
-		"subwoofer": {
-			"value": "TWO OF THEM. http://ihasahotdog.files.wordpress.com/2009/06/funny-dog-pictures-sub-woofers.jpg",
-			"popularity": 1
-		},
-		"nuke.it": {
-			"value": "Nuke it from orbit. ’s the only way to be sure. http://youtu.be/2s1MspmfEwg"
-		},
-		"stack": {
-			"value": "what is an execution, if it is also a list? ⁓"
-		},
-		"jux": {
-			"value": "A juxtaposition handler execution in the Paws programming language."
-		},
-		"jeannicolas": {
-			"value": "bewbs",
-			"popularity": 1
-		},
-		"yep": {
-			"alias": "yeah"
-		},
-		"yope": {
-			"alias": "yeah"
-		},
-		"things.that.are.not.done.in.paws": {
-			"value": "0) Distribution"
-		},
-		"done": {
-			"value": "Congratulations! But.. will it compile? :S"
-		},
-		":d": {
-			"value": "http://ell.io/qyy6",
-			"popularity": 1
-		},
-		"gggu": {
-			"value": "http://ell.io/gggu",
-			"popularity": 1
-		},
-		"challenge": {
-			"value": "The current challenge is to be one of the first to complete the im-Paws-sible task of creating a psuedo-language similar enough to Paws to pass muster. The reward for 1ˢᵗ place is $600, 2ⁿᵈ is $300, and 3ʳᵈ wins $150."
-		},
-		"sad": {
-			"value": "'sad' is not recognized. I am a soulless robot. See !commands for a list of commands.",
-			"popularity": 2
-		},
-		"elliottcable": {
-			"value": "elliottcable created the Paws project, and Paws’ nuclear linguistic semantics. <http://ell.io/tt> [Paws.c, Paws.js, P₃, Fullness] (b‐sol: 7 161 ſ)",
-			"popularity": 6
-		},
-		"pants": {
-			"alias": "+o"
-		},
-		"offtopic": {
-			"value": "→ ##Paws, off‐topic :3"
-		},
-		"ontopic": {
-			"value": "→ #Paws.Nucleus, on‐topic :3",
-			"popularity": 1
-		},
 		"doctype": {
 			"value": "The standard ΩF:∅ DOCTYPE is <!DOCTYPE html>"
-		},
-		"i lied": {
-			"value": "When elliottcable says “I lied,” it usually means he fucked up. #secret",
-			"popularity": 3
-		},
-		"prophile": {
-			"value": "? [\\1] (b‐sol: 7 730 ſ)"
-		},
-		"devyn": {
-			"value": "? (???) (b‐sol: 9 648 ſ)",
-			"popularity": 3
-		},
-		"elliott": {
-			"alias": "elliottcable"
-		},
-		"ec": {
-			"alias": "elliottcable"
-		},
-		"devin": {
-			"alias": "eboyjr"
-		},
-		"user factoids": {
-			"value": "Format: \"Information <URIs> [Projects] (extraneous data)\" extraneous data, colonspace-assigned, commaspace-separated"
-		},
-		"lame": {
-			"value": "you're lame :( <http://goo.gl/RKwIz>"
-		},
-		"derp": {
-			"alias": "sephr"
-		},
-		"jew": {
-			"value": "JEW JEW JEW JULIA JEW JEWOWAH JEW JEW-DEE JEW JEW-UH! http://ell.io/7WhD"
-		},
-		"what the fucking fuck": {
-			"value": "ʕ•̫͡•ʕ*̫͡*ʕ•͓͡•ʔ-̫͡-ʕ•̫͡•ʔ*̫͡*ʔ-̫͡-ʔ",
-			"popularity": 2
-		},
-		"pornfast": {
-			"value": "Porn-fast! It’s like breakfast except … made of porn!"
-		},
-		"xyzzy": {
-			"value": "\u00035Nothing happens.",
-			"popularity": 1
-		},
-		"berri": {
-			"value": "berri is … berri! <http://berryx.com/> (b‐sol: 8 861 ſ)"
-		},
-		"paws viewer": {
-			"value": "Paws source code viewer from PawsMonkey by eboyjr: <http://eboyjr.oftn.org:8080/files/source/paws-monkey/demo/>",
-			"popularity": 1
-		},
-		"halp": {
-			"value": "Hey smart people, HALP! elliottcable, battlecollie, micahjohnston, incomprehensibly",
-			"popularity": 2
 		},
 		"common": {
 			"value": "ΩF:∅ 'common' repository: <https://github.com/oftn/common/>"
 		},
-		"hand": {
-			"value": "Welcome to Paws. Enjoy your stay, and have a nice day! ^‿^"
-		},
 		"oftn-bot": {
 			"value": "I'm not starved African boy locked in the ΩF:∅ basement who has been taught that relaying IRC commands is the only purpose of life. No sirreee. Just a regular IRC bot. Not human.",
-			"popularity": 3
-		},
-		"insult": {
-			"value": "Strč prst skrz krk! Look it up.",
-			"popularity": 1
-		},
-		"ffuu": {
-			"value": "FFFFFFFUUUUUUUUUUUU–"
-		},
-		"o_o": {
-			"value": "oo_o_o__o_o_oo"
-		},
-		">_>": {
-			"value": ">>_>_>__>_>_>>"
-		},
-		"<_<": {
-			"value": "<<_<_<__<_<_<<"
-		},
-		"^_^": {
-			"value": "^^_^_^__^_^_^^",
-			"popularity": 1
-		},
-		"fistpump": {
-			"value": "7o7 FISTPUMP",
-			"popularity": 2
-		},
-		"exasperation": {
-			"value": "7o7 (exasperated.)",
-			"popularity": 1
-		},
-		"grenades": {
-			"value": "7o7 FIRE IN THE HOLE"
-		},
-		"sevens": {
-			"value": "7o7 my arms are made of sevens.",
-			"popularity": 1
-		},
-		"fyvm": {
-			"value": "fuck you very much ^‿^",
-			"popularity": 4
-		},
-		"v.v": {
-			"value": "vv.v.v..v.v.vv"
-		},
-		"alexgordon": {
-			"value": "Grab your satchel and take a leap into the nocturnal wonderful world of Alex Gordon! ;) <http://youtu.be/69Z5EfAfeAo>",
-			"popularity": 2
-		},
-		"cloudhead": {
-			"value": "http://rule63.paheal.net/_images/150c3ff51e8e1abb0096ac23fd82880f/24047%20-%20Luigi%20Mario%20Super_Mario_Bros.jpeg"
-		},
-		"harm": {
-			"value": "“Further harm’s *always* necessary.” <http://www.casualvillain.com/Unsounded/comic/ch01/ch01_23.html>"
-		},
-		"sanity": {
-			"value": "<http://ell.io/qDKI>"
-		},
-		"circlejerk": {
-			"value": "circlejerk >_>"
-		},
-		"deja-vu": {
-			"value": "(He means deja-Vulcan. Typo.)"
-		},
-		"f7u12": {
-			"alias": "ffuu"
-		},
-		"testing": {
-			"value": "<https://github.com/nlemke/nyan/raw/master/2.jpg>"
-		},
-		"stop": {
-			"value": "This conversation is going nowhere. Just stop.",
-			"popularity": 3
-		},
-		"clouds": {
-			"value": "is stuck up in the clouds. Hilight ’em if you want ’em.",
-			"popularity": 17
-		},
-		"enough": {
-			"alias": "stop"
-		},
-		"caps": {
-			"value": "YOU TELL ’EM, SISTAH!",
-			"popularity": 1
-		},
-		"micahjohnston": {
-			"value": "Here. This is for you. <http://cl.ly/8qke>",
-			"popularity": 11
-		},
-		"wtfpaws": {
-			"value": "http://fileability.net/snaps/WTFpaws.png",
-			"popularity": 2
-		},
-		"dp": {
-			"value": "DOUBLE PENETRATION!!!"
-		},
-		"micah": {
-			"alias": "micahjohnston"
-		},
-		"spaceship": {
-			"value": "+eboyjr: Wow this is like building a spaceship \\n +eboyjr: A major feat of software engineering",
-			"popularity": 1
-		},
-		"geek": {
-			"value": "“I'm not sure what the exact definition of geek is, but I think \"enjoys recharging batteries\" has to be very high on that list.” http://ell.io/csVl"
-		},
-		"sol": {
-			"value": "use `v8> String(new Sol)` for now. http://yreality.net/UJD",
-			"popularity": 1
-		},
-		"elliottcablestatus": {
-			"value": "elliottcable is currently #awesome."
-		},
-		"paws obfuscator": {
-			"value": "It's going to be called PAWSFUCKER."
-		},
-		"wtf is this shit": {
-			"value": "What the fuck is this shit!? <http://i.imgur.com/UJigT.jpg>"
-		},
-		"fav": {
-			"value": "↑ that’s my favourite."
-		},
-		"metafav": {
-			"value": "no, I lied, *↑* is *actually* my favorite factoid."
-		},
-		"metametafav": {
-			"value": "fuck this circlejerk!"
-		},
-		"come back later": {
-			"value": "Try at ſ 833+. That’s when this channel tends to get active."
-		},
-		"god forbid": {
-			"value": "<@elliottcable> God forbid anyone ever quote me on ANYTHING I SAY <http://pawschan.tumblr.com/post/7135395189>"
-		},
-		"no": {
-			"alias": "nope"
-		},
-		"hate": {
-			"value": "A strong emotion of regard, of the kind humans sometimes express toward one another and computational knowledge engines express toward the internet.",
-			"popularity": 3
-		},
-		"pacman": {
-			"value": "NOM NOM NOM NOM NOM NOM NOM BLOOOOOP"
-		},
-		"pawschan": {
-			"value": "That’s on PawsChan somewhere."
-		},
-		"santa is female": {
-			"value": "god mode unlocked."
-		},
-		"easter eggs": {
-			"value": "Santa is not male"
-		},
-		"cheat codes": {
-			"value": "find them yourself, noob. No it's not UP UP RIGHT RIGHT DOWN DOWN LEFT LEFT UP DOWN A B A B."
-		},
-		"sonic the hedgehog": {
-			"value": "speed multiplier x4"
-		},
-		"up up down down left right left right b a start": {
-			"value": "+30 to life"
-		},
-		"up up down down left right left right b a select start": {
-			"value": "SEX."
-		},
-		"up": {
-			"value": "^_^",
-			"popularity": 2
-		},
-		"down": {
-			"value": "v_v",
-			"popularity": 2
-		},
-		"left": {
-			"value": "<_<",
-			"popularity": 2
-		},
-		"right": {
-			"value": ">_>",
-			"popularity": 2
-		},
-		"disapprove": {
-			"value": "ಠ_ಠ",
 			"popularity": 7
-		},
-		"okay": {
-			"value": "v_v okay…"
-		},
-		"ಠ_ಠ": {
-			"value": "I heartily fuck you!"
-		},
-		"plums": {
-			"value": "http://youtu.be/ykuTKwbRwF0"
-		},
-		"flamewar": {
-			"value": "alexgordon’s starting a flamework up in heah"
-		},
-		"jane": {
-			"value": "jane is not a programmer.",
-			"popularity": 0
-		},
-		"facemormon": {
-			"value": "horny mormons on the moon, man. you can send them some porn, but they probably won't watch it."
-		},
-		"maniacal laugh": {
-			"alias": "maniacle laugh"
-		},
-		"drama queen": {
-			"value": "elliottcable"
-		},
-		":7": {
-			"value": "<http://ell.io/q8YP>",
-			"popularity": 1
-		},
-		"reduction": {
-			"value": "“Reductions are more interesting than additions.” <https://github.com/graydon/rust/wiki/Language-FAQ>"
-		},
-		"best word": {
-			"value": "SHDUFIACANT and DISCRITERTION",
-			"popularity": 6
-		},
-		"i love this bot": {
-			"value": "thank you. ^‿^",
-			"popularity": 5
-		},
-		"holowaychuk": {
-			"value": "SHIT HE’S ALL THE AIS! *ALL* OF THE AIS! D:"
-		},
-		"fecal-oral route": {
-			"value": "The fecal-oral route is a route of transmission of diseases, in which they are passed in fecal particles from one host into the oral cavity of another. There are usually intermediate steps … <http://en.wikipedia.org/wiki/Fecal-oral_route>"
-		},
-		"left right": {
-			"value": "<_< … >_>"
-		},
-		"cat": {
-			"value": "http://substack.net/images/cat-on-keys.png"
-		},
-		"optimism": {
-			"value": "http://substack.net/images/optimistic.png"
-		},
-		"hi": {
-			"value": "HELLO"
-		},
-		"changes": {
-			"value": "<@battlecollie> It changes EVERYTHING without changing ANYTHING"
-		},
-		"cables": {
-			"value": "Elliott's cables, obviously. Who else would they belong to?"
 		},
 		"oftn": {
 			"value": "The ΩF:∅ Foundation creates and maintains free and open-source software.",
-			"popularity": 1
+			"popularity": 2
 		},
 		"hammertime": {
-			"value": "━━▊ ━━▊ ━━▊"
-		},
-		"forum": {
-			"value": "https://groups.google.com/forum/#!forum/oftn",
-			"popularity": 0
-		},
-		"f3u24": {
-			"value": "FFFUUUUUUUUUUUUUUUUUUUUUUUU–",
-			"popularity": 0
-		},
-		"this channel is the best": {
-			"value": "God, ##Philosophy is my FAVOURITE channel!",
-			"popularity": 0
-		},
-		"paws": {
-			"value": "lol, yeah right",
-			"popularity": 0
-		},
-		"abstractsingletonproxyfactorybean": {
-			"value": "AbstractSingletonProxyFactoryBean is BESTSINGLETONPROXYFACTORYBEAN <http://static.springsource.org/spring/docs/2.5.x/api/org/springframework/aop/framework/AbstractSingletonProxyFactoryBean.html>",
-			"popularity": 3
-		},
-		"pneumonoultramicroscopicsilicovolcanoconiosis": {
-			"value": "\"pneumonoultramicroscopicsilicovolcanoconiosis\".split('').inject(Array.new) { |acc,e| acc << e; acc << rand(12)+1 }.join",
-			"popularity": 2
-		},
-		"tod": {
-			"value": "fuck tod.",
-			"popularity": 0
-		},
-		"die": {
-			"value": "If you hilight e l l i o t t c a b l e, you will SERIOUSLY DIE!! ^‿^",
-			"popularity": 1
-		},
-		"crickets": {
-			"value": "*chirp* *chirp* *chirp* *chirp* *chirp*",
-			"popularity": 1
-		},
-		"oftnisbest": {
-			"value": "ΩF:∅ is BEST∅",
-			"popularity": 2
-		},
-		"nn": {
-			"value": "Night night :)",
-			"popularity": 8
-		},
-		"battlecollie": {
-			"value": "fucking. He’s elliottcable, obviously. *idiot*.",
-			"popularity": 1
-		},
-		"happycollie": {
-			"value": "happycollie is bestcollie. ’cept maybe drunkcollie.",
-			"popularity": 1
-		},
-		"missingno": {
-			"value": "õ9ô^Ê]\\eA\\xC2\\x92Ã*Ç\\x1EQ¬ç¯}Ñ©¾×ÚðÍ×¢\\xC2\\x96NúX´Û (�aeqw91S wwqe) (b‐sol: 4 294 967 296 ſ)",
+			"value": "━━▊ ━━▊ ━━▊",
 			"popularity": 4
-		},
-		"everyone": {
-			"value": "BISCUITRAT. BISCUITRAT IS EVERYONE.",
-			"popularity": 0
-		},
-		"kill": {
-			"value": "I don't like to kill people",
-			"popularity": 1
-		},
-		"courage": {
-			"value": "WHAT MAKES THE HOTTENTOTS SO HOT? COURAGE!",
-			"popularity": 0
-		},
-		"bloom": {
-			"value": "BLOOM FILTER. BOOM. <http://ell.io/NNZn>",
-			"popularity": 1
-		},
-		"justin timberlake": {
-			"alias": "bloom"
-		},
-		"boxxy": {
-			"value": "BOXXY PLUS POCKY IS LOOOOVVEEEE",
-			"popularity": 1
-		},
-		"+o": {
-			"value": "+o means pants",
-			"popularity": 1
-		},
-		"+v": {
-			"value": "+v means cookie",
-			"popularity": 1
-		},
-		"cookie": {
-			"alias": "+v"
-		},
-		"oh wait": {
-			"value": "no it’s not.",
-			"popularity": 1
-		},
-		"you’re next": {
-			"value": "cloudhead, `kat, Navarr, jane, Eridius, alexgordon",
-			"popularity": 1
-		},
-		"snowman": {
-			"value": "http://www.unicodesnowmanforyou.com/",
-			"popularity": 0
-		},
-		"poop": {
-			"value": "http://�.la/",
-			"popularity": 0
-		},
-		"�": {
-			"alias": "poop"
-		},
-		"stranger": {
-			"value": "NO. Just… no.",
-			"popularity": 1
-		},
-		"a sephr": {
-			"value": "a pointy-haired boss",
-			"popularity": 1
-		},
-		"superior intellects": {
-			"value": "US!",
-			"popularity": 0
-		},
-		"fuuuuuuuuuck.": {
-			"value": "<http://beautifulswearwords.com/post/7377328525>",
-			"popularity": 0
-		},
-		"ground": {
-			"value": "is no longer stuck up in the clouds.",
-			"popularity": 10
-		},
-		"protip": {
-			"value": "PROTIP (that is, a tip from a PRO): If it’s in the bot, it’s a joke.",
-			"popularity": 0
-		},
-		"d’awww": {
-			"value": "D’AWWWWWWWW! <http://flickr.com/photos/elliottcable/5968703863/lightbox>",
-			"popularity": 1
-		},
-		"vernate": {
-			"value": "vernate (v): what micahjohnston wishes we would all do to him",
-			"popularity": 0
-		},
-		"fuck you": {
-			"value": "<http://ell.io/pGQq>",
-			"popularity": 2
-		},
-		"memory?": {
-			"value": "elliottcable has none. (Except what he stores in oftn-bot!)",
-			"popularity": 4
-		},
-		"nexxy": {
-			"value": "sexxy",
-			"popularity": 1
-		},
-		"mephux": {
-			"value": "has spikes",
-			"popularity": 0
-		},
-		"bangtag": {
-			"value": "besttag",
-			"popularity": 1
-		},
-		"the stack": {
-			"value": "the rabbithole",
-			"popularity": 0
-		},
-		"my dropbear": {
-			"value": "let me check it.",
-			"popularity": 0
-		},
-		"remember": {
-			"value": "jeannicolas is getting married.",
-			"popularity": 0
-		},
-		"lol": {
-			"value": "An abbreviation for \"laughing out loud\", often typed by people who are not doing so. Sometimes used as punctuation, inexplicably. Generally, an indicator of substandard mental facilities. Avoid using \"lol\" in  your online communications unless you want to project the image of an incompetent bumbler.",
-			"popularity": 4
-		},
-		"turnips": {
-			"value": "turnips are a rüt vegetable.",
-			"popularity": 0
-		},
-		"locks": {
-			"value": "Let it be known that locks is a furry.",
-			"popularity": 1
-		},
-		"well, i found this": {
-			"value": "<@alexgordon> well I found this, whatever the fuck it is http://fanart.lionking.org/Artists/Kesi_Legend/Doctor10Grin.jpg",
-			"popularity": 0
-		},
-		"well i found this": {
-			"alias": "well, i found this"
-		},
-		"hahaha": {
-			"value": "HAHAHA is cgarme’s programming experience.",
-			"popularity": 0
-		},
-		"lulz": {
-			"value": "The Lulz. Do it for them. <http://farm4.static.flickr.com/3546/3797141975_111e0eb1de.jpg>",
-			"popularity": 1
-		},
-		"squirrel!": {
-			"value": "http://cl.ly/8qke",
-			"popularity": 1
-		},
-		"space clay": {
-			"value": "inimino is made of it!",
-			"popularity": 0
-		},
-		"fuck it baby food": {
-			"value": "is beb foud",
-			"popularity": 1
-		},
-		"haskell": {
-			"value": "Did you say Pascal? <http://ell.io/d63Y>",
-			"popularity": 2
-		},
-		"upsidedown": {
-			"value": ".-.",
-			"popularity": 1
-		},
-		"rtf": {
-			"value": "RTF is only useful for printing to outdated printers.",
-			"popularity": 1
-		},
-		"toofar": {
-			"value": "Too far, dude.",
-			"popularity": 3
-		},
-		"nosleep": {
-			"value": "had no sleep. Give him/her a break! Also, if you don't want to sleep either: <http://reddit.com/r/nosleep>",
-			"popularity": 5
-		},
-		"sex": {
-			"value": "[~sex] updatedb; locate; talk; date; cd; strip; look; touch; finger; unzip; uptime; gawk; head; emerge --oneshot condom; mount; fsck; gasp; more; yes; yes; yes; more; umount; emerge -C condom; make clean;  sleep;",
-			"popularity": 2
-		},
-		"botsnack": {
-			"value": "Thanks! *nom nom nom* It could use some salt, though.",
-			"popularity": 2
-		},
-		"salt": {
-			"value": "Oh... WOW! Really?! Salt?! Thanks! OMG! I can't believe you gave me salt! You are the kindest person ever!",
-			"popularity": 2
-		},
-		"botsnack with salt": {
-			"value": "Oooh, what's this? A botsnack? Thanks! *nom nom nom* Holy shit, it has salt on it! *oftn-bot is now high on salt.*",
-			"popularity": 1
-		},
-		"beg for salt": {
-			"value": "Please, kind sir, may you spare some salt?",
-			"popularity": 1
-		},
-		"kiss": {
-			"value": "Keep it simple, stupid!",
-			"popularity": 1
-		},
-		"fuck my shins": {
-			"value": "elliottcable is effectively Darth Vader. http://flickr.com/photos/elliottcable/sets/72157627098380256",
-			"popularity": 0
-		},
-		"cake": {
-			"value": "The cake has been tainted.",
-			"popularity": 4
-		},
-		"funstuff": {
-			"value": "Flow control. Flow control is the fun stuff.",
-			"popularity": 1
-		},
-		"elliott’s mind": {
-			"value": "Elliott’s mind = genetic-mutation-causing heavy radiation.",
-			"popularity": 1
 		},
 		"cannot": {
 			"value": "\"I cannot do it; I cannot do it...\" <http://www.youtube.com/watch?v=NvXvIdBymZI&feature=player_detailpage#t=18s>",
-			"popularity": 1
-		},
-		"the spicy": {
-			"value": "We can Alter the spicy according to your taste.",
-			"popularity": 1
-		},
-		"ask sephr": {
-			"value": "< sephr> do whatever plan9 did",
 			"popularity": 2
 		},
-		"o4o": {
-			"value": "Religion and politics are not* to be discussed.",
-			"popularity": 1
-		},
-		"paws sex": {
-			"value": "The Paws Programming Language: Sexual documentation <https://gist.github.com/5c3dd0b45aeb83a021d8>",
-			"popularity": 1
-		},
 		"colors": {
-			"value": "\u00030zero \u00031one \u00032two \u00033three \u00034four \u00035five \u00036six \u00037seven \u00038eight \u00039nine \u000310ten \u000311eleven \u000312twelve \u000313 thirteen \u000314fourteen \u000315fifteen \u000316sixteen",
-			"popularity": 4
-		},
-		"foo": {
-			"value": "\u00035bar\u000f",
-			"popularity": 1
-		},
-		"fucking squirrel": {
-			"value": "LOOK. IT’S A FUCKING SQUIRREL. <http://ell.io/Fgm0>",
-			"popularity": 1
-		},
-		"thumbs up": {
-			"value": "� �  :D <http://i.imgur.com/oT44C.gif>",
-			"popularity": 1
-		},
-		"squirrel": {
-			"alias": "micahjohnston"
-		},
-		"reticulating splines": {
-			"value": "Please wait. Reticulating splines … <http://youtu.be/8UR5WpJCZGA>",
-			"popularity": 1
+			"value": "Foreground: \u0003000 \u0003011 \u0003022 \u0003033 \u0003044 \u0003055 \u0003066 \u0003077 \u0003088 \u0003099 \u00031010 \u00031111 \u00031212 \u00031313 \u00031414 \u00031515 \u00031616\u000f; Background: \u00031,0  0 \u000f \u0003,1  1 \u000f \u0003,2  2 \u000f \u0003,3  3 \u000f \u0003,4  4 \u000f \u0003,5  5 \u000f \u0003,6  6 \u000f \u0003,7  7 \u000f \u0003,8  8 \u000f \u0003,9  9 \u000f \u0003,10 10 \u000f \u0003,11 11 \u000f \u0003,12 12 \u000f \u0003,13 13 \u000f \u0003,14 14 \u000f \u00031,15 15 \u000f \u00031,16 16 \u000f",
+			"popularity": 22
 		},
 		"ωf:∅": {
 			"alias": "oftn"
 		},
-		"cheer up": {
-			"value": "Elephant on a Trampoline! <http://mlkshk.com/p/2KQC>",
+		"movies": {
+			"value": "No movies, yet.",
+			"popularity": 3
+		},
+		"rainbow": {
+			"value": "\u00034@@@@@@\u00035@\u00034@@\u00035@@\u00034@\u00035@@@\u00037@\u00035@@\u00037@@\u00035@\u00037@@@\u00038@\u00037@@\u00038@@\u00037@\u00038@@@\u00039@\u00038@@\u00039@@\u00038@\u00039@@@\u00033@\u00039@@\u00033@@\u00039@\u00033@@@\u000310@\u00033@@\u000310@@\u00033@\u000310@@@\u000311@\u000310@@\u000311@@\u000310@\u000311@@@\u000312@\u000311@@\u000312@@\u000311@\u000312@@@\u00032@\u000312@@\u00032@@\u000312@\u00032@@@\u000313@\u00032@@\u000313@@\u00032@\u000313@@@\u00036@\u000313@@\u00036@@\u000313@\u00036@@@@@@",
+			"popularity": 6
+		},
+		"night": {
+			"value": "At night, the ice weasels come.",
 			"popularity": 1
 		},
-		"todo": {
-			"value": "eboyjr's daunting todo list: <http://thingler.com/ddf8ee6eb0fa8a10d28b50a22d0e0877> (If you want me to work on something add it there)",
-			"popularity": 1
+		"random number": {
+			"value": "0",
+			"popularity": 13
 		},
-		"elliottcable-todo": {
-			"value": "elliottcable’s daunting todo list: <http://ell.io/gJTw> (If you want me to work on something … good luck.)",
-			"popularity": 1
-		},
-		"ban": {
-			"value": "elliottcable can ban your ass forever.",
-			"popularity": 1
-		},
-		"bikeshed": {
-			"value": "STOP IT. Just stop it. elliottcable will make a decision, and then we will stop talking about it. <http://bikeshed.com/>",
+		"i know that feeling": {
+			"value": " ",
 			"popularity": 0
 		},
-		"darth vader": {
-			"value": "Darth Vader rides micahjohnston. <http://flickr.com/photos/powerpig/4793000033/in/set-72157607996040207/lightbox/>",
+		"bot": {
+			"alias": "oftn-bot"
+		},
+		"jesus": {
+			"value": "Holy Jesus Harold Christ!",
 			"popularity": 1
 		},
-		"public domain": {
-			"value": "There is no such thing as “putting a work in the public domain”, you America-centered, Commonwealth-biased individual. ",
+		"micahjohnston": {
+			"value": "Also known as micahtrololoston",
 			"popularity": 0
 		},
-		"approve": {
-			"value": "ʘ‿ʘ",
-			"popularity": 0
+		"onthree": {
+			"value": "3!",
+			"popularity": 1
+		},
+		"chocissues": {
+			"value": "Report issues with Chocolat here: https://github.com/fileability/chocolat-public/issues",
+			"popularity": 1
+		},
+		"disapprove": {
+			"value": "ಠ_ಠ",
+			"popularity": 1
+		},
+		"twitter": {
+			"value": "The ΩF:∅ Foundation is on Twitter: http://twitter.com/#!/oftn_foundation",
+			"popularity": 1
+		},
+		"coca": {
+			"value": "C compiler/translator written in/for JavaScript <https://github.com/oftn/coca/>",
+			"popularity": 1
 		}
 	}
 }
