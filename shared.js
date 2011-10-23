@@ -43,6 +43,12 @@ var Shared = module.exports = {
 		switch (command) {
 		case "|>": /* Multi-line input */
 			person.js = person.js || {timeout: null, code: []};
+			/* Clear input buffer after a minute */
+			clearTimeout (person.js.timeout);
+			person.js.timeout = setTimeout (function() {
+				person.js.code.length = 0;
+				context.channel.send_reply (context.sender, "Your `|>` line input has been cleared. (1 minute)");
+			}, 1000 * 60);
 			person.js.code.push (code);
 			return;
 		case ">>>":

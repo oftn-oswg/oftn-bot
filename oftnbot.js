@@ -16,6 +16,8 @@ var FeelingLucky = require("./lib/feelinglucky");
 var Shared = require("./shared");
 var Profile = require("./oftnbot-profile");
 
+var Twitter = require("twitter");
+
 String.prototype.repeat = function(i) {
 	var d = '', t = this;
 	while (i) {
@@ -40,6 +42,8 @@ var ΩF_0Bot = function(profile) {
 	
 	this.start_github_server(9370);
 	this.github_context = null;
+
+	this.twitter = new Twitter(Profile.twitter);
 };
 
 
@@ -54,6 +58,7 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("learn", Shared.learn, {allow_intentions: false});
 	this.register_command("forget", Shared.forget, {allow_intentions: false});
 	this.register_command("commands", Shared.commands);
+	this.register_command("tweet", this.tweet);
 	this.register_command("g", Shared.google);
 
 	this.password = "I solemnly swear that I am up to no evil";
@@ -136,7 +141,7 @@ util.inherits(ΩF_0Bot, Bot);
 		try {
 			if (context.priv) throw new Error("Cannot use command in private.");
 
-			var authorized = ["alexgordon", "jeannicolas", "eboyjr", "locks"];
+			var authorized = ["alexgordon", "jeannicolas", "eboyjr", "locks", "CapsuleNZ"];
 			if (!~authorized.indexOf(context.sender.name)) {
 				throw new Error("You are not authorized to use this command.");
 			}
@@ -222,6 +227,25 @@ util.inherits(ΩF_0Bot, Bot);
 	} catch(e) {
 		// Factoid not found, do nothing.
 	}
+};
+
+ΩF_0Bot.prototype.tweet = function(context, text) {
+	var username;
+	var authorized = {
+		"eboyjr": "eboyjr",
+		"sephr": "sephr"
+	};
+	
+	if (!authorized.hasOwnProperty (context.sender.name)) return;
+	username = authorized[context.sender.name];
+
+	this.twitter.updateStatus(text + " \u2014@" + username, function(data) {
+		if (data.id_str) {
+			context.channel.send ("Tweet successful: https://twitter.com/oftn_foundation/status/"+data.id_str);
+		} else {
+			context.channel.send ("Error posting tweet.");
+		}
+	});
 };
 
 new ΩF_0Bot(Profile).init();

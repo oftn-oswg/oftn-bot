@@ -114,7 +114,7 @@
 		},
 		"leaving": {
 			"value": "How horrible! I don't know what I'll do with myself without you, eboyjr or sephr!",
-			"popularity": 4
+			"popularity": 5
 		},
 		"androide": {
 			"value": "An IDE for Android. People working on it: sephr, gkatsev, and not eboyjr."
@@ -133,7 +133,7 @@
 		},
 		"!": {
 			"value": "uh, i know right!",
-			"popularity": 58
+			"popularity": 59
 		},
 		"!!": {
 			"alias": "!"
@@ -240,6 +240,10 @@
 		"coca": {
 			"value": "C compiler/translator written in/for JavaScript <https://github.com/oftn/coca/>",
 			"popularity": 1
+		},
+		"internetaining": {
+			"value": "best word",
+			"popularity": 0
 		}
 	}
 }
