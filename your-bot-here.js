@@ -4,7 +4,7 @@ var Bot = require("./lib/irc");
 var YourBot = function(profile) {
 	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
-	this.set_command_identifier("!"); // Exclamation
+	this.set_trigger("!"); // Exclamation
 };
 
 Util.inherits(YourBot, Bot);
