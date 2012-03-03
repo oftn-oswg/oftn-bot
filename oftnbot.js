@@ -2,6 +2,7 @@ var fs = require("fs");
 var url = require("url");
 var util = require("util");
 var http = require("http");
+var https = require('https');
 var path = require("path");
 var querystring = require('querystring');
 
@@ -60,6 +61,7 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("commands", Shared.commands);
 	this.register_command("tweet", this.tweet);
 	this.register_command("g", Shared.google);
+	this.register_command("gh", this.gh);
 
 	this.password = "I solemnly swear that I am up to no evil";
 	
@@ -219,7 +221,7 @@ util.inherits(ΩF_0Bot, Bot);
 ΩF_0Bot.prototype.find = function(context, text) {
 
 	if (context.priv) {
-		return Shared.find(context, text);
+		return Shared.find.call(this, context, text);
 	}
 	
 	try {
@@ -229,21 +231,65 @@ util.inherits(ΩF_0Bot, Bot);
 	}
 };
 
+ΩF_0Bot.prototype.gh = function(context, username) {
+
+	var options = {
+		host: "api.github.com",
+		path: "/users/" + username
+	};
+
+	https.get (options, function(res) {
+		res.on ("data", function(json) {
+			var data = JSON.parse (json);
+			var reply = [];
+
+			if (data.name)  reply.push (data.name);
+			if (data.email) reply.push ("<"+data.email+">");
+			if (data.html_url) reply.push ("| "+data.html_url+" |");
+			if (data.blog)  reply.push (data.blog);
+			if (data.location) reply.push ("("+data.location+")");
+
+			if (data.created_at) {
+				var d = new Date(data.created_at);
+				var str = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][d.getMonth()] + " " + (d.getDate()+1) + ", " + d.getFullYear();
+				reply.push ("- Member since: "+str);
+			}
+
+			if (data.public_repos) reply.push ("- " + data.public_repos + " public repo" + (data.public_repos-1?"s":""));
+
+			context.channel.send_reply (context.intent, reply.join(" "));
+		});
+	}); 
+
+};
+
 ΩF_0Bot.prototype.tweet = function(context, text) {
 	var username;
 	var authorized = {
-		"eboyjr": "eboyjr",
-		"sephr": "sephr"
+		"eboy": "eboyjr",
+		"sephr": "sephr",
+		"devyn": "devynci",
+		"inimino": "inimino",
+		"gkatsev": "gkatsev",
+		"cloudhead": "cloudhead",
+		"yrashk": "yrashk"
 	};
 	
 	if (!authorized.hasOwnProperty (context.sender.name)) return;
 	username = authorized[context.sender.name];
 
+	if (text.length > 140) {
+		context.channel.send_reply (context.sender, "Error: Status is over 140 characters. Get rid of at least "+(text.length-140)+" characters.");
+		return;
+	}
+
 	this.twitter.updateStatus(text + " \u2014@" + username, function(data) {
 		if (data.id_str) {
 			context.channel.send ("Tweet successful: https://twitter.com/oftn_foundation/status/"+data.id_str);
-		} else {
-			context.channel.send ("Error posting tweet.");
+		} else 
+			var json = data.data;
+			data = JSON.parse (json);{
+			context.channel.send ("Error posting tweet: " + data.error);
 		}
 	});
 };

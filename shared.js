@@ -97,10 +97,6 @@ var Shared = module.exports = {
 	
 	learn: function(context, text) {
 	
-		if (!context.priv) {
-			return context.channel.send_reply(context.sender, "Must PM the bot to learn factoids");
-		}
-
 		try {
 			var parsed = text.match(/^(alias)?\s*(.+?)\s*(=~?)\s*(.+)$/i);
 			if (!parsed) {

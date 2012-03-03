@@ -143,7 +143,7 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 		sandbox_throw_error (this, "Could not make new exports global.");
 	}
 
-	version_ch = JS_VersionToString (JS_GetVersion (context));
+	version_ch = JS_GetImplementationVersion ();
 	if (version_ch) {
 		version = JS_NewStringCopyZ (context, version_ch);
 		if (version) {
@@ -266,7 +266,7 @@ JSObject* sandbox_globals_create (Sandbox *this, JSContext *context)
 }
 
 
-JSBool sandbox_jsnative_execute (JSContext *cx, uintN argc, jsval *vp)
+JSBool sandbox_jsnative_execute (JSContext *cx, unsigned argc, jsval *vp)
 {
 	JSObject *global;
 	static char *input_text = NULL;

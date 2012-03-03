@@ -3,7 +3,7 @@
 	"factoids": {
 		"number": {
 			"value": "Our unofficial standard number is 9370. Our official non-standard number is 2.",
-			"popularity": 4
+			"popularity": 5
 		},
 		"website": {
 			"value": "The ΩF:∅ website is a portal to all things ΩF:∅, and it is located at <http://oftn.org/>",
@@ -35,19 +35,16 @@
 			"alias": "reddit"
 		},
 		"eboyjr": {
-			"value": "Co-founder of ΩF:∅ and creator of the world's best Paws implementation [PawsMonkey, Cencio] (b‐sol: 8 719 ſ) He's also a black furry rapper.",
-			"popularity": 6
+			"value": "Have you seen my obscure interest lately?",
+			"popularity": 8
 		},
 		"collab": {
 			"value": "For real-time collaboration, we use Gobby 0.5. The server is eboyjr.oftn.org, run by eboyjr. If that's not available, we use <http://oftn.titanpad.com/>.",
-			"popularity": 7
-		},
-		"gobby": {
-			"alias": "collab"
+			"popularity": 10
 		},
 		"rimshot": {
 			"value": "[Ba dun tshh.](http://instantrimshot.com/audio/rimshot.mp3)",
-			"popularity": 16
+			"popularity": 17
 		},
 		"suit-toolkit": {
 			"alias": "suit-canvas-toolkit"
@@ -57,7 +54,7 @@
 		},
 		"yaml": {
 			"value": "Convert JSON (stdin) to YAML (stdout): perl -MJSON -MYAML -e 'local$/;print YAML::Dump(JSON->new->decode(<>))'",
-			"popularity": 1
+			"popularity": 2
 		},
 		"suit-canvas-toolkit": {
 			"value": "A slick user-interface toolkit created in JavaScript for use with the canvas element. <https://github.com/oftn/suit-js/> Demo: <http://oftn.org/projects/suit/>"
@@ -67,8 +64,8 @@
 			"popularity": 18
 		},
 		"board": {
-			"value": "ΩF:∅ Foundation Board of Directors: cloudhead, eboyjr, sephr (2x), gkatsev, mynyml, inimino, drudge, and yrashk",
-			"popularity": 2
+			"value": "The ΩF:∅ Foundation Board of Directors: cloudhead, eboyjr, sephr, gkatsev, GothAlice, devyn, inimino, and yrashk",
+			"popularity": 3
 		},
 		"ugt": {
 			"value": "Universal Greeting Time. Created in #mipslinux, it is a rule that states that whenever somebody enters an IRC channel it is always morning, and it is always late when the person leaves. The local time of any other people in the channel, including the greeter, is irrelevant. http://www.total-knowledge.com/~ilya/mips/ugt.html"
@@ -86,7 +83,7 @@
 		},
 		"test": {
 			"value": "Error: Failure while printing test status.",
-			"popularity": 61
+			"popularity": 65
 		},
 		"specgen": {
 			"value": "Anolis <http://anolis.gsnedders.com/>",
@@ -106,15 +103,15 @@
 		},
 		"eli": {
 			"value": "http://eligrey.com/about",
-			"popularity": 2
+			"popularity": 3
 		},
 		"sephr": {
 			"value": "http://sephr.com/about (also he's the CEO of ΩF:∅)",
-			"popularity": 10
+			"popularity": 11
 		},
 		"leaving": {
 			"value": "How horrible! I don't know what I'll do with myself without you, eboyjr or sephr!",
-			"popularity": 5
+			"popularity": 6
 		},
 		"androide": {
 			"value": "An IDE for Android. People working on it: sephr, gkatsev, and not eboyjr."
@@ -132,8 +129,8 @@
 			"popularity": 3
 		},
 		"!": {
-			"value": "uh, i know right!",
-			"popularity": 59
+			"value": "i know right!",
+			"popularity": 63
 		},
 		"!!": {
 			"alias": "!"
@@ -143,7 +140,7 @@
 		},
 		"metafar": {
 			"value": "A branch of conversation started with a metaphor which strays too far and becomes irrelevant from its original purpose.",
-			"popularity": 1
+			"popularity": 2
 		},
 		"binaryxml": {
 			"value": "The binary XML protocol. Allows the sending of binary information in valid XML. Example: <binary><byte width=\"8\"><zero/><one/><one/><zero/><one/><zero/><zero/></one/></byte></binary>"
@@ -165,10 +162,11 @@
 			"value": "The standard ΩF:∅ DOCTYPE is <!DOCTYPE html>"
 		},
 		"common": {
-			"value": "ΩF:∅ 'common' repository: <https://github.com/oftn/common/>"
+			"value": "ΩF:∅ 'common' repository: <https://github.com/oftn/common/>",
+			"popularity": 1
 		},
 		"oftn-bot": {
-			"value": "I'm not starved African boy locked in the ΩF:∅ basement who has been taught that relaying IRC commands is the only purpose of life. No sirreee. Just a regular IRC bot. Not human.",
+			"value": "I'm not a starved autistic boy locked in the ΩF:∅ basement who has been taught that relaying IRC commands is the only purpose of life. No sirreee. Just a regular IRC bot. Not human.",
 			"popularity": 7
 		},
 		"oftn": {
@@ -231,7 +229,7 @@
 		},
 		"disapprove": {
 			"value": "ಠ_ಠ",
-			"popularity": 1
+			"popularity": 6
 		},
 		"twitter": {
 			"value": "The ΩF:∅ Foundation is on Twitter: http://twitter.com/#!/oftn_foundation",
@@ -244,6 +242,34 @@
 		"internetaining": {
 			"value": "best word",
 			"popularity": 0
+		},
+		"next": {
+			"value": "Another satisfied customer.. NEXT!",
+			"popularity": 1
+		},
+		"post hook": {
+			"value": "The Github Post-Receive Hook URL for all ΩF:∅ repositories is: http://eboyjr.oftn.org:9370/oftn",
+			"popularity": 1
+		},
+		"donate": {
+			"value": "https://www.wepay.com/donate/oftn",
+			"popularity": 0
+		},
+		"facebook": {
+			"value": "https://www.facebook.com/oftn.foundation",
+			"popularity": 0
+		},
+		"google+": {
+			"value": "https://plus.google.com/111688594845627806515",
+			"popularity": 0
+		},
+		"pet oftn-bot": {
+			"value": "beep boop paws sucks",
+			"popularity": 1
+		},
+		"default topic": {
+			"value": "The ΩF:∅ Foundation - The league of open-source software beaux esprits - http://oftn.org - mumble://talk.oftn.org",
+			"popularity": 1
 		}
 	}
 }

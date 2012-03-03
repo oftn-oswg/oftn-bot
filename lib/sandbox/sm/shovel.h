@@ -61,7 +61,7 @@ JSObject*        sandbox_globals_create   (Sandbox     *this,
                                            JSContext   *context);
 
 JSBool           sandbox_jsnative_execute (JSContext *context,
-                                           uintN argc,
+                                           unsigned argc,
                                            jsval *vp);
 
 #endif
