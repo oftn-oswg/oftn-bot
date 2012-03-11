@@ -32,7 +32,6 @@ import           System
 import           System.IO
 import           System.Process
 import           System.Random
-import           Text.JSON
 import           Text.Printf
 import           Text.Regex
 import           Text.Show.Functions
