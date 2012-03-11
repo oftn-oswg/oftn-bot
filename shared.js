@@ -200,6 +200,14 @@ var Shared = module.exports = {
 					} else {
 						throw new Error("No topic to revert to.");
 					}
+				} else if (text === "default") {
+					try {
+						var def = this.factoids.find("topic", true);
+						set_topic (def);
+						return;
+					} catch (e) {
+						throw new Error("No default topic set. (`topic` factoid)");
+					}
 				}
 				
 				var regexinfo = parse_regex_literal(text);

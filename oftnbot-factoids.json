@@ -9,10 +9,6 @@
 			"value": "The ΩF:∅ website is a portal to all things ΩF:∅, and it is located at <http://oftn.org/>",
 			"popularity": 3
 		},
-		"projects": {
-			"value": "List of projects: !AndroIDE, !cencio, !coca, !signale, !suit, and !voice-search",
-			"popularity": 21
-		},
 		"voice-search": {
 			"value": "Voice Search is a Google Chrome extension that provides a method to search by speaking. https://github.com/oftn/voice-search/",
 			"popularity": 3
@@ -60,12 +56,12 @@
 			"value": "A slick user-interface toolkit created in JavaScript for use with the canvas element. <https://github.com/oftn/suit-js/> Demo: <http://oftn.org/projects/suit/>"
 		},
 		"help": {
-			"value": "Use the `>>` command for the SpiderMonkey interpreter, and the `>>>` command for the V8 interpreter.",
-			"popularity": 18
+			"value": "For help using oftn-bot, see <https://github.com/oftn/oftn-bot/wiki/Guide-to-oftn-bot>",
+			"popularity": 24
 		},
 		"board": {
 			"value": "The ΩF:∅ Foundation Board of Directors: cloudhead, eboyjr, sephr, gkatsev, GothAlice, devyn, inimino, and yrashk",
-			"popularity": 3
+			"popularity": 4
 		},
 		"ugt": {
 			"value": "Universal Greeting Time. Created in #mipslinux, it is a rule that states that whenever somebody enters an IRC channel it is always morning, and it is always late when the person leaves. The local time of any other people in the channel, including the greeter, is irrelevant. http://www.total-knowledge.com/~ilya/mips/ugt.html"
@@ -83,7 +79,7 @@
 		},
 		"test": {
 			"value": "Error: Failure while printing test status.",
-			"popularity": 65
+			"popularity": 67
 		},
 		"specgen": {
 			"value": "Anolis <http://anolis.gsnedders.com/>",
@@ -126,7 +122,7 @@
 		},
 		"source": {
 			"value": "My source can be found at: <https://github.com/oftn/oftn-bot>",
-			"popularity": 3
+			"popularity": 4
 		},
 		"!": {
 			"value": "i know right!",
@@ -163,7 +159,7 @@
 		},
 		"common": {
 			"value": "ΩF:∅ 'common' repository: <https://github.com/oftn/common/>",
-			"popularity": 1
+			"popularity": 2
 		},
 		"oftn-bot": {
 			"value": "I'm not a starved autistic boy locked in the ΩF:∅ basement who has been taught that relaying IRC commands is the only purpose of life. No sirreee. Just a regular IRC bot. Not human.",
@@ -270,6 +266,16 @@
 		"default topic": {
 			"value": "The ΩF:∅ Foundation - The league of open-source software beaux esprits - http://oftn.org - mumble://talk.oftn.org",
 			"popularity": 1
+		},
+		"usage": {
+			"alias": "help"
+		},
+		"topic": {
+			"alias": "default topic"
+		},
+		"logs": {
+			"value": "Some logs of this channel are hosted by eboy at http://eboyjr.oftn.org:8080/files/irclogs/freenode/ in #oftn.log files.",
+			"popularity": 0
 		}
 	}
 }

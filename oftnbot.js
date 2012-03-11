@@ -62,6 +62,7 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("tweet", this.tweet);
 	this.register_command("g", Shared.google);
 	this.register_command("gh", this.gh);
+	this.register_command("projects", this.projects);
 
 	this.password = "I solemnly swear that I am up to no evil";
 	
@@ -137,13 +138,13 @@ util.inherits(ΩF_0Bot, Bot);
 		this.github_context = client;
 	});
 	
-	this.register_command("choc", function(context) {
+	/*this.register_command("choc", function(context) {
 		var userlist = context.channel.userlist;
 
 		try {
 			if (context.priv) throw new Error("Cannot use command in private.");
 
-			var authorized = ["alexgordon", "jeannicolas", "eboyjr", "locks", "CapsuleNZ"];
+			var authorized = ["alexgordon", "jeannicolas", "eboy", "locks", "CapsuleNZ"];
 			if (!~authorized.indexOf(context.sender.name)) {
 				throw new Error("You are not authorized to use this command.");
 			}
@@ -168,6 +169,7 @@ util.inherits(ΩF_0Bot, Bot);
 			context.channel.send_reply (context.sender, e);
 		}
 	});
+	//*/
 
 };
 
@@ -204,7 +206,7 @@ util.inherits(ΩF_0Bot, Bot);
 				}
 			} catch (e) {}
 			if (result.length) {
-				if (this.github_context) {
+			if (this.github_context) {
 					var chnl = this.github_context.get_channel(channel);
 					for (var i = 0, len = result.length; i < len; i++) {
 						chnl.send(result[i], {color: true});
@@ -231,6 +233,76 @@ util.inherits(ΩF_0Bot, Bot);
 	}
 };
 
+ΩF_0Bot.prototype.projects = function(context, project) {
+
+	var options = { host: "api.github.com" };
+
+	if (project) {
+		// Output information for specific project.
+		options.path = "/repos/oftn/"+project;
+		https.get (options, function(res) {
+			var json = "";
+			res.on ("data", function(data) { json += data; });
+			res.on ("end", function() {
+				var data = JSON.parse (json);
+
+				if (data.message) {
+					context.channel.send_reply (context.intent, data.message);
+					return;
+				}
+
+				var reply = [];
+				reply.push ("\x036"+data.name+"\x0f:");
+				reply.push (data.description);
+
+				if (data.language) reply.push ("[\x0310"+data.language+"\x0f]");
+				if (data.homepage) reply.push ("\x032<"+data.homepage+">\x0f");
+
+				if (data.pushed_at) {
+					var diff = Date.now() - new Date(data.pushed_at).getTime();
+					var times = ["second"];
+					var relative = (function(diff) {
+						var term, shift = diff/1000|0;
+						if (shift < 45) { term = "second"; }
+						else if (shift < 2700) { shift /= 60; term = "minute"; }
+						else if (shift < 64800) { shift /= 3600; term = "hour"; }
+						else { shift = shift / 3600 / 24; term = "day"; }
+
+						shift |= 0;
+						if (shift != 1) term += "s";
+						return "(updated "+shift+" "+term+" ago)";
+					})(diff);
+					reply.push (relative);
+				}
+				context.channel.send_reply (context.intent, reply.join (" "), {color: true});
+			});
+		});
+	} else {
+		// Output public repositories.
+		options.path = "/orgs/oftn/repos";
+		https.get (options, function(res) {
+			var json = "";
+			res.on ("data", function(data) { json += data; });
+			res.on ("end", function() {
+
+				var data = JSON.parse (json);
+				var reply = [];
+
+				data.sort (function(a, b) {
+					return new Date(b.pushed_at).getTime() - new Date(a.pushed_at).getTime();
+				});
+
+				for (var i = 0, len = Math.min(data.length, 12); i < len; i++) {
+					//if (data[i].fork) continue;
+					reply.push ("\x036"+data[i].name+"\x0F");
+				}
+
+				context.channel.send_reply (context.intent, "Projects of the ΩF:∅ Foundation: " + reply.join(", "), {color: true});
+			});
+		});
+	}
+};
+
 ΩF_0Bot.prototype.gh = function(context, username) {
 
 	var options = {
@@ -239,7 +311,9 @@ util.inherits(ΩF_0Bot, Bot);
 	};
 
 	https.get (options, function(res) {
-		res.on ("data", function(json) {
+		var json = "";
+		res.on ("data", function(data) { json += data; });
+		res.on ("end", function() {
 			var data = JSON.parse (json);
 			var reply = [];
 
