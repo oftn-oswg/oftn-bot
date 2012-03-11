@@ -53,7 +53,7 @@ util.inherits(ΩF_0Bot, Bot);
 ΩF_0Bot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 
-	this.register_listener(/^((?:sm?|v8?|js?|>>?|\|)>)([^>].*)+/, Shared.execute_js);
+	this.register_listener(/^((?:sm?|v8?|js?|hs?|>>?|\|)>)([^>].*)+/, Shared.execute_js);
 	this.register_command("topic", Shared.topic);
 	this.register_command("find", Shared.find);
 	this.register_command("learn", Shared.learn, {allow_intentions: false});
