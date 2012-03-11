@@ -51,6 +51,9 @@ var Shared = module.exports = {
 			}, 1000 * 60);
 			person.js.code.push (code);
 			return;
+		case "h>":
+		case "hs>":
+			engine = Sandbox.Haskell; break;
 		case ">>>":
 		case "v>":
 		case "v8>":
