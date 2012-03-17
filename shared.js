@@ -16,7 +16,7 @@ function parse_regex_literal (text) {
 var Shared = module.exports = {
 	
 	google: function(context, text) {
-		FeelingLucky(text, function(data) {
+		FeelingLucky(text + " -site:w3schools.com", function(data) {
 			if (data) {
 				context.channel.send_reply (context.intent, 
 					"\x02"+data.title+"\x0F \x032<"+data.url+">\x0F", {color: true});
