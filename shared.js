@@ -68,7 +68,7 @@ var Shared = module.exports = {
 			clearTimeout (person.js.timeout);
 		}
 
-		this.sandbox.run(engine, 3000, code, function(result) {
+		this.sandbox.run(engine, 4000, code, function(result) {
 			var reply;
 
 			try {

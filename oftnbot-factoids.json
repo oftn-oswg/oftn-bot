@@ -57,7 +57,7 @@
 		},
 		"help": {
 			"value": "For help using oftn-bot, see <https://github.com/oftn/oftn-bot/wiki/Guide-to-oftn-bot>",
-			"popularity": 24
+			"popularity": 25
 		},
 		"board": {
 			"value": "The ΩF:∅ Foundation Board of Directors: cloudhead, eboyjr, sephr, gkatsev, GothAlice, devyn, inimino, and yrashk",
@@ -71,15 +71,15 @@
 			"popularity": 4
 		},
 		"kirby": {
-			"value": "<(^-^<) <(^-^)> (>^-^)>",
-			"popularity": 4
+			"value": "<(n_n<) <(n_n)> (>n_n)>",
+			"popularity": 5
 		},
 		"recursion": {
 			"value": "See !recursion"
 		},
 		"test": {
 			"value": "Error: Failure while printing test status.",
-			"popularity": 67
+			"popularity": 69
 		},
 		"specgen": {
 			"value": "Anolis <http://anolis.gsnedders.com/>",
@@ -108,9 +108,6 @@
 		"leaving": {
 			"value": "How horrible! I don't know what I'll do with myself without you, eboyjr or sephr!",
 			"popularity": 6
-		},
-		"androide": {
-			"value": "An IDE for Android. People working on it: sephr, gkatsev, and not eboyjr."
 		},
 		"irc modes": {
 			"value": "<http://webtoman.com/opera/panel/ircdmodes.html>",
@@ -167,7 +164,7 @@
 		},
 		"oftn": {
 			"value": "The ΩF:∅ Foundation creates and maintains free and open-source software.",
-			"popularity": 2
+			"popularity": 3
 		},
 		"hammertime": {
 			"value": "━━▊ ━━▊ ━━▊",
@@ -244,12 +241,12 @@
 			"popularity": 1
 		},
 		"post hook": {
-			"value": "The Github Post-Receive Hook URL for all ΩF:∅ repositories is: http://eboyjr.oftn.org:9370/oftn",
-			"popularity": 1
+			"value": "The Github Post-Receive Hook URL for oftn-bot is: http://eboyjr.oftn.org:9370/<uri-escaped-channel>",
+			"popularity": 3
 		},
 		"donate": {
 			"value": "https://www.wepay.com/donate/oftn",
-			"popularity": 0
+			"popularity": 1
 		},
 		"facebook": {
 			"value": "https://www.facebook.com/oftn.foundation",
@@ -264,7 +261,7 @@
 			"popularity": 1
 		},
 		"default topic": {
-			"value": "The ΩF:∅ Foundation - The league of open-source software beaux esprits - http://oftn.org - mumble://talk.oftn.org",
+			"value": "The ΩF:∅ Foundation - The league of open-source software beaux esprits - http://oftn.org - http://oftn.titanpad.com/ - mumble://talk.oftn.org",
 			"popularity": 1
 		},
 		"usage": {
@@ -275,6 +272,42 @@
 		},
 		"logs": {
 			"value": "Some logs of this channel are hosted by eboy at http://eboyjr.oftn.org:8080/files/irclogs/freenode/ in #oftn.log files.",
+			"popularity": 0
+		},
+		"api design": {
+			"value": "When designing an interface, imagine that your program is all that stands between the user and hot, sweaty, tangled-bedsheets-fingertips-digging-into-the-back sex. <http://xkcd.com/196/>",
+			"popularity": 0
+		},
+		"it works": {
+			"value": "It works it works! Omg omg omg! I mean it compiles. Now what's a segfault?",
+			"popularity": 1
+		},
+		"important": {
+			"value": "Spelling and capitalization are important in programming, unless you are using PHP.",
+			"popularity": 3
+		},
+		"o4o": {
+			"value": "Some topics are controversial and often end in negativity. Take care on subjects like war, race, religion, politics, gender, sexuality, drugs, potentially illegal activities and suicide. The topics are not banned; stating your position is ok, but trolling, baiting, hostility or repetition are not. If you are asked to stop, do so politely, or move to #oftn-offtopic.",
+			"popularity": 0
+		},
+		"status nuck": {
+			"value": "porning",
+			"popularity": 0
+		},
+		"csi": {
+			"value": "YEEAAAAAAAAAAAAAAAH <http://mirrors.rit.edu/instantCSI/>",
+			"popularity": 0
+		},
+		"new projects": {
+			"value": "We welcome all new projects to the ΩF:∅ Foundation. To start a new one, tell a board member 1) the name of the project, 2) project description [optional], and 3) which ΩF:∅ members are also going to be working on this project. Also ask about setting up a web page at <http://oftn.org/>.",
+			"popularity": 0
+		},
+		"designers": {
+			"value": "1) entropy- alex@entropyirc.net [cheesy rounded corners]  2) oksushi #css-lance [professional, busy] 3) jedimind http://pud.ca/ [commercial, probably expensive]",
+			"popularity": 0
+		},
+		"gods": {
+			"value": "locks",
 			"popularity": 0
 		}
 	}

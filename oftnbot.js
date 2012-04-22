@@ -64,6 +64,17 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("gh", this.gh);
 	this.register_command("projects", this.projects);
 
+	this.register_listener(/^([a-z0-9]+[:,])?\s*((lol|oh|wtf|hey|no|omg|um|but|actually|idk|also|and|just|then|what|wat|woah|whoah|ok|okay)\s*)*\bwait\b/i, function(context) {
+		if (context.sender.name === "sephr") {
+			context.client.raw ("PRIVMSG ChanServ :OP #oftn");
+			setTimeout (function() {
+				context.client.raw ("KICK #oftn sephr :You're not allowed to tell people to wait.");
+				context.client.raw ("MODE #oftn +b *!*@unaffiliated/sephr :");
+				context.client.raw ("PRIVMSG ChanServ :DEOP #oftn");
+			}, 2 * 1000);
+		}
+	});
+
 	this.password = "I solemnly swear that I am up to no evil";
 	
 	this.register_command("access", function(context, text) {
@@ -180,11 +191,11 @@ util.inherits(ΩF_0Bot, Bot);
 		var chunks = [], channel;
 		
 		// Get the channel to send messages in from the url
-		channel = url.parse(request.url).pathname.replace(/[^A-Z0-9\.]/ig, '').replace(/\./g, '#');
+		channel = decodeURIComponent(url.parse(request.url).pathname.slice(1));
 		if (!channel) {
-			channel = "oftn";
+			channel = "#oftn";
 		}
-		channel = "#"+channel;
+		console.log("Received GitHub update for %s", channel);
 		
 		request.setEncoding("utf8");
 		request.on("data", function(chunk) {
