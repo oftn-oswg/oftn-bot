@@ -208,12 +208,12 @@ util.inherits(ΩF_0Bot, Bot);
 
 			if (time < 1) time = 60000;
 
-			//console.log("(→ NickServ) QUIET " + context.channel.name + " " + md[1]);
-			context.client.get_user("NickServ").send("QUIET " + context.channel.name + " " + md[1]);
+			//console.log("(→ ChanServ) QUIET " + context.channel.name + " " + md[1]);
+			context.client.get_user("ChanServ").send("QUIET " + context.channel.name + " " + md[1]);
 
 			setTimeout(function () {
-				//console.log("(→ NickServ) UNQUIET " + context.channel.name + " " + md[1]);
-				context.client.get_user("NickServ").send("UNQUIET #oftn " + context.channel.name + " " + md[1]);
+				//console.log("(→ ChanServ) UNQUIET " + context.channel.name + " " + md[1]);
+				context.client.get_user("ChanServ").send("UNQUIET #oftn " + context.channel.name + " " + md[1]);
 			}, time);
 		} else {
 			context.channel.send_reply (context.sender, "Usage: !quiet <user> [time=1m], where time is specified as [NNd][NNh][NNm]<NN[s]>");
