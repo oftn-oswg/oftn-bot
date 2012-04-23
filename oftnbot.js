@@ -213,7 +213,7 @@ util.inherits(ΩF_0Bot, Bot);
 
 			setTimeout(function () {
 				//console.log("(→ ChanServ) UNQUIET " + context.channel.name + " " + md[1]);
-				context.client.get_user("ChanServ").send("UNQUIET #oftn " + context.channel.name + " " + md[1]);
+				context.client.get_user("ChanServ").send("UNQUIET " + context.channel.name + " " + md[1]);
 			}, time);
 		} else {
 			context.channel.send_reply (context.sender, "Usage: !quiet <user> [time=1m], where time is specified as [NNd][NNh][NNm]<NN[s]>");
