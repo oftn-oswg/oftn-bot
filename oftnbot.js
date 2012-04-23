@@ -31,6 +31,18 @@ String.prototype.repeat = function(i) {
 	return d;
 };
 
+Array.prototype.zip = function (other, zipFunc) {
+	var i, out = [], max = Math.min(this.length, other.length);
+
+	if (typeof zipFunc !== "function")
+		zipFunc = function (x, y) { return [x, y] };
+
+	for (i = 0; i < max; i++)
+		out.push(zipFunc(this[i], other[i]));
+
+	return out;
+};
+
 
 var ΩF_0Bot = function(profile) {
 	Bot.call(this, profile);
@@ -182,6 +194,31 @@ util.inherits(ΩF_0Bot, Bot);
 	});
 	//*/
 
+
+	this.register_command("quiet", function (context, text) {
+		var md = text.match(/^ *([^ ]+) *(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(\d*)s? *$/);
+
+		if (context.priv)
+			return context.channel.send ("Can not be invoked via PM.");
+
+		if (md) {
+			var time = md.slice(2).map   (                                  function (i)   { return parseInt(i || 0, 10); })
+			                      .zip   ([86400000, 3600000, 60000, 1000], function (x,y) { return x * y; })
+			                      .reduce(                                  function (x,y) { return x + y; });
+
+			if (time < 1) time = 60000;
+
+			//console.log("(→ NickServ) QUIET " + context.channel.name + " " + md[1]);
+			context.client.get_user("NickServ").send("QUIET " + context.channel.name + " " + md[1]);
+
+			setTimeout(function () {
+				//console.log("(→ NickServ) UNQUIET " + context.channel.name + " " + md[1]);
+				context.client.get_user("NickServ").send("UNQUIET #oftn " + context.channel.name + " " + md[1]);
+			}, time);
+		} else {
+			context.channel.send_reply (context.sender, "Usage: !quiet <user> [time=1m], where time is specified as [NNd][NNh][NNm]<NN[s]>");
+		}
+	});
 };
 
 
