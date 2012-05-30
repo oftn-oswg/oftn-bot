@@ -32,7 +32,7 @@
 		},
 		"eboyjr": {
 			"value": "Have you seen my obscure interest lately?",
-			"popularity": 8
+			"popularity": 9
 		},
 		"collab": {
 			"value": "For real-time collaboration, we use Gobby 0.5. The server is eboyjr.oftn.org, run by eboyjr. If that's not available, we use <http://oftn.titanpad.com/>.",
@@ -241,8 +241,8 @@
 			"popularity": 1
 		},
 		"post hook": {
-			"value": "The Github Post-Receive Hook URL for oftn-bot is: http://eboyjr.oftn.org:9370/<uri-escaped-channel>",
-			"popularity": 3
+			"value": "The Github Post-Receive WebHook URL for oftn-bot is: http://eboyjr.oftn.org:9370/<uri-escaped-channel>",
+			"popularity": 4
 		},
 		"donate": {
 			"value": "https://www.wepay.com/donate/oftn",
@@ -309,6 +309,9 @@
 		"gods": {
 			"value": "locks",
 			"popularity": 0
+		},
+		"webhook": {
+			"alias": "post hook"
 		}
 	}
 }

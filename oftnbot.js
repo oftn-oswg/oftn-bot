@@ -80,10 +80,31 @@ util.inherits(ΩF_0Bot, Bot);
 		if (context.sender.name === "sephr") {
 			context.client.raw ("PRIVMSG ChanServ :OP #oftn");
 			setTimeout (function() {
-				context.client.raw ("KICK #oftn sephr :You're not allowed to tell people to wait.");
+				context.client.raw ("KICK #oftn sephr :You're not allowed to use wait in that way.");
 				context.client.raw ("MODE #oftn +b *!*@unaffiliated/sephr :");
 				context.client.raw ("PRIVMSG ChanServ :DEOP #oftn");
 			}, 2 * 1000);
+		}
+	});
+
+	this.register_listener(/(-?\b\d+(?:\.\d*)?)\s+°?\s*([FC])\b/i, function(context, text, value, unit) {
+		var celsius, result;
+
+		value = parseFloat (value);
+		celsius = (unit === "C" || unit === "c");
+
+		if (celsius) {
+			converted = value * (9/5) + 32;
+			result = fmt(value) + " °C is " + fmt(converted) + " °F";
+		} else {
+			converted = (value - 32) * (5/9);
+			result = fmt(value) + " °F is " + fmt(converted) + " °C";
+		}
+		
+		context.channel.send (result);
+
+		function fmt(value) {
+			return String(Math.round(value*100)/100);
 		}
 	});
 
