@@ -168,7 +168,7 @@ JSBot.prototype.help = function(context, text) {
 
 JSBot.prototype.mdn = function(context, text, command) {
 	if (!text) {
-		return Shared.find (context, command);
+		return Shared.find.call (this, context, command);
 	}
 
 	Shared.google (context, "site:developer.mozilla.org "+text);
@@ -178,7 +178,7 @@ JSBot.prototype.mdn = function(context, text, command) {
 JSBot.prototype.command_not_found = function(context, text) {
 
 	if (context.priv) {
-		return this.find(context, text);
+		return Shared.find.call (this, context, text);
 	}
 	
 	try {
