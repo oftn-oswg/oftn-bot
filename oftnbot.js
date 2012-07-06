@@ -76,18 +76,7 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("gh", this.gh);
 	this.register_command("projects", this.projects);
 
-	this.register_listener(/^([a-z0-9]+[:,])?\s*((lol|oh|wtf|hey|no|omg|um|but|actually|idk|also|and|just|then|what|wat|woah|whoah|ok|okay)\s*)*\bwait\b/i, function(context) {
-		if (context.sender.name === "sephr") {
-			context.client.raw ("PRIVMSG ChanServ :OP #oftn");
-			setTimeout (function() {
-				context.client.raw ("KICK #oftn sephr :You're not allowed to use wait in that way.");
-				context.client.raw ("MODE #oftn +b *!*@unaffiliated/sephr :");
-				context.client.raw ("PRIVMSG ChanServ :DEOP #oftn");
-			}, 2 * 1000);
-		}
-	});
-
-	this.register_listener(/(-?\b\d+(?:\.\d*)?)\s+°?\s*([FC])\b/i, function(context, text, value, unit) {
+	this.register_listener(/(-?\b\d+(?:\.\d*)?)\s*°?\s*([FC])\b/, function(context, text, value, unit) {
 		var celsius, result;
 
 		value = parseFloat (value);
@@ -245,6 +234,22 @@ util.inherits(ΩF_0Bot, Bot);
 
 ΩF_0Bot.prototype.start_github_server = function(port) {
 
+	var users = {
+		"eboyjr": "eboy",
+		"eligrey": "sephr",
+		"otter": "otters",
+		"FireyFly": "FireFly",
+		"amcgregor": "GothAlice",
+		"guipn": "guidj0s",
+		"insidious": "Obfuscate",
+		"killdream": "Sorella",
+		"mathiasbynens": "matjas",
+		"navarr": "Navarr",
+		"nisstyre56": "Nisstyre",
+		"SilverTab": "jeannicolas",
+		"Systemfault": "systemfault"
+	};
+
 	http.createServer(function (request, response) {
 		var chunks = [], channel;
 		
@@ -270,7 +275,7 @@ util.inherits(ΩF_0Bot, Bot);
 						var author = data.commits[i].author;
 						author = author.username || author.login || author.name || author.email;
 						var commitmsg = data.commits[i].message.replace(/[\r\n]/g, ' ').replace(/^(.{64}).+$/, '$1…');
-						result.push("\x036* "+data.repository.name+"\x0F "+commitmsg+" \x032<"+data.commits[i].url.slice(0, -33)+">\x0F\x0310 "+author+"\x0F");
+						result.push("\x036* "+data.repository.name+"\x0F "+commitmsg+" \x032<"+data.commits[i].url.slice(0, -33)+">\x0F "+(users[author] || author));
 					}
 				}
 			} catch (e) {}
