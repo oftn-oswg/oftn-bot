@@ -166,44 +166,10 @@ util.inherits(ΩF_0Bot, Bot);
 	});
 	
 	this.on('command_not_found', this.find);
-	
+
 	this.on('connect', function(client) {
 		this.github_context = client;
 	});
-	
-	/*this.register_command("choc", function(context) {
-		var userlist = context.channel.userlist;
-
-		try {
-			if (context.priv) throw new Error("Cannot use command in private.");
-
-			var authorized = ["alexgordon", "jeannicolas", "eboy", "locks", "CapsuleNZ"];
-			if (!~authorized.indexOf(context.sender.name)) {
-				throw new Error("You are not authorized to use this command.");
-			}
-
-			var client = http.createClient(80, "chocolatapp.com");
-			var request = client.request ("GET",
-				Profile.choc_invite,
-				{ "host": "chocolatapp.com" });
-
-			request.addListener("response", function(response) {
-				response.setEncoding("utf8");
-				var url = '';
-				response.addListener('data', function(data) { url += data; });
-				response.addListener('end', function() {
-					// Send url
-					context.channel.send_reply (context.intent, "An invite URL has been sent to you. Please check your private messages.");
-					context.intent.send (url);
-				});
-			});
-			request.end();
-		} catch (e) {
-			context.channel.send_reply (context.sender, e);
-		}
-	});
-	//*/
-
 
 	this.register_command("quiet", function (context, text) {
 		var md = text.match(/^ *([^ ]+) *(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(\d*)s? *$/);
@@ -272,13 +238,37 @@ util.inherits(ΩF_0Bot, Bot);
 				var data = JSON.parse(json);
 				if (len = data.commits.length) {
 					for (var i = 0; i < len; i++) {
+
+						/* Get author information */
 						var author = data.commits[i].author;
-						author = author.username || author.login || author.name || author.email;
-						var commitmsg = data.commits[i].message.replace(/[\r\n]/g, ' ').replace(/^(.{64}).+$/, '$1…');
-						result.push("\x036* "+data.repository.name+"\x0F "+commitmsg+" \x032<"+data.commits[i].url.slice(0, -33)+">\x0F "+(users[author] || author));
+						var user = author.username || author.login || author.name || author.email;
+						if (users[user]) {
+							user = users[user];
+						}
+
+						/* Get commit message information and shorten */
+						var message = data.commits[i].message;
+						if (message) {
+							message = message.split(/[\r\n]/g)[0];
+							if (message.length > 64) {
+								message = message.substr(0, 64) + "…";
+							}
+						}
+
+						/* Get name of repository */
+						var repo = data.repository.name;
+
+						/* Get url to commit information page, and shorten if it's a Github commit */
+						var url = data.commits[i].url;
+						if (url && /^https:\/\/github.com\/[^\/]+\/[^\/]+\/commit\/[a-z0-9]{40}$/.test(url)) {
+							url = url.slice(0, -33);
+						}
+
+						result.push("\x036* " + repo + "\x0F " + message + " \x032" + (url ? "<" + url + ">" : "|") +"\x0F " + user);
 					}
 				}
-			} catch (e) {}
+			} catch (e) { result.push(String(e)); }
+
 			if (result.length) {
 			if (this.github_context) {
 					var chnl = this.github_context.get_channel(channel);
@@ -414,13 +404,16 @@ util.inherits(ΩF_0Bot, Bot);
 ΩF_0Bot.prototype.tweet = function(context, text) {
 	var username;
 	var authorized = {
+		/* Board */
 		"eboy": "eboyjr",
 		"sephr": "sephr",
 		"devyn": "devynci",
 		"inimino": "inimino",
 		"gkatsev": "gkatsev",
 		"cloudhead": "cloudhead",
-		"yrashk": "yrashk"
+		"yrashk": "yrashk",
+
+		"FireFly": "FireyFly"
 	};
 	
 	if (!authorized.hasOwnProperty (context.sender.name)) return;
