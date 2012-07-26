@@ -250,7 +250,7 @@ util.inherits(ΩF_0Bot, Bot);
 						var message = data.commits[i].message;
 						if (message) {
 							message = message.split(/[\r\n]/g)[0];
-							if (message.length > 64) {
+							if (message.length > 128) {
 								message = message.substr(0, 64) + "…";
 							}
 						}
