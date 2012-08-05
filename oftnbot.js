@@ -195,6 +195,38 @@ util.inherits(ΩF_0Bot, Bot);
 			context.channel.send_reply (context.sender, "Usage: !quiet <user> [time=1m], where time is specified as [NNd][NNh][NNm]<NN[s]>");
 		}
 	});
+
+	this.register_command("america", function(context) {
+		var flag = [
+			' ',
+			'\x030,2  ★   ★   ★   ★   ★   ★  \x030,5                                 ',
+			'\x030,2    ★   ★   ★   ★   ★    \x030,0                                 ',
+			'\x030,2  ★   ★   ★   ★   ★   ★  \x030,5                                 ',
+			'\x030,2    ★   ★   ★   ★   ★    \x030,0                                 ',
+			'\x030,2  ★   ★   ★   ★   ★   ★  \x030,5                                 ',
+			'\x030,2    ★   ★   ★   ★   ★    \x030,0                                 ',
+			'\x030,2  ★   ★   ★   ★   ★   ★  \x030,5                                 ',
+			'\x030,2    ★   ★   ★   ★   ★    \x030,0                                 ',
+			'\x030,2  ★   ★   ★   ★   ★   ★  \x030,5                                 ',
+			'\x030,0                                                          ',
+			'\x030,5                                                          ',
+			'\x030,0                                                          ',
+			'\x030,5                                                          ',
+			'\x030,0                                                          ',
+			'\x030,5                                                          ',
+			' '
+		];
+
+		if (!context.priv) {
+			context.channel.send_reply (context.sender, "This command is only available in private.");
+			return;
+		}
+
+		flag.forEach(function(string) {
+			context.channel.send(string, {color: true});
+		});
+
+	});
 };
 
 
@@ -217,26 +249,34 @@ util.inherits(ΩF_0Bot, Bot);
 	};
 
 	http.createServer(function (request, response) {
-		var chunks = [], channel;
+		var payload = "", channel;
 		
 		// Get the channel to send messages in from the url
 		channel = decodeURIComponent(url.parse(request.url).pathname.slice(1));
 		if (!channel) {
 			channel = "#oftn";
 		}
-		console.log("Received GitHub update for %s", channel);
-		
+
 		request.setEncoding("utf8");
 		request.on("data", function(chunk) {
-			chunks.push(chunk);
+			payload += chunk;
 		});
-		
+
 		// When the request has finished coming in.
 		request.on("end", function() {
-			var json = querystring.parse(chunks.join("")).payload, result = [], len;
 			try {
+				var json = querystring.parse(payload).payload, result = [];
 				var data = JSON.parse(json);
-				if (len = data.commits.length) {
+
+				var len = data.commits ? data.commits.length : 0;
+				if (data.head_commit && len === 0) {
+					data.commits.push(data.head_commit);
+					len++;
+				}
+
+				console.log("Received GitHub update for %s (%d commits)", channel, len);
+
+				if (len) {
 					for (var i = 0; i < len; i++) {
 
 						/* Get author information */
@@ -249,9 +289,9 @@ util.inherits(ΩF_0Bot, Bot);
 						/* Get commit message information and shorten */
 						var message = data.commits[i].message;
 						if (message) {
-							message = message.split(/[\r\n]/g)[0];
+							message = message.split(/[\r\n]+/g)[0];
 							if (message.length > 128) {
-								message = message.substr(0, 64) + "…";
+								message = message.substr(0, 127) + "…";
 							}
 						}
 
@@ -264,23 +304,37 @@ util.inherits(ΩF_0Bot, Bot);
 							url = url.slice(0, -33);
 						}
 
-						result.push("\x036* " + repo + "\x0F " + message + " \x032" + (url ? "<" + url + ">" : "|") +"\x0F " + user);
+						/* Get branch information from data.ref */
+						var branch = data.ref;
+						if (branch) {
+							branch = branch.replace(/^refs\/heads\//, "");
+						}
+
+						result.push(
+							(repo ? "\x0311" + repo + "\x0F" : "") +
+							(branch ? " \x038" + branch + "\x0F" : "") + ": " +
+							(user ? "(" +user + ") " : "") +
+							(message ? message + " " : "") + 
+							(url ? url : "")
+						);
 					}
 				}
-			} catch (e) { result.push(String(e)); }
+			} catch (e) {
+				console.error(e.stack);
+			}
 
-			if (result.length) {
-			if (this.github_context) {
-					var chnl = this.github_context.get_channel(channel);
-					for (var i = 0, len = result.length; i < len; i++) {
-						chnl.send(result[i], {color: true});
-					}
+			if (result.length && this.github_context) {
+				var chnl = this.github_context.get_channel(channel);
+				for (var i = 0, len = result.length; i < len; i++) {
+					chnl.send(result[i], {color: true});
 				}
 			}
+
 			response.end();
 		}.bind(this));
 	  
 	}.bind(this)).listen(port);
+
 	util.puts("Github server running at port: "+port);
 };
 
