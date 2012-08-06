@@ -172,27 +172,42 @@ util.inherits(ΩF_0Bot, Bot);
 	});
 
 	this.register_command("quiet", function (context, text) {
-		var md = text.match(/^ *([^ ]+) *(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(\d*)s? *$/);
+		var match;
 
-		if (context.priv)
-			return context.channel.send ("Can not be invoked via PM.");
+		try {
+			if (!context.sender.host) {
+				throw new Error("Could not verify credentials.");
+			}
 
-		if (md) {
-			var time = md.slice(2).map   (                                  function (i)   { return parseInt(i || 0, 10); })
-			                      .zip   ([86400000, 3600000, 60000, 1000], function (x,y) { return x * y; })
-			                      .reduce(                                  function (x,y) { return x + y; });
+			if (!/^oftn\/board\//.test(context.sender.host)) {
+				throw new Error("You are not authorized.");
+			}
+
+			if (context.priv) {
+				throw new Error("Can not be invoked via private message.");
+			}
+
+			var match = text.match(/^ *([^ ]+) *(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(\d*)s? *$/);
+
+			if (!match) {
+				throw new SyntaxError(
+					"Usage: !quiet <user> <time>, where time is optional and specified as [NNd][NNh][NNm]<NN[s]> (defaults to 1m)");
+			}
+
+			var time = match.slice(2).map   (                                  function (i)   { return parseInt(i || 0, 10); })
+			                         .zip   ([86400000, 3600000, 60000, 1000], function (x,y) { return x * y; })
+			                         .reduce(                                  function (x,y) { return x + y; });
 
 			if (time < 1) time = 60000;
 
-			//console.log("(→ ChanServ) QUIET " + context.channel.name + " " + md[1]);
-			context.client.get_user("ChanServ").send("QUIET " + context.channel.name + " " + md[1]);
+			context.client.get_user("ChanServ").send("QUIET " + context.channel.name + " " + match[1]);
 
 			setTimeout(function () {
 				//console.log("(→ ChanServ) UNQUIET " + context.channel.name + " " + md[1]);
-				context.client.get_user("ChanServ").send("UNQUIET " + context.channel.name + " " + md[1]);
+				context.client.get_user("ChanServ").send("UNQUIET " + context.channel.name + " " + match[1]);
 			}, time);
-		} else {
-			context.channel.send_reply (context.sender, "Usage: !quiet <user> [time=1m], where time is specified as [NNd][NNh][NNm]<NN[s]>");
+		} catch (e) {
+			context.channel.send_reply (context.sender, e);
 		}
 	});
 
@@ -456,37 +471,52 @@ util.inherits(ΩF_0Bot, Bot);
 };
 
 ΩF_0Bot.prototype.tweet = function(context, text) {
-	var username;
-	var authorized = {
+	var username, auth;
+	var twitters = {
 		/* Board */
-		"eboy": "eboyjr",
+		"eboyjr": "eboyjr",
 		"sephr": "sephr",
 		"devyn": "devynci",
 		"inimino": "inimino",
 		"gkatsev": "gkatsev",
 		"cloudhead": "cloudhead",
 		"yrashk": "yrashk",
+		"amcgregor": "GothAlice",
 
 		"FireFly": "FireyFly"
 	};
-	
-	if (!authorized.hasOwnProperty (context.sender.name)) return;
-	username = authorized[context.sender.name];
 
-	if (text.length > 140) {
-		context.channel.send_reply (context.sender, "Error: Status is over 140 characters. Get rid of at least "+(text.length-140)+" characters.");
-		return;
-	}
+	try {
 
-	this.twitter.updateStatus(text + " \u2014@" + username, function(data) {
-		if (data.id_str) {
-			context.channel.send ("Tweet successful: https://twitter.com/oftn_foundation/status/"+data.id_str);
-		} else 
-			var json = data.data;
-			data = JSON.parse (json);{
-			context.channel.send ("Error posting tweet: " + data.error);
+		if (!context.sender.host) {
+			throw new Error("Could not verify credentials.");
 		}
-	});
+
+		auth = String(context.sender.host).match(/^oftn\/(?:member|board)\/(.*)$/);
+		if (!auth) {
+			throw new Error("You are not authorized.");
+		}
+
+		auth = twitters[auth[1]] ? "@" + twitters[auth[1]] : auth[1];
+		text = text + " \u2014" + auth;
+
+		if (text.length > 140) {
+			throw new Error("Status is over 140 characters. Get rid of at least "+(text.length-140)+" characters.");
+		}
+
+		this.twitter.updateStatus(text, function(data) {
+			if (data.id_str) {
+				context.channel.send ("Tweet successful: https://twitter.com/oftn_foundation/status/"+data.id_str);
+			} else {
+				var json = data.data;
+				data = JSON.parse (json);
+				context.channel.send ("Error posting tweet: " + data.error);
+			}
+		});
+
+	} catch (e) {
+		context.channel.send_reply(context.sender, e);
+	}
 };
 
 new ΩF_0Bot(Profile).init();
