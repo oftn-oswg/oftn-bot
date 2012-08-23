@@ -76,21 +76,41 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("gh", this.gh);
 	this.register_command("projects", this.projects);
 
-	this.register_listener(/(-?\b\d+(?:\.\d*)?)\s*°?\s*([FC])\b/, function(context, text, value, unit) {
-		var celsius, result;
+	var tempurature = /(?:^|[ \(\[])(-?\d+(?:\.\d+)?)[\s°]*([CF])(?:$|[ .\)\]])/g;
 
-		value = parseFloat (value);
-		celsius = (unit === "C" || unit === "c");
+	this.register_listener(tempurature, function(context, text) {
+		var cache, now, cache_time, match, id, celsius, result, value, conversions = [];
 
-		if (celsius) {
-			converted = value * (9/5) + 32;
-			result = fmt(value) + " °C is " + fmt(converted) + " °F";
-		} else {
-			converted = (value - 32) * (5/9);
-			result = fmt(value) + " °F is " + fmt(converted) + " °C";
+		now = Date.now();
+		cache = context.channel.temp_cache = context.channel.temp_cache || {};
+		cache_time = 1000 * 60 * 15; /* 15 minutes */
+
+		while (match = tempurature.exec(text)) {
+			value = match[1];
+			unit = match[2];
+
+			value = parseFloat (value);
+			celsius = (unit === "C");
+			id = fmt(value) + "°" + unit;
+
+			if (cache[id] > now - cache_time) {
+				/* Tempurature has already been converted recently */
+				continue;
+			}
+			cache[id] = now;
+
+			if (celsius) {
+				converted = value * (9/5) + 32;
+				result = id + " = " + fmt(converted) + "°F";
+			} else {
+				converted = (value - 32) * (5/9);
+				result = id + " = " + fmt(converted) + "°C";
+			}
+
+			conversions.push(result);
 		}
 		
-		context.channel.send (result);
+		context.channel.send (conversions.join("; "));
 
 		function fmt(value) {
 			return String(Math.round(value*100)/100);
