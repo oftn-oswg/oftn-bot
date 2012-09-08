@@ -101,7 +101,7 @@ var Shared = module.exports = {
 	learn: function(context, text) {
 	
 		try {
-			var parsed = text.match(/^(alias)?\s*(.+?)\s*(=~?)\s*(.+)$/i);
+			var parsed = text.match(/^(alias)?\s*("[^"]*"|.+?)\s*(=~?)\s*(.+)$/i);
 			if (!parsed) {
 				throw new SyntaxError(
 					"Syntax is `learn ( [alias] foo = bar | foo =~ s/expression/replace/gi )`.");
@@ -111,6 +111,10 @@ var Shared = module.exports = {
 			var factoid = parsed[2];
 			var operation = parsed[3];
 			var value = parsed[4];
+
+			if (factoid.charAt(0) === '"') {
+				factoid = JSON.parse(factoid);
+			}
 
 			if (alias) {
 				var key = this.factoids.alias(factoid, value);
