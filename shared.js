@@ -139,7 +139,7 @@ var Shared = module.exports = {
 				if (old === result) {
 					context.channel.send_reply(context.sender, "Nothing changed.");
 				} else {
-					this.factoids. learn(factoid, result, context.sender.name);
+					this.factoids.learn(factoid, result, context.sender.name);
 					context.channel.send_reply(context.sender, "Changed `"+factoid+
 						"` to: "+result);
 				}
