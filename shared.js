@@ -125,7 +125,7 @@ var Shared = module.exports = {
 
 			/* Setting the text of a factoid */ 
 			if (operation === "=") {
-				this.factoids.learn(factoid, value);
+				this.factoids.learn(factoid, value, context.sender);
 				context.channel.send_reply(context.sender, "Learned `"+factoid+"`.");
 				return;
 
@@ -139,7 +139,7 @@ var Shared = module.exports = {
 				if (old === result) {
 					context.channel.send_reply(context.sender, "Nothing changed.");
 				} else {
-					this.factoids.learn(factoid, result);
+					this.factoids. learn(factoid, result, context.sender);
 					context.channel.send_reply(context.sender, "Changed `"+factoid+
 						"` to: "+result);
 				}
