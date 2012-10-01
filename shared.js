@@ -102,7 +102,7 @@ var Shared = module.exports = {
 	learn: function(context, text) {
 	
 		try {
-			var parsed = text.match(/^(alias)?\s*(.+?)\s*(=~?)\s*(.+)$/i);
+			var parsed = text.match(/^(alias)?\s*("[^"]*"|.+?)\s*(=~?)\s*(.+)$/i);
 			if (!parsed) {
 				throw new SyntaxError(
 					"Syntax is `learn ( [alias] foo = bar | foo =~ s/expression/replace/gi )`.");
@@ -113,6 +113,10 @@ var Shared = module.exports = {
 			var operation = parsed[3];
 			var value = parsed[4];
 
+			if (factoid.charAt(0) === '"') {
+				factoid = JSON.parse(factoid);
+			}
+
 			if (alias) {
 				var key = this.factoids.alias(factoid, value);
 				context.channel.send_reply(context.sender,
@@ -122,7 +126,7 @@ var Shared = module.exports = {
 
 			/* Setting the text of a factoid */ 
 			if (operation === "=") {
-				this.factoids.learn(factoid, value);
+				this.factoids.learn(factoid, value, context.sender.name);
 				context.channel.send_reply(context.sender, "Learned `"+factoid+"`.");
 				return;
 
@@ -136,7 +140,7 @@ var Shared = module.exports = {
 				if (old === result) {
 					context.channel.send_reply(context.sender, "Nothing changed.");
 				} else {
-					this.factoids.learn(factoid, result);
+					this.factoids.learn(factoid, result, context.sender.name);
 					context.channel.send_reply(context.sender, "Changed `"+factoid+
 						"` to: "+result);
 				}

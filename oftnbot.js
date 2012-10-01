@@ -76,21 +76,41 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("gh", this.gh);
 	this.register_command("projects", this.projects);
 
-	this.register_listener(/(-?\b\d+(?:\.\d*)?)\s*°?\s*([FC])\b/, function(context, text, value, unit) {
-		var celsius, result;
+	var tempurature = /(?:^|[ \(\[])(-?\d+(?:\.\d+)?)[\s°]*([CF])(?:$|[ .\)\]])/g;
 
-		value = parseFloat (value);
-		celsius = (unit === "C" || unit === "c");
+	this.register_listener(tempurature, function(context, text) {
+		var cache, now, cache_time, match, id, celsius, result, value, conversions = [];
 
-		if (celsius) {
-			converted = value * (9/5) + 32;
-			result = fmt(value) + " °C is " + fmt(converted) + " °F";
-		} else {
-			converted = (value - 32) * (5/9);
-			result = fmt(value) + " °F is " + fmt(converted) + " °C";
+		now = Date.now();
+		cache = context.channel.temp_cache = context.channel.temp_cache || {};
+		cache_time = 1000 * 60 * 15; /* 15 minutes */
+
+		while (match = tempurature.exec(text)) {
+			value = match[1];
+			unit = match[2];
+
+			value = parseFloat (value);
+			celsius = (unit === "C");
+			id = fmt(value) + "°" + unit;
+
+			if (cache[id] > now - cache_time) {
+				/* Tempurature has already been converted recently */
+				continue;
+			}
+			cache[id] = now;
+
+			if (celsius) {
+				converted = value * (9/5) + 32;
+				result = id + " = " + fmt(converted) + "°F";
+			} else {
+				converted = (value - 32) * (5/9);
+				result = id + " = " + fmt(converted) + "°C";
+			}
+
+			conversions.push(result);
 		}
 		
-		context.channel.send (result);
+		context.channel.send (conversions.join("; "));
 
 		function fmt(value) {
 			return String(Math.round(value*100)/100);
@@ -166,68 +186,81 @@ util.inherits(ΩF_0Bot, Bot);
 	});
 	
 	this.on('command_not_found', this.find);
-	
+
 	this.on('connect', function(client) {
 		this.github_context = client;
 	});
-	
-	/*this.register_command("choc", function(context) {
-		var userlist = context.channel.userlist;
+
+	this.register_command("quiet", function (context, text) {
+		var match;
 
 		try {
-			if (context.priv) throw new Error("Cannot use command in private.");
-
-			var authorized = ["alexgordon", "jeannicolas", "eboy", "locks", "CapsuleNZ"];
-			if (!~authorized.indexOf(context.sender.name)) {
-				throw new Error("You are not authorized to use this command.");
+			if (!context.sender.host) {
+				throw new Error("Could not verify credentials.");
 			}
 
-			var client = http.createClient(80, "chocolatapp.com");
-			var request = client.request ("GET",
-				Profile.choc_invite,
-				{ "host": "chocolatapp.com" });
+			if (!/^oftn\/board\//.test(context.sender.host)) {
+				throw new Error("You are not authorized.");
+			}
 
-			request.addListener("response", function(response) {
-				response.setEncoding("utf8");
-				var url = '';
-				response.addListener('data', function(data) { url += data; });
-				response.addListener('end', function() {
-					// Send url
-					context.channel.send_reply (context.intent, "An invite URL has been sent to you. Please check your private messages.");
-					context.intent.send (url);
-				});
-			});
-			request.end();
+			if (context.priv) {
+				throw new Error("Can not be invoked via private message.");
+			}
+
+			var match = text.match(/^ *([^ ]+) *(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(\d*)s? *$/);
+
+			if (!match) {
+				throw new SyntaxError(
+					"Usage: !quiet <user> <time>, where time is optional and specified as [NNd][NNh][NNm]<NN[s]> (defaults to 1m)");
+			}
+
+			var time = match.slice(2).map   (                                  function (i)   { return parseInt(i || 0, 10); })
+			                         .zip   ([86400000, 3600000, 60000, 1000], function (x,y) { return x * y; })
+			                         .reduce(                                  function (x,y) { return x + y; });
+
+			if (time < 1) time = 60000;
+
+			context.client.get_user("ChanServ").send("QUIET " + context.channel.name + " " + match[1]);
+
+			setTimeout(function () {
+				//console.log("(→ ChanServ) UNQUIET " + context.channel.name + " " + md[1]);
+				context.client.get_user("ChanServ").send("UNQUIET " + context.channel.name + " " + match[1]);
+			}, time);
 		} catch (e) {
 			context.channel.send_reply (context.sender, e);
 		}
 	});
-	//*/
 
+	this.register_command("america", function(context) {
+		var flag = [
+			' ',
+			'\x030,2  ★   ★   ★   ★   ★   ★  \x030,5                                 ',
+			'\x030,2    ★   ★   ★   ★   ★    \x030,0                                 ',
+			'\x030,2  ★   ★   ★   ★   ★   ★  \x030,5                                 ',
+			'\x030,2    ★   ★   ★   ★   ★    \x030,0                                 ',
+			'\x030,2  ★   ★   ★   ★   ★   ★  \x030,5                                 ',
+			'\x030,2    ★   ★   ★   ★   ★    \x030,0                                 ',
+			'\x030,2  ★   ★   ★   ★   ★   ★  \x030,5                                 ',
+			'\x030,2    ★   ★   ★   ★   ★    \x030,0                                 ',
+			'\x030,2  ★   ★   ★   ★   ★   ★  \x030,5                                 ',
+			'\x030,0                                                          ',
+			'\x030,5                                                          ',
+			'\x030,0                                                          ',
+			'\x030,5                                                          ',
+			'\x030,0                                                          ',
+			'\x030,5                                                          ',
+			' '
+		];
 
-	this.register_command("quiet", function (context, text) {
-		var md = text.match(/^ *([^ ]+) *(?:(\d+)d)?(?:(\d+)h)?(?:(\d+)m)?(\d*)s? *$/);
-
-		if (context.priv)
-			return context.channel.send ("Can not be invoked via PM.");
-
-		if (md) {
-			var time = md.slice(2).map   (                                  function (i)   { return parseInt(i || 0, 10); })
-			                      .zip   ([86400000, 3600000, 60000, 1000], function (x,y) { return x * y; })
-			                      .reduce(                                  function (x,y) { return x + y; });
-
-			if (time < 1) time = 60000;
-
-			//console.log("(→ ChanServ) QUIET " + context.channel.name + " " + md[1]);
-			context.client.get_user("ChanServ").send("QUIET " + context.channel.name + " " + md[1]);
-
-			setTimeout(function () {
-				//console.log("(→ ChanServ) UNQUIET " + context.channel.name + " " + md[1]);
-				context.client.get_user("ChanServ").send("UNQUIET " + context.channel.name + " " + md[1]);
-			}, time);
-		} else {
-			context.channel.send_reply (context.sender, "Usage: !quiet <user> [time=1m], where time is specified as [NNd][NNh][NNm]<NN[s]>");
+		if (!context.priv) {
+			context.channel.send_reply (context.sender, "This command is only available in private.");
+			return;
 		}
+
+		flag.forEach(function(string) {
+			context.channel.send(string, {color: true});
+		});
+
 	});
 };
 
@@ -251,46 +284,92 @@ util.inherits(ΩF_0Bot, Bot);
 	};
 
 	http.createServer(function (request, response) {
-		var chunks = [], channel;
+		var payload = "", channel;
 		
 		// Get the channel to send messages in from the url
 		channel = decodeURIComponent(url.parse(request.url).pathname.slice(1));
 		if (!channel) {
 			channel = "#oftn";
 		}
-		console.log("Received GitHub update for %s", channel);
-		
+
 		request.setEncoding("utf8");
 		request.on("data", function(chunk) {
-			chunks.push(chunk);
+			payload += chunk;
 		});
-		
+
 		// When the request has finished coming in.
 		request.on("end", function() {
-			var json = querystring.parse(chunks.join("")).payload, result = [], len;
 			try {
+				var json = querystring.parse(payload).payload, result = [];
 				var data = JSON.parse(json);
-				if (len = data.commits.length) {
+
+				var len = data.commits ? data.commits.length : 0;
+				if (data.head_commit && len === 0) {
+					data.commits.push(data.head_commit);
+					len++;
+				}
+
+				console.log("Received GitHub update for %s (%d commits)", channel, len);
+
+				if (len) {
 					for (var i = 0; i < len; i++) {
+
+						/* Get author information */
 						var author = data.commits[i].author;
-						author = author.username || author.login || author.name || author.email;
-						var commitmsg = data.commits[i].message.replace(/[\r\n]/g, ' ').replace(/^(.{64}).+$/, '$1…');
-						result.push("\x036* "+data.repository.name+"\x0F "+commitmsg+" \x032<"+data.commits[i].url.slice(0, -33)+">\x0F "+(users[author] || author));
+						var user = author.username || author.login || author.name || author.email;
+						if (users[user]) {
+							user = users[user];
+						}
+
+						/* Get commit message information and shorten */
+						var message = data.commits[i].message;
+						if (message) {
+							message = message.split(/[\r\n]+/g)[0];
+							if (message.length > 128) {
+								message = message.substr(0, 127) + "…";
+							}
+						}
+
+						/* Get name of repository */
+						var repo = data.repository.name;
+
+						/* Get url to commit information page, and shorten if it's a Github commit */
+						var url = data.commits[i].url;
+						if (url && /^https:\/\/github.com\/[^\/]+\/[^\/]+\/commit\/[a-z0-9]{40}$/.test(url)) {
+							url = url.slice(0, -33);
+						}
+
+						/* Get branch information from data.ref */
+						var branch = data.ref;
+						if (branch) {
+							branch = branch.replace(/^refs\/heads\//, "");
+						}
+
+						result.push(
+							(repo ? "\x0311" + repo + "\x0F" : "") +
+							(branch ? " \x038" + branch + "\x0F" : "") + ": " +
+							(user ? "(" +user + ") " : "") +
+							(message ? message + " " : "") + 
+							(url ? url : "")
+						);
 					}
 				}
-			} catch (e) {}
-			if (result.length) {
-			if (this.github_context) {
-					var chnl = this.github_context.get_channel(channel);
-					for (var i = 0, len = result.length; i < len; i++) {
-						chnl.send(result[i], {color: true});
-					}
+			} catch (e) {
+				console.error(e.stack);
+			}
+
+			if (result.length && this.github_context) {
+				var chnl = this.github_context.get_channel(channel);
+				for (var i = 0, len = result.length; i < len; i++) {
+					chnl.send(result[i], {color: true});
 				}
 			}
+
 			response.end();
 		}.bind(this));
 	  
 	}.bind(this)).listen(port);
+
 	util.puts("Github server running at port: "+port);
 };
 
@@ -412,34 +491,52 @@ util.inherits(ΩF_0Bot, Bot);
 };
 
 ΩF_0Bot.prototype.tweet = function(context, text) {
-	var username;
-	var authorized = {
-		"eboy": "eboyjr",
+	var username, auth;
+	var twitters = {
+		/* Board */
+		"eboyjr": "eboyjr",
 		"sephr": "sephr",
 		"devyn": "devynci",
 		"inimino": "inimino",
 		"gkatsev": "gkatsev",
 		"cloudhead": "cloudhead",
-		"yrashk": "yrashk"
+		"yrashk": "yrashk",
+		"amcgregor": "GothAlice",
+
+		"FireFly": "FireyFly"
 	};
-	
-	if (!authorized.hasOwnProperty (context.sender.name)) return;
-	username = authorized[context.sender.name];
 
-	if (text.length > 140) {
-		context.channel.send_reply (context.sender, "Error: Status is over 140 characters. Get rid of at least "+(text.length-140)+" characters.");
-		return;
-	}
+	try {
 
-	this.twitter.updateStatus(text + " \u2014@" + username, function(data) {
-		if (data.id_str) {
-			context.channel.send ("Tweet successful: https://twitter.com/oftn_foundation/status/"+data.id_str);
-		} else 
-			var json = data.data;
-			data = JSON.parse (json);{
-			context.channel.send ("Error posting tweet: " + data.error);
+		if (!context.sender.host) {
+			throw new Error("Could not verify credentials.");
 		}
-	});
+
+		auth = String(context.sender.host).match(/^oftn\/(?:member|board)\/(.*)$/);
+		if (!auth) {
+			throw new Error("You are not authorized.");
+		}
+
+		auth = twitters[auth[1]] ? "@" + twitters[auth[1]] : auth[1];
+		text = text + " \u2014" + auth;
+
+		if (text.length > 140) {
+			throw new Error("Status is over 140 characters. Get rid of at least "+(text.length-140)+" characters.");
+		}
+
+		this.twitter.updateStatus(text, function(data) {
+			if (data.id_str) {
+				context.channel.send ("Tweet successful: https://twitter.com/oftn_foundation/status/"+data.id_str);
+			} else {
+				var json = data.data;
+				data = JSON.parse (json);
+				context.channel.send ("Error posting tweet: " + data.error);
+			}
+		});
+
+	} catch (e) {
+		context.channel.send_reply(context.sender, e);
+	}
 };
 
 new ΩF_0Bot(Profile).init();
