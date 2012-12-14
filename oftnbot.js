@@ -75,6 +75,7 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("g", Shared.google);
 	this.register_command("gh", this.gh);
 	this.register_command("projects", this.projects);
+	this.register_command("unicode", this.unicode);
 
 	var tempurature = /(?:^|[ \(\[])(-?\d+(?:\.\d+)?)[\s°]*([CF])(?:$|[ .\)\]])/g;
 
@@ -538,5 +539,93 @@ util.inherits(ΩF_0Bot, Bot);
 		context.channel.send_reply(context.sender, e);
 	}
 };
+
+var unilist;
+
+ΩF_0Bot.prototype.unicode = function(context, text) {
+
+	if (!unilist) {
+		fs.readFile (path.join (__dirname, "UnicodeData.txt"), "utf8", function(err, data) {
+			if (err) throw err;
+
+			unilist = [];
+			var regln = /^(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*)$/;
+
+			context.channel.send ("Loading Unicode database...");
+
+			var lines = data.split("\n");
+			for (var i = 0, len = lines.length; i < len; i++) {
+				var ch = lines[i].match(regln);
+				if (ch) {
+					var v = parseInt(ch[1], 16);
+					unilist[v] = ch[2] || ch[11];
+				}
+			}
+
+			context.channel.send_reply (context.intent, unicode (text));
+		});
+	} else {
+		context.channel.send_reply (context.intent, unicode (text));
+	}
+
+	function unicode(text) {
+		text = String(text);
+
+		var result, hi, lo;
+
+		// Sequence of decimal digits
+		if (text.match (/^\d+$/))
+			return lookup (parseInt (text, 10));
+
+		result = text.match (/^(?:U\+|0x)([0-9a-f]+)$/i);
+
+		// Sequence of hexadecimal digits
+		if (result)
+			return lookup (parseInt (result[1], 16));
+
+		// Single unicode character
+		switch (text.length) {
+		case 1:
+			lookup (text.charCodeAt (0));
+			break;
+		case 2:
+			hi = text.charCodeAt (0);
+			if (hi >= 0xD800 && hi <= 0xDBFF) {
+				lo = text.charCodeAt (1);
+				var x = (hi & ((1 << 6) -1)) << 10 | lo & ((1 << 10) -1);
+				var w = (hi >> 6) & ((1 << 5) - 1);
+				var u = w + 1;
+				var c = u << 16 | x;
+				lookup (c);
+				return;
+			}
+			break;
+		}
+
+		// Search for character by name
+		return search (text.toUpperCase());
+
+		function lookup(ch) {
+			if (unilist[ch])
+				return unilist[ch] + " | " + String.fromCharCode(ch) + " (U+" + hex(ch) + ")";
+			return "Character " + ch + " not in database.";
+		}
+
+		function hex(code) {
+			return (code <= 0xf ? "000" : (code <= 0xff ? "00" : (code <= 0xfff ? "0" : ""))) + code.toString(16).toUpperCase();
+		}
+
+		function search(str) {
+			var len = unilist.length;
+			for (var i = 0; i < len; i++) {
+				if (unilist[i] && unilist[i].indexOf (str) !== -1) {
+					return lookup (i);
+				}
+			}
+			return "Not found.";
+		}
+	}
+};
+
 
 new ΩF_0Bot(Profile).init();
