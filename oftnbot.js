@@ -66,6 +66,8 @@ util.inherits(ΩF_0Bot, Bot);
 	Bot.prototype.init.call(this);
 
 	this.register_listener(/^((?:sm?|v8?|js?|hs?|>>?|\|)>)([^>].*)+/, Shared.execute_js);
+	this.register_listener(/\bhttps?:\/\/\S+/, this.url);
+
 	this.register_command("topic", Shared.topic);
 	this.register_command("find", Shared.find);
 	this.register_command("learn", Shared.learn, {allow_intentions: false});
@@ -551,8 +553,6 @@ var unilist;
 			unilist = [];
 			var regln = /^(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*)$/;
 
-			context.channel.send ("Loading Unicode database...");
-
 			var lines = data.split("\n");
 			for (var i = 0, len = lines.length; i < len; i++) {
 				var ch = lines[i].match(regln);
@@ -586,8 +586,7 @@ var unilist;
 		// Single unicode character
 		switch (text.length) {
 		case 1:
-			lookup (text.charCodeAt (0));
-			break;
+			return lookup (text.charCodeAt (0));
 		case 2:
 			hi = text.charCodeAt (0);
 			if (hi >= 0xD800 && hi <= 0xDBFF) {
@@ -596,10 +595,8 @@ var unilist;
 				var w = (hi >> 6) & ((1 << 5) - 1);
 				var u = w + 1;
 				var c = u << 16 | x;
-				lookup (c);
-				return;
+				return lookup (c);
 			}
-			break;
 		}
 
 		// Search for character by name
@@ -627,5 +624,124 @@ var unilist;
 	}
 };
 
+
+ΩF_0Bot.prototype.url = function (context, text) {
+
+	var match, regex = /https?:\/\/\S+/g;
+	while (match = regex.exec (text)) {
+		var vid, info = url.parse (match[0]);
+		if (info.host === "youtu.be") {
+			vid = info.pathname.slice(1);
+		} else if (info.hostname.indexOf (".youtube.")) {
+			vid = querystring.parse (info.query).v;
+		}
+
+		if (vid)
+			youtube (vid);
+	}
+
+
+	function youtube (vid) {
+
+		var data = {
+			id: vid,
+			key: "AIzaSyDiSI-jlejJfRXgbaDNvKX8AwdyBNVIYwQ",
+			part: "snippet,contentDetails",
+			fields: "items(snippet/title,contentDetails/duration)"
+		};
+
+		var opts = {
+			method: "GET",
+			hostname: "www.googleapis.com",
+			path: "/youtube/v3/videos?" + querystring.stringify (data)
+		};
+
+		var req = https.request (opts, function (res) {
+			var json;
+
+			if (res.statusCode !== 200) {
+				console.error ("YouTube API access failed.");
+				return;
+			}
+
+
+			json = "";
+			res.setEncoding ("utf8");
+			res.on ("data", function (chunk) { json += chunk; });
+			res.on ("end", function() {
+				try {
+					var data = JSON.parse(json);
+
+					if (!data.items || !data.items.length)
+						throw new Error ("YouTube API response contained no items.");
+
+					for (var i = 0; i < data.items.length; i++) {
+						try {
+							var title = data.items[i].snippet.title;
+							var duration = seconds_to_duration (parse_iso8601_duration (data.items[i].contentDetails.duration));
+
+							context.channel.send ("\u00031,15You\u00030,5Tube\u000F | " + title + " | \u001F" + duration + "\u000F | https://youtu.be/" + vid, {color: true});
+						} catch (e) {
+							console.error ("YouTube API parse error");
+							console.error (e);
+						}
+					}
+				} catch (e) {
+					console.error ("Youtube API response not in correct JSON format.");
+					console.error (e);
+				}
+			});
+		});
+
+		req.end ();
+	}
+
+	function parse_iso8601_duration (duration) {
+		var seconds, match;
+
+		match = duration.match (
+			/^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/);
+
+		seconds = parseInt (match[6], 10) | 0;             // Seconds
+		seconds += parseInt (match[5], 10) * 60 | 0;       // Minutes
+		seconds += parseInt (match[4], 10) * 3600 | 0;     // Hours
+		seconds += parseInt (match[3], 10) * 86400 | 0;    // Days
+		seconds += parseInt (match[2], 10) * 2628000 | 0;  // Months
+		seconds += parseInt (match[1], 10) * 31536000 | 0; // Years
+
+		return seconds;
+	}
+
+	function seconds_to_duration (seconds) {
+		var hours, minutes;
+
+		hours = Math.floor (seconds / 3600);
+		seconds = seconds % 3600;
+
+		minutes = Math.floor (seconds / 60);
+		seconds = seconds % 60;
+
+		return (
+			hours
+				? hours + ":" +
+					(minutes
+						? (minutes >= 10
+							? minutes
+							: "0" + minutes)
+						: "00")
+				: (minutes
+					? minutes
+					: ""
+				)
+			) +
+			":" +
+			(seconds
+				? (seconds >= 10
+					? seconds
+					: "0" + seconds)
+				: "00"
+			);
+	}
+};
 
 new ΩF_0Bot(Profile).init();
