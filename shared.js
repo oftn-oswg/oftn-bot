@@ -207,24 +207,25 @@ var Shared = module.exports = {
 					} else {
 						throw new Error("No topic to revert to.");
 					}
-				} else if (text === "default") {
-					try {
-						var def = this.factoids.find("topic", true);
-						set_topic (def);
-						return;
-					} catch (e) {
-						throw new Error("No default topic set. (`topic` factoid)");
-					}
 				}
 				
-				var regexinfo = parse_regex_literal(text);
-				var regex = regexinfo[0];
+				try {
+					var template = this.factoids.find("topic", true);
+					var data = JSON.parse (text);
+					template = template.replace (/{([a-z]+)}/g, function (match, name) {
+						return data.hasOwnProperty(name) ? data[name] : "";
+					});
+					set_topic (template);
+				} catch (e) {
+					var regexinfo = parse_regex_literal(text);
+					var regex = regexinfo[0];
 		
-				var topic = context.channel.topic.replace(regex, regexinfo[1]);
-				if (topic === context.channel.topic) throw new Error("Nothing changed.");
+					var topic = context.channel.topic.replace(regex, regexinfo[1]);
+					if (topic === context.channel.topic) throw new Error("Nothing changed.");
 		
-				set_topic (topic.replace(/\n/g, ' '));
-				//context.channel.set_topic(topic);
+					set_topic (topic.replace(/\n/g, ' '));
+					//context.channel.set_topic(topic);
+				}
 			} else {
 				context.channel.send_reply(context.intent, context.channel.topic);
 			}
