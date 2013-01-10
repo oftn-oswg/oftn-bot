@@ -243,21 +243,24 @@ var Shared = module.exports = {
 		}
 	},
 
-	karma : function(context,text,nick,action){
-  			context.channel.send_reply(context.intent,text+" "+nick+" "+action);
- 		    karma_db.instantwrite = true;
-        karma_db.wait = 0;
-		    nick = nick.toLowerCase();
-        console.log(karma_db);
-		   	kurma = karma_db.object.karma;
-			  if (typeof kurma[nick] !== "undefined") {
-				    kurma[nick].karma = (action === "++" ? kurma[nick].karma + 1 : kurma[nick].karma -1);
-			  }
-			  else {
-			    kurma[nick] = {name: nick, karma: 0};
-			  }
-		  	karma_db.activity();
-			  context.channel.send_reply(context.intent, "Karma for "+nick+" : "+kurma[nick].karma);
-	}
+	karma: function (context, text, nick, action) {
+		
+	    context.channel.send_reply(context.intent, text + " " + nick + " " + action);
+	    karma_db.instantwrite = true;
+	    karma_db.wait = 0;
+	    nick = nick.toLowerCase();
+	    console.log(karma_db);
+	    kurma = karma_db.object.karma;
+	    if (typeof kurma[nick] !== "undefined") {
+	        kurma[nick].karma = (action === "++" ? kurma[nick].karma + 1 : kurma[nick].karma - 1);
+	    } else {
+	        kurma[nick] = {
+	            name: nick,
+	            karma: 0
+	        };
+	    }
+	    karma_db.activity();
+	    context.channel.send_reply(context.intent, "Karma for " + nick + " : " + kurma[nick].karma);
+}
 
 };
