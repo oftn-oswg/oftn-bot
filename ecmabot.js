@@ -30,6 +30,8 @@ JSBot.prototype.init = function() {
 	this.register_listener(/^((?:sm?|v8?|js?|>>?)>)([^>].*)+/, Shared.execute_js);
 	
 	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
+	this.register_listener (/^(\w+)(\+\+|--)$/i, Shared.karma);
+
 	
 	this.register_listener(/\bi(?:\u0027| wi)?ll try\b/i,
 		this.there_is_no_try);
