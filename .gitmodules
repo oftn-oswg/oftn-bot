@@ -1,0 +1,3 @@
+[submodule "lib/caniuse/data"]
+	path = lib/caniuse/data
+	url = https://github.com/Fyrd/caniuse.git
