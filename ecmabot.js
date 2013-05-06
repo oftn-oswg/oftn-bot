@@ -6,6 +6,7 @@ var http = require("http");
 var Sandbox = require("./lib/sandbox");
 var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
+var CanIUseServer = require("./lib/caniuse");
 
 var Bot = require("./lib/irc");
 var Shared = require("./shared");
@@ -14,6 +15,7 @@ var Shared = require("./shared");
 var JSBot = function(profile) {
 	this.sandbox = new Sandbox(path.join(__dirname, "ecmabot-utils.js"));
 	this.factoids = new FactoidServer(path.join(__dirname, "ecmabot-factoids.json"));
+	this.caniuse_server = new CanIUseServer;
 
 	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
@@ -49,7 +51,11 @@ JSBot.prototype.init = function() {
 	
 	this.register_command("re", this.re, {
 		help: "Usage: !re Your text here /expression/gi || FLAGS: (g: global match, i: ignore case)"});
-	
+
+	this.register_command("caniuse", this.caniuse, {
+		help: "Search the caniuse.com database. Usage: !caniuse webgl"});
+	this.register_command("ciu", "caniuse");
+
 	this.register_command("find", Shared.find);
 	
 	this.register_command("help", this.help);
@@ -238,6 +244,15 @@ JSBot.prototype.load_ecma_ref = function() {
 			util.puts("ECMA-262 reference file has changed.");
 			bot.load_ecma_ref();
 		});
+	}
+};
+
+JSBot.prototype.caniuse = function(context, text) {
+	try {
+		var text = this.caniuse_server.search(text);
+		context.channel.send_reply(context.intent, text, {color: true});
+	} catch(e) {
+		context.channel.send_reply(context.sender, e);
 	}
 };
 

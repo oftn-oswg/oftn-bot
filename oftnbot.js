@@ -13,6 +13,7 @@ var Sol = require("./lib/sol");
 var Sandbox = require("./lib/sandbox");
 var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
+var CanIUseServer = require("./lib/caniuse");
 
 var Shared = require("./shared");
 var Profile = require("./oftnbot-profile");
@@ -57,6 +58,7 @@ var ΩF_0Bot = function(profile) {
 	this.github_context = null;
 
 	this.twitter = new Twitter(Profile.twitter);
+	this.caniuse_server = new CanIUseServer;
 };
 
 
@@ -65,7 +67,9 @@ util.inherits(ΩF_0Bot, Bot);
 ΩF_0Bot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 
-	this.register_listener(/^((?:sm?|v8?|js?|hs?|>>?|\|)>)([^>].*)+/, Shared.execute_js);
+	this.register_listener(/^((?:sm?|v8?|js?|hs?|>>?|>>>>|\|)>)([^>].*)+/, Shared.execute_js);
+	this.register_listener(/\bhttps?:\/\/\S+/, this.url);
+
 	this.register_command("topic", Shared.topic);
 	this.register_command("find", Shared.find);
 	this.register_command("learn", Shared.learn, {allow_intentions: false});
@@ -75,6 +79,17 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("g", Shared.google);
 	this.register_command("gh", this.gh);
 	this.register_command("projects", this.projects);
+	this.register_command("unicode", this.unicode);
+	this.register_command("caniuse", this.caniuse);
+	this.register_command("ciu", "caniuse");
+
+
+	this.register_command("rand", function(context, text) {
+		var options = text.split(',');
+		context.channel.send_reply (context.sender,
+			options[Math.random() * options.length | 0].trim());
+		}
+	);
 
 	var tempurature = /(?:^|[ \(\[])(-?\d+(?:\.\d+)?)[\s°]*([CF])(?:$|[ .\)\]])/g;
 
@@ -188,7 +203,9 @@ util.inherits(ΩF_0Bot, Bot);
 	this.on('command_not_found', this.find);
 
 	this.on('connect', function(client) {
-		this.github_context = client;
+		// name set from the profile
+		if (client.name === "Freenode")
+			this.github_context = client;
 	});
 
 	this.register_command("quiet", function (context, text) {
@@ -526,7 +543,7 @@ util.inherits(ΩF_0Bot, Bot);
 
 		this.twitter.updateStatus(text, function(data) {
 			if (data.id_str) {
-				context.channel.send ("Tweet successful: https://twitter.com/oftn_foundation/status/"+data.id_str);
+				context.channel.send ("Tweet successful: https://twitter.com/oftn_wg/status/"+data.id_str);
 			} else {
 				var json = data.data;
 				data = JSON.parse (json);
@@ -538,5 +555,218 @@ util.inherits(ΩF_0Bot, Bot);
 		context.channel.send_reply(context.sender, e);
 	}
 };
+
+var unilist;
+
+ΩF_0Bot.prototype.unicode = function(context, text) {
+
+	if (!unilist) {
+		fs.readFile (path.join (__dirname, "UnicodeData.txt"), "utf8", function(err, data) {
+			if (err) throw err;
+
+			unilist = [];
+			var regln = /^(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*);(.*)$/;
+
+			var lines = data.split("\n");
+			for (var i = 0, len = lines.length; i < len; i++) {
+				var ch = lines[i].match(regln);
+				if (ch) {
+					var v = parseInt(ch[1], 16);
+					unilist[v] = ch[2] || ch[11];
+				}
+			}
+
+			context.channel.send_reply (context.intent, unicode (text));
+		});
+	} else {
+		context.channel.send_reply (context.intent, unicode (text));
+	}
+
+	function unicode(text) {
+		text = String(text);
+
+		var result, hi, lo;
+
+		// Sequence of decimal digits
+		if (text.match (/^\d+$/))
+			return lookup (parseInt (text, 10));
+
+		result = text.match (/^(?:U\+|0x)([0-9a-f]+)$/i);
+
+		// Sequence of hexadecimal digits
+		if (result)
+			return lookup (parseInt (result[1], 16));
+
+		// Single unicode character
+		switch (text.length) {
+		case 1:
+			return lookup (text.charCodeAt (0));
+		case 2:
+			hi = text.charCodeAt (0);
+			if (hi >= 0xD800 && hi <= 0xDBFF) {
+				lo = text.charCodeAt (1);
+				var x = (hi & ((1 << 6) -1)) << 10 | lo & ((1 << 10) -1);
+				var w = (hi >> 6) & ((1 << 5) - 1);
+				var u = w + 1;
+				var c = u << 16 | x;
+				return lookup (c);
+			}
+		}
+
+		// Search for character by name
+		return search (text.toUpperCase());
+
+		function lookup(ch) {
+			if (unilist[ch])
+				return unilist[ch] + " | " + String.fromCharCode(ch) + " (U+" + hex(ch) + ")";
+			return "Character " + ch + " not in database.";
+		}
+
+		function hex(code) {
+			return (code <= 0xf ? "000" : (code <= 0xff ? "00" : (code <= 0xfff ? "0" : ""))) + code.toString(16).toUpperCase();
+		}
+
+		function search(str) {
+			var len = unilist.length;
+			for (var i = 0; i < len; i++) {
+				if (unilist[i] && unilist[i].indexOf (str) !== -1) {
+					return lookup (i);
+				}
+			}
+			return "Not found.";
+		}
+	}
+};
+
+
+ΩF_0Bot.prototype.url = function (context, text) {
+
+	var match, regex = /https?:\/\/\S+/g;
+	while (match = regex.exec (text)) {
+		var vid, info = url.parse (match[0]);
+		if (info.host === "youtu.be") {
+			vid = info.pathname.slice(1);
+		} else if (info.hostname.indexOf (".youtube.")) {
+			vid = querystring.parse (info.query).v;
+		}
+
+		if (vid)
+			youtube (vid);
+	}
+
+
+	function youtube (vid) {
+
+		var data = {
+			id: vid,
+			key: "AIzaSyDiSI-jlejJfRXgbaDNvKX8AwdyBNVIYwQ",
+			part: "snippet,contentDetails",
+			fields: "items(snippet/title,contentDetails/duration)"
+		};
+
+		var opts = {
+			method: "GET",
+			hostname: "www.googleapis.com",
+			path: "/youtube/v3/videos?" + querystring.stringify (data)
+		};
+
+		var req = https.request (opts, function (res) {
+			var json;
+
+			if (res.statusCode !== 200) {
+				console.error ("YouTube API access failed.");
+				return;
+			}
+
+
+			json = "";
+			res.setEncoding ("utf8");
+			res.on ("data", function (chunk) { json += chunk; });
+			res.on ("end", function() {
+				try {
+					var data = JSON.parse(json);
+
+					if (!data.items || !data.items.length)
+						throw new Error ("YouTube API response contained no items.");
+
+					for (var i = 0; i < data.items.length; i++) {
+						try {
+							var title = data.items[i].snippet.title;
+							var duration = seconds_to_duration (parse_iso8601_duration (data.items[i].contentDetails.duration));
+
+							context.channel.send ("\u00031,15You\u00030,5Tube\u000F | " + title + " | \u001F" + duration + "\u000F | https://youtu.be/" + vid, {color: true});
+						} catch (e) {
+							console.error ("YouTube API parse error");
+							console.error (e);
+						}
+					}
+				} catch (e) {
+					console.error ("Youtube API response not in correct JSON format.");
+					console.error (e);
+				}
+			});
+		});
+
+		req.end ();
+	}
+
+	function parse_iso8601_duration (duration) {
+		var seconds, match;
+
+		match = duration.match (
+			/^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/);
+
+		seconds = parseInt (match[6], 10) | 0;             // Seconds
+		seconds += parseInt (match[5], 10) * 60 | 0;       // Minutes
+		seconds += parseInt (match[4], 10) * 3600 | 0;     // Hours
+		seconds += parseInt (match[3], 10) * 86400 | 0;    // Days
+		seconds += parseInt (match[2], 10) * 2628000 | 0;  // Months
+		seconds += parseInt (match[1], 10) * 31536000 | 0; // Years
+
+		return seconds;
+	}
+
+	function seconds_to_duration (seconds) {
+		var hours, minutes;
+
+		hours = Math.floor (seconds / 3600);
+		seconds = seconds % 3600;
+
+		minutes = Math.floor (seconds / 60);
+		seconds = seconds % 60;
+
+		return (
+			hours
+				? hours + ":" +
+					(minutes
+						? (minutes >= 10
+							? minutes
+							: "0" + minutes)
+						: "00")
+				: (minutes
+					? minutes
+					: ""
+				)
+			) +
+			":" +
+			(seconds
+				? (seconds >= 10
+					? seconds
+					: "0" + seconds)
+				: "00"
+			);
+	}
+};
+
+
+ΩF_0Bot.prototype.caniuse = function(context, text) {
+	try {
+		var text = this.caniuse_server.search(text);
+		context.channel.send_reply(context.intent, text, {color: true});
+	} catch(e) {
+		context.channel.send_reply(context.sender, e);
+	}
+};
+
 
 new ΩF_0Bot(Profile).init();
