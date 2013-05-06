@@ -13,6 +13,7 @@ var Sol = require("./lib/sol");
 var Sandbox = require("./lib/sandbox");
 var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
+var CanIUseServer = require("./lib/caniuse");
 
 var Shared = require("./shared");
 var Profile = require("./oftnbot-profile");
@@ -57,6 +58,7 @@ var ΩF_0Bot = function(profile) {
 	this.github_context = null;
 
 	this.twitter = new Twitter(Profile.twitter);
+	this.caniuse_server = new CanIUseServer;
 };
 
 
@@ -65,7 +67,7 @@ util.inherits(ΩF_0Bot, Bot);
 ΩF_0Bot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 
-	this.register_listener(/^((?:sm?|v8?|js?|hs?|>>?|\|)>)([^>].*)+/, Shared.execute_js);
+	this.register_listener(/^((?:sm?|v8?|js?|hs?|>>?|>>>>|\|)>)([^>].*)+/, Shared.execute_js);
 	this.register_listener(/\bhttps?:\/\/\S+/, this.url);
 
 	this.register_command("topic", Shared.topic);
@@ -78,6 +80,16 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("gh", this.gh);
 	this.register_command("projects", this.projects);
 	this.register_command("unicode", this.unicode);
+	this.register_command("caniuse", this.caniuse);
+	this.register_command("ciu", "caniuse");
+
+
+	this.register_command("rand", function(context, text) {
+		var options = text.split(',');
+		context.channel.send_reply (context.sender,
+			options[Math.random() * options.length | 0].trim());
+		}
+	);
 
 	var tempurature = /(?:^|[ \(\[])(-?\d+(?:\.\d+)?)[\s°]*([CF])(?:$|[ .\)\]])/g;
 
@@ -191,7 +203,9 @@ util.inherits(ΩF_0Bot, Bot);
 	this.on('command_not_found', this.find);
 
 	this.on('connect', function(client) {
-		this.github_context = client;
+		// name set from the profile
+		if (client.name === "Freenode")
+			this.github_context = client;
 	});
 
 	this.register_command("quiet", function (context, text) {
@@ -529,7 +543,7 @@ util.inherits(ΩF_0Bot, Bot);
 
 		this.twitter.updateStatus(text, function(data) {
 			if (data.id_str) {
-				context.channel.send ("Tweet successful: https://twitter.com/oftn_foundation/status/"+data.id_str);
+				context.channel.send ("Tweet successful: https://twitter.com/oftn_wg/status/"+data.id_str);
 			} else {
 				var json = data.data;
 				data = JSON.parse (json);
@@ -743,5 +757,16 @@ var unilist;
 			);
 	}
 };
+
+
+ΩF_0Bot.prototype.caniuse = function(context, text) {
+	try {
+		var text = this.caniuse_server.search(text);
+		context.channel.send_reply(context.intent, text, {color: true});
+	} catch(e) {
+		context.channel.send_reply(context.sender, e);
+	}
+};
+
 
 new ΩF_0Bot(Profile).init();
