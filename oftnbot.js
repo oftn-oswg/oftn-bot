@@ -770,7 +770,7 @@ var unilist;
 };
 
 ΩF_0Bot.prototype.auth = function(context, text) {
-	Bot.prototype.authenticate();
+	context.client.authenticate();
 };
 
 new ΩF_0Bot(Profile).init();

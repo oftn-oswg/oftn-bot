@@ -258,7 +258,7 @@ JSBot.prototype.caniuse = function(context, text) {
 };
 
 JSBot.prototype.auth = function(context, text) {
-	Bot.prototype.authenticate();
+	context.client.authenticate();
 };
 
 var profile = require("./ecmabot-profile.js");
