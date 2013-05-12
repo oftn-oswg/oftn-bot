@@ -82,6 +82,7 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("unicode", this.unicode);
 	this.register_command("caniuse", this.caniuse);
 	this.register_command("ciu", "caniuse");
+	this.register_command("auth", this.auth, {allow_intentions: false});
 
 
 	this.register_command("rand", function(context, text) {
@@ -768,5 +769,8 @@ var unilist;
 	}
 };
 
+ΩF_0Bot.prototype.auth = function(context, text) {
+	Bot.prototype.authenticate();
+};
 
 new ΩF_0Bot(Profile).init();

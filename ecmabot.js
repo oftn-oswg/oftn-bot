@@ -56,7 +56,11 @@ JSBot.prototype.init = function() {
 	this.register_command("find", Shared.find);
 	
 	this.register_command("help", this.help);
-	
+
+	this.register_command("auth", this.auth, {
+		allow_intentions: false,
+		help: "Attempt to re-authenticate with NickServ."});
+
 	this.register_command("learn", Shared.learn, {
 		allow_intentions: false,
 		help: "Add factoid to bot. Usage: !learn ( [alias] foo = bar | foo =~ s/expression/replace/gi )"});
@@ -251,6 +255,10 @@ JSBot.prototype.caniuse = function(context, text) {
 	} catch(e) {
 		context.channel.send_reply(context.sender, e);
 	}
+};
+
+JSBot.prototype.auth = function(context, text) {
+	Bot.prototype.authenticate();
 };
 
 var profile = require("./ecmabot-profile.js");
