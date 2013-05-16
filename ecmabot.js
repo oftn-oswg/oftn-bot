@@ -57,7 +57,7 @@ JSBot.prototype.init = function() {
 	
 	this.register_command("help", this.help);
 
-	this.register_command("auth", this.auth, {
+	this.register_command("auth", Shared.reauthenticate, {
 		allow_intentions: false,
 		help: "Attempt to re-authenticate with NickServ."});
 
@@ -255,10 +255,6 @@ JSBot.prototype.caniuse = function(context, text) {
 	} catch(e) {
 		context.channel.send_reply(context.sender, e);
 	}
-};
-
-JSBot.prototype.auth = function(context, text) {
-	context.client.authenticate();
 };
 
 var profile = require("./ecmabot-profile.js");

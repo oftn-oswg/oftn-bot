@@ -82,7 +82,7 @@ util.inherits(ΩF_0Bot, Bot);
 	this.register_command("unicode", this.unicode);
 	this.register_command("caniuse", this.caniuse);
 	this.register_command("ciu", "caniuse");
-	this.register_command("auth", this.auth, {allow_intentions: false});
+	this.register_command("auth", Shared.reauthenticate, {allow_intentions: false});
 
 
 	this.register_command("rand", function(context, text) {
@@ -767,10 +767,6 @@ var unilist;
 	} catch(e) {
 		context.channel.send_reply(context.sender, e);
 	}
-};
-
-ΩF_0Bot.prototype.auth = function(context, text) {
-	context.client.authenticate();
 };
 
 new ΩF_0Bot(Profile).init();

@@ -239,6 +239,10 @@ var Shared = module.exports = {
 			context.client.get_user("ChanServ")
 				.send("TOPIC "+context.channel.name+" "+topic);
 		}
+	},
+
+	reauthenticate: function(context, text) {
+		context.client.authenticate();
 	}
 
 
