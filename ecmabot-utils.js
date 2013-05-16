@@ -238,12 +238,13 @@ var utils = {
 // Fake setTimeout functionality
 // Preserves proper setTimeout order but doesn't honor delay
 var exeQueue = [];
+
 exeQueue.insertOrdered = function(val) {
 	var l = this.length,
-		order = val.order;
+	    order = val.order;
 
-	while(l--) {
-		if(this[l].order > order) break;
+	while (l--) {
+		if (this[l].order > order) break;
 	}
 
 	this.splice(l+1, 0, val);
@@ -259,7 +260,7 @@ function executeTimeouts() {
 Object.defineProperty(global, "setTimeout", {
 	value: function setTimeout(fn, delay) {
 		var runOrder = Date.now() + delay,
-			args = Array.prototype.slice.call(arguments, 2);
+		    args = Array.prototype.slice.call(arguments, 2);
 
 		exeQueue.insertOrdered({
 			order : runOrder,
