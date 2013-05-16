@@ -235,6 +235,47 @@ var utils = {
 	}
 };
 
+// Fake setTimeout functionality
+// Preserves proper setTimeout order but doesn't honor delay
+(function(G){
+	var exeQueue = [];
+
+	exeQueue.insertOrdered = function(val) {
+		var l = this.length,
+			order = val.order;
+
+		while(l--) {
+			if(this[l].order > order) break;
+		}
+
+		this.splice(l+1, 0, val);
+	}
+
+	function executeNext() {
+		var next = exeQueue.pop();
+		if (next) {
+			next.callback.apply(this, next.args);
+		}
+	}
+
+	G.setTimeout = function (fn, delay) {
+		var runOrder = Date.now() + delay,
+			args = Array.prototype.slice.call(arguments, 2),
+			wrappedFn = function () {
+				fn.apply(this, arguments);
+				return executeNext();
+			};
+
+		exeQueue.insertOrdered({
+			order : runOrder,
+			callback : wrappedFn,
+			args: args
+		});
+	};
+
+	G.executeTimeouts = executeNext;
+})(global);
+
 // The built-ins in this context should not be changed.
 Object.freeze(Function.prototype);
 Object.freeze(Boolean.prototype);
