@@ -258,22 +258,28 @@ var utils = {
 		}
 	}
 
-	G.setTimeout = function (fn, delay) {
-		var runOrder = Date.now() + delay,
-			args = Array.prototype.slice.call(arguments, 2),
-			wrappedFn = function () {
-				fn.apply(this, arguments);
-				return executeNext();
-			};
+	Object.defineProperty(G, "setTimeout", {
+		value: function (fn, delay) {
+			var runOrder = Date.now() + delay,
+				args = Array.prototype.slice.call(arguments, 2),
+				wrappedFn = function () {
+					fn.apply(this, arguments);
+					return executeNext();
+				};
 
-		exeQueue.insertOrdered({
-			order : runOrder,
-			callback : wrappedFn,
-			args: args
-		});
-	};
+			exeQueue.insertOrdered({
+				order : runOrder,
+				callback : wrappedFn,
+				args: args
+			});
+		},
+		enumerable: true
+	});
 
-	G.executeTimeouts = executeNext;
+	Object.defineProperty(G, "executeTimeouts", {
+		value: executeNext,
+		enumerable: false
+	});
 })(global);
 
 // The built-ins in this context should not be changed.
