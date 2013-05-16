@@ -257,7 +257,7 @@ function executeTimeouts() {
 }
 
 Object.defineProperty(global, "setTimeout", {
-	value: function (fn, delay) {
+	value: function setTimeout(fn, delay) {
 		var runOrder = Date.now() + delay,
 			args = Array.prototype.slice.call(arguments, 2);
 
