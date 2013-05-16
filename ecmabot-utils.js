@@ -250,8 +250,8 @@ exeQueue.insertOrdered = function(val) {
 }
 
 function executeTimeouts() {
-	var next = exeQueue.pop();
-	if (next) {
+	var next;
+	while (next = exeQueue.pop()) {
 		next.callback.apply(this, next.args);
 	}
 }
@@ -259,15 +259,11 @@ function executeTimeouts() {
 Object.defineProperty(global, "setTimeout", {
 	value: function (fn, delay) {
 		var runOrder = Date.now() + delay,
-			args = Array.prototype.slice.call(arguments, 2),
-			wrappedFn = function () {
-				fn.apply(this, arguments);
-				return executeTimeouts();
-			};
+			args = Array.prototype.slice.call(arguments, 2);
 
 		exeQueue.insertOrdered({
 			order : runOrder,
-			callback : wrappedFn,
+			callback : fn,
 			args: args
 		});
 	},
