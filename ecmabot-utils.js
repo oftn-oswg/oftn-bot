@@ -237,50 +237,42 @@ var utils = {
 
 // Fake setTimeout functionality
 // Preserves proper setTimeout order but doesn't honor delay
-(function(G){
-	var exeQueue = [];
+var exeQueue = [];
+exeQueue.insertOrdered = function(val) {
+	var l = this.length,
+		order = val.order;
 
-	exeQueue.insertOrdered = function(val) {
-		var l = this.length,
-			order = val.order;
-
-		while(l--) {
-			if(this[l].order > order) break;
-		}
-
-		this.splice(l+1, 0, val);
+	while(l--) {
+		if(this[l].order > order) break;
 	}
 
-	function executeNext() {
-		var next = exeQueue.pop();
-		if (next) {
-			next.callback.apply(this, next.args);
-		}
+	this.splice(l+1, 0, val);
+}
+
+function executeTimeouts() {
+	var next = exeQueue.pop();
+	if (next) {
+		next.callback.apply(this, next.args);
 	}
+}
 
-	Object.defineProperty(G, "setTimeout", {
-		value: function (fn, delay) {
-			var runOrder = Date.now() + delay,
-				args = Array.prototype.slice.call(arguments, 2),
-				wrappedFn = function () {
-					fn.apply(this, arguments);
-					return executeNext();
-				};
+Object.defineProperty(global, "setTimeout", {
+	value: function (fn, delay) {
+		var runOrder = Date.now() + delay,
+			args = Array.prototype.slice.call(arguments, 2),
+			wrappedFn = function () {
+				fn.apply(this, arguments);
+				return executeTimeouts();
+			};
 
-			exeQueue.insertOrdered({
-				order : runOrder,
-				callback : wrappedFn,
-				args: args
-			});
-		},
-		enumerable: true
-	});
-
-	Object.defineProperty(G, "executeTimeouts", {
-		value: executeNext,
-		enumerable: false
-	});
-})(global);
+		exeQueue.insertOrdered({
+			order : runOrder,
+			callback : wrappedFn,
+			args: args
+		});
+	},
+	enumerable: true
+});
 
 // The built-ins in this context should not be changed.
 Object.freeze(Function.prototype);
@@ -304,6 +296,7 @@ exports.run = function(execute) {
 	var result, error;
 	try {
 		result = execute();
+		executeTimeouts();
 	} catch(e) {
 		if (typeof e.name !== "undefined" &&
 			typeof e.message !== "undefined") {
