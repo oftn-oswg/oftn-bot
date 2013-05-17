@@ -237,10 +237,10 @@ var utils = {
 
 // Fake setTimeout functionality
 // Preserves proper setTimeout order but doesn't honor delay
-var exeQueue = [];
-var timerNum = 0xDECAFBAD;
+var timerQueue = [];
+var timerHandle = 0xDECAFBAD;
 
-exeQueue.insertOrdered = function(val) {
+timerQueue.insertOrdered = function(val) {
 	var l = this.length,
 	    order = val.order;
 
@@ -252,10 +252,10 @@ exeQueue.insertOrdered = function(val) {
 }
 
 function executeTimeouts() {
-	var next;
+	var nextTimer;
 
-	while (next = exeQueue.pop()) {
-		next.callback.apply(this, next.args);
+	while (nextTimer = timerQueue.pop()) {
+		nextTimer.callback.apply(nextTimer.thisVal, nextTimer.args);
 	}
 }
 
@@ -264,25 +264,26 @@ Object.defineProperty(global, "setTimeout", {
 		var runOrder = Date.now() + delay,
 		    args = Array.prototype.slice.call(arguments, 2);
 
-		exeQueue.insertOrdered({
+		timerQueue.insertOrdered({
+			thisVal : this,
 			order : runOrder,
 			callback : fn,
 			args: args,
-			timer: timerNum
+			handle: timerHandle
 		});
 
-		return timerNum++;
+		return timerHandle++;
 	},
 	enumerable: true
 });
 
 Object.defineProperty(global, "clearTimeout", {
-	value: function clearTimeout(timer) {
-		var l = exeQueue.length;
+	value: function clearTimeout(handle) {
+		var l = timerQueue.length;
 
 		while (l--) {
-			if (exeQueue[l].timer === timer) {
-				exeQueue.splice(l, 1);
+			if (timerQueue[l].handle === handle) {
+				timerQueue.splice(l, 1);
 				break;
 			}
 		}
