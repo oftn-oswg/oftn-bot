@@ -651,11 +651,11 @@ var unilist;
 		}
 
 		if (vid)
-			youtube (vid);
+			youtube (vid, info.hash);
 	}
 
 
-	function youtube (vid) {
+	function youtube (vid, hash) {
 
 		var data = {
 			id: vid,
@@ -694,7 +694,7 @@ var unilist;
 							var title = data.items[i].snippet.title;
 							var duration = seconds_to_duration (parse_iso8601_duration (data.items[i].contentDetails.duration));
 
-							context.channel.send ("\u00031,15You\u00030,5Tube\u000F | " + title + " | \u001F" + duration + "\u000F | https://youtu.be/" + vid, {color: true});
+							context.channel.send ("\u00031,15You\u00030,5Tube\u000F | " + title + " | \u001F" + duration + "\u000F | https://youtu.be/" + vid + (hash ? hash : ""), {color: true});
 						} catch (e) {
 							console.error ("YouTube API parse error");
 							console.error (e);
