@@ -57,6 +57,7 @@ var Shared = module.exports = {
 		case ">>>":
 		case "v>":
 		case "v8>":
+			// context.channel.send_reply(context.intent, "v8 temporarily disabled, please use js> instead."); return;
 			engine = Sandbox.V8; break;
 		default:
 			engine = Sandbox.SpiderMonkey; break;
@@ -238,6 +239,10 @@ var Shared = module.exports = {
 			context.client.get_user("ChanServ")
 				.send("TOPIC "+context.channel.name+" "+topic);
 		}
+	},
+
+	reauthenticate: function(context, text) {
+		context.client.authenticate();
 	}
 
 

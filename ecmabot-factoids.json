@@ -2,74 +2,91 @@
 	"wait": 30000,
 	"factoids": {
 		"json_encode": {
-			"value": "When you need to pass PHP variables to JavaScript, use the PHP method json_encode. For example: var info = (<?php echo json_encode($info); ?>);",
-			"popularity": 7
+			"value": "When you need to pass PHP variables to JavaScript, use the PHP method json_encode. For example: var info = (<?php echo json_encode($info); ?>); However, please do not put Javascript inline in your PHP files - Javascript belongs in .js files ONLY.",
+			"popularity": 17
 		},
 		"w3schools": {
-			"value": "Errors, ommisions, deceit. They are NOT (despite their name) related to the W3C. Their code contains deprecated code, bad methodologies, IE-centric code and mistakes. Stop reading/pointing to them! http://w3fools.com/",
-			"popularity": 11
+			"value": "W3Schools is not related to the W3C and has many problems: http://w3fools.com/",
+			"popularity": 83
 		},
 		"iframe": {
 			"value": "To get the document element of the iframe, use: iframe.contentWindow.document; However, cross-domain access to an iframe is disallowed.",
-			"popularity": 8
+			"popularity": 17
 		},
 		"this": {
-			"value": "If a function is called on an object, x.y(), then `this` within `y` refers to `x`. If called directly: y(), `this` refers to `window`. `this` can be set explicitly by using y.call(thisArg, argument1, argument2, ...)",
-			"popularity": 5
+			"value": "If a function is called on an object, object.y(), then `this` within `y` refers to `object`. If called directly: y(), `this` refers to the global object - for browsers it's `window`. `this` can be set explicitly by using y.call(thisArg, argument1, argument2, ...), or with .apply() and .bind(). For further explanation, see: http://killdream.github.com/blog/2011/10/understanding-javascript-oop/#sec-2-2",
+			"popularity": 191
 		},
 		"closures": {
-			"value": "For experienced JavaScripters: http://jibbering.com/faq/faq_notes/closures.html  For newbies and those who don't like big words: http://www.javascriptkit.com/javatutors/closures.shtml (very loose, take with a grain of salt)",
-			"popularity": 3
+			"value": "For experienced JavaScripters: http://jibbering.com/faq/faq_notes/closures.html For newbies: http://www.javascriptkit.com/javatutors/closures.shtml",
+			"popularity": 41
 		},
 		"cross-domain": {
-			"value": "The same-origin policy prevents access to most methods and properties across pages on different sites (even those inside iframes). Alternatives: A server-side proxy, the Dojo iframe trick, cross-origin resource sharing (http://www.w3.org/TR/cors/), and JSONP, a popular cross-domain alternative to XMLHttpRequest (Ajax). See `same.",
-			"popularity": 7
+			"alias": "same"
 		},
 		"closure": {
 			"alias": "closures"
 		},
 		"paste": {
-			"value": "Paste links, not code. http://jsfiddle.net/ and http://www.webdevout.net/test are great. Please do not use pastebin.com, the reasons are many. See !pastebin.",
-			"popularity": 13
+			"value": "Paste links, not code. http://gist.github.com is great. Sites like http://jsbin.com/, http://jsfiddle.net/, and http://www.webdevout.net/test let people easily run your code, but can be slow. Please do not use http://pastebin.com, the reasons are many. See !pastebin",
+			"popularity": 398,
+			"editors": [
+				"niggler",
+				"gkatsev",
+				"CoverSlide"
+			]
 		},
 		"json": {
-			"value": "JavaScript Object Notation, see http://www.json.org/. Looks very similar to literal objects/values in JavaScript, except object keys and strings, which are always double-quoted.",
-			"popularity": 5
+			"value": "JavaScript Object Notation, see http://www.json.org/. Looks like literals in JS, but object keys and strings are always double-quoted. Remember: if it's not a string (if you don't need JSON.parse) it's not JSON.",
+			"popularity": 32
 		},
 		"code": {
-			"value": "Show some code. Code examples should be complete (sufficient to show the problem) and minimal (as short as possible while remaining complete). Go to http://jsfiddle.net/ or see `paste.",
-			"popularity": 18
+			"value": "Show some code. Code examples should be complete (sufficient to show the problem) and minimal (as short as possible while remaining complete). Go to http://jsbin.com/ or see !paste.",
+			"popularity": 266,
+			"editors": [
+				"CoverSlide"
+			]
 		},
 		"callee": {
 			"alias": "recursion"
 		},
 		"pastebin": {
-			"value": "Please do not use pastebin.com. There are problems with syntax highlighting and font sizes that make it hard to read, and copy/paste includes line numbers. Consider using http://jsfiddle.net/ which allows us to run the code in our browser to help with debugging.",
-			"popularity": 4
+			"value": "Please do not use pastebin.com. There are problems with syntax highlighting and font sizes that make it hard to read. Consider using http://jsbin.com/ which allows us to run the code in our browser to help with debugging.",
+			"popularity": 254,
+			"editors": [
+				"bendman",
+				"gkatsev",
+				"Mortchek"
+			]
 		},
 		"harmony": {
-			"value": "ECMAScript Harmony is an upcoming revision to the ECMAScript standard. May in the future be renamed to ES6. Proposals yet-to-be-approved: http://wiki.ecmascript.org/doku.php?id=strawman:strawman",
-			"popularity": 3
+			"alias": "es6"
 		},
 		"cornify": {
 			"value": "`^nn~ <http://www.cornify.com/>",
-			"popularity": 7
+			"popularity": 11
 		},
 		"ecmascript": {
-			"value": "ECMAScript (pronounced Ek-ma-script) is the written, non-proprietary standard of JavaScript. JavaScript is a Mozilla-specific dialect which adds some features. JScript is Microsoft's dialect.",
-			"popularity": 0
+			"value": "ECMAScript (pronounced Ek-ma-script) is the written, non-proprietary standard of JavaScript. JavaScript is a Mozilla-specific dialect which adds some features. JScript is Microsoft's dialect. ActionScript is a dialect used in Adobe Flash.",
+			"popularity": 3
 		},
 		"scoping": {
-			"value": "https://developer.mozilla.org/en/JavaScript/Reference/Scope_Cheatsheet",
-			"popularity": 0
+			"value": "http://johnkpaul.com/blog/2013/02/11/what-is-hoisting-really/ https://developer.mozilla.org/en/JavaScript/Reference/Scope_Cheatsheet",
+			"popularity": 1,
+			"editors": [
+				"eboy"
+			]
 		},
 		"var": {
-			"value": "Always declare variables with `var`, or you will pollute the globe. Using `var` will limit access to that variable to the current scope, whatever it is.",
-			"popularity": 9
+			"value": "Always declare variables with `var`, or you will pollute the global scope. Using `var` will limit access to that variable to the current scope, whatever it is.",
+			"popularity": 44,
+			"editors": [
+				"j201"
+			]
 		},
 		"forms": {
-			"value": "Accessing form elements via JavaScript: Don't use document.formName.elementName. Use document.forms['formName'].elements['elementName'], document.getElementById() or document.getElementsByName() instead.",
-			"popularity": 1
+			"value": "Accessing form elements: Don't use document.formName.elementName. Use document.forms.formName.elements.elementName or getElementById, getElementsByName, or querySelector",
+			"popularity": 15
 		},
 		"scope": {
 			"alias": "scoping"
@@ -80,18 +97,12 @@
 		"hoisting": {
 			"alias": "scoping"
 		},
-		"cors": {
-			"alias": "cross-domain"
-		},
 		"same origin": {
 			"alias": "cross-domain"
 		},
 		"jsonlint": {
 			"value": "JSONLint - The JSON Validator. - http://www.jsonlint.com/",
 			"popularity": 0
-		},
-		"jsonp": {
-			"alias": "cross-domain"
 		},
 		"reason": {
 			"value": "Please explain why you need to even do such a thing. What are you trying to accomplish? What is your final goal? You may find that you are approaching the problem the wrong way.",
@@ -105,23 +116,27 @@
 			"alias": "textContent"
 		},
 		"xy": {
-			"value": "The XY problem: You want to do X, but don't know how. You think you can solve it using Y, but don't know how to do that, either. You ask about Y, which is a strange thing to want to do. Just ask about X.",
-			"popularity": 5
+			"value": "The XY problem: You want to do X, but don't know how. You think you can solve it using Y, but don't know how to do that either. You ask about Y, which is a strange thing to want to do. Just ask about X.",
+			"popularity": 114,
+			"editors": [
+				"j201",
+				"sukima"
+			]
 		},
 		"flxhr": {
-			"value": "flXHR [flĕkʹsər], (flex-er), is a cross-browser, XHR-compatible tool for cross-domain Ajax (Flash) communication. It utilizes an invisible flXHR.swf instance that acts as sort of a client-side proxy for requests. http://flxhr.flensed.com/",
-			"popularity": 1
+			"value": "\"flXHR [flĕkʹsər], (flex-er), is a cross-browser, XHR-compatible tool for cross-domain Ajax (Flash) communication. It utilizes an invisible flXHR.swf instance that acts as sort of a client-side proxy for requests. https://github.com/flensed/flXHR\"",
+			"popularity": 5
 		},
 		"float2int": {
-			"value": "|0 is bitwise OR with 0 - a quick way to convert floats to integers",
-			"popularity": 0
+			"value": "|0 is bitwise OR with 0 - a quick way to convert any value to a 32-bit integer, as well as any of these: x|0, x>>0, ~~x.",
+			"popularity": 1
 		},
 		"|0": {
 			"alias": "float2int"
 		},
 		"typeof": {
 			"value": "The typeof operator returns a string indicating the type of the unevaluated operand. Returns 'object', 'boolean', 'number', 'string', 'function', 'xml', or 'undefined'. Arrays return 'object'. Use: if (typeof variable !== \"undefined\") to check if a variable is defined.",
-			"popularity": 11
+			"popularity": 16
 		},
 		"comet": {
 			"value": "http://en.wikipedia.org/wiki/Comet_(programming)",
@@ -136,74 +151,80 @@
 			"popularity": 0
 		},
 		"kirby": {
-			"value": "<(n‿n<) <(n‿n)> (>n‿n)>",
-			"popularity": 7
+			"value": "<(n_n<) <(n_n)> (>n_n)>",
+			"popularity": 3
 		},
 		"eloquent": {
-			"value": "Eloquent JavaScript is a comprehensive introductory Web-based book with examples and a built-in interpreter. http://eloquentjavascript.net/index.html",
-			"popularity": 21
+			"value": "Eloquent JavaScript is a comprehensive introductory Web-based book with examples and a built-in interpreter. http://eloquentjavascript.net/",
+			"popularity": 564
 		},
 		"tias": {
 			"value": "Try it and see, why dontcha?",
-			"popularity": 5
+			"popularity": 65
 		},
 		"css": {
-			"value": "Use Javascript to manipulate CSS stylesheets in a page. http://www.quirksmode.org/dom/w3c_css.html",
-			"popularity": 0
+			"value": "Use Javascript to manipulate CSS stylesheets in a page. http://www.quirksmode.org/dom/w3c_css.html For other CSS problems, please try the #css channel.",
+			"popularity": 5
 		},
 		"recursion": {
-			"value": "see `recursion`",
-			"popularity": 6
+			"value": "See !recursion",
+			"popularity": 18
 		},
 		"ask": {
-			"value": "Ask you question directly, you don't need to ask permission to ask a question! See also: http://www.catb.org/~esr/faqs/smart-questions.html",
-			"popularity": 1
-		},
-		"java": {
-			"value": "Remember, JavaScript is to Java as hamburger is to ham. We don't know Java, and if you're trying to apply your Java knowledge to JavaScript, it probably won't work. Try #java",
-			"popularity": 2
+			"value": "Don't ask to ask, or if anyone is here or alive or uses something. Just ask your question. http://www.mikeash.com/getting_answers.html http://www.catb.org/esr/faqs/smart-questions.html http://guipn.com/how-to-get-helpful-help.htm",
+			"popularity": 141,
+			"editors": [
+				"hemanth",
+				"eboy",
+				"CoverSlide",
+				"Mortchek"
+			]
 		},
 		"let": {
 			"value": "The let statement provides a way to associate values with variables within the scope of a block, without affecting the values of like-named variables outside the block.",
-			"popularity": 0
+			"popularity": 5
 		},
 		"pm": {
-			"value": "Please investigate me with private messages. (Private messaging is not supported, so please use a Javascript interpreter; see `console)",
-			"popularity": 0
+			"value": "Never ask for help in pm. People who help in the channel do so in part because of the rewards that brings; public recognition and helping *everyone* listening to learn. Why would anyone want to help in pm?",
+			"popularity": 25,
+			"editors": [
+				"j201"
+			]
 		},
 		"select": {
 			"value": "To get the value of a <select> form field: var select = document.getElementById(\"select\"); var value = select.options[select.selectedIndex].value;",
-			"popularity": 1
+			"popularity": 3
 		},
 		"doesn't work": {
-			"value": "Look buddy, doesn't work is a strong statement. Does it sit on the couch all day? Is it making faces at you? Does it want more money? Is it sleeping with your girlfriend? Please be specific! Tell us what you want to happen, what is actually happening, and any error messages you find.",
-			"popularity": 16
+			"value": "What do you mean it doesn't work? Is it unemployed? What happens when you try to run it? What's the output? What's the error message? What did you want or expect to happen? Saying \"it doesn't work\" is pointless.",
+			"popularity": 130
 		},
 		"$": {
 			"value": "The `$` character has no special meaning in JavaScript, other than being allowed as a character in an variable name. It is used by some JavaScript libraries like jQuery, but traditionally used in machine generated JavaScript to avoid interference with other identifiers.",
-			"popularity": 4
+			"popularity": 5
 		},
 		"jquery": {
-			"value": "For help with jQuery-related problems, visit the #jquery channel.",
-			"popularity": 9
+			"value": "JQUERY =====> #jquery",
+			"popularity": 133,
+			"editors": [
+				"niggler",
+				"Mortchek",
+				"PigDude"
+			]
 		},
 		"mdc": {
-			"value": "The Mozilla Developer Network, a comprehensive, usable, and accurate resource for everyone developing for the Open Web. <https://developer.mozilla.org/en/JavaScript/>",
-			"popularity": 10
+			"value": "Mozilla Developer Network @ http://developer.mozilla.org/",
+			"popularity": 6
 		},
 		"mdn": {
 			"alias": "mdc"
-		},
-		"classes": {
-			"value": "There are *no* `classes` in JavaScript. JavaScript uses prototypal OO; objects are constructed directly, based on other objects, without a blueprint. Thinking of constructor functions as classes is *wrong*, and will confuse you in the long term.",
-			"popularity": 1
 		},
 		"debugging": {
 			"alias": "console"
 		},
 		"eval": {
 			"value": "The `eval` function is evil from both performance and design perspectives. If using `eval` is the answer, chances are you're asking the wrong question (although there are a few cases where it's useful). Read http://blogs.msdn.com/ericlippert/archive/2003/11/01/53329.aspx for more information.",
-			"popularity": 1
+			"popularity": 20
 		},
 		"property access": {
 			"value": "Property access: myobject.foo is just another way of saying myobject['foo']. This means that if property = 'foo', it's also the same as myobject[property].",
@@ -211,11 +232,11 @@
 		},
 		"hammertime": {
 			"value": "━━▊ ━━▊ ━━▊",
-			"popularity": 1
+			"popularity": 14
 		},
 		"wait": {
 			"value": "Don't feel ignored and repeat your question quickly; if nobody knows your answer, nobody will answer you. While you wait, try searching https://developer.mozilla.org/en/JavaScript or https://developer.mozilla.org/en/DOM || You might also consider reading: http://www.catb.org/~esr/faqs/smart-questions.html",
-			"popularity": 2
+			"popularity": 5
 		},
 		"encodeURIComponent": {
 			"value": "Always use `encodeURIComponent` to put query strings together. For example: \"foo=\"+encodeURIComponent(foo)+\"&bar=\"+encodeURIComponent(bar). Strings are encoded in UTF-8 format.",
@@ -228,46 +249,38 @@
 			"alias": "encodeURIComponent"
 		},
 		"document.write": {
-			"value": "document.wrong. Please use something more modern and less prone to doing confusing things.",
-			"popularity": 8
+			"value": "document.wrong. Please use something more modern and less prone to doing confusing things. This function tries to write to the current document. If the document has already been processed, the document will be replaced with a blank one with your argument. If you don't want that, use the proper DOM methods instead.",
+			"popularity": 79
 		},
 		"cross-browser": {
-			"value": "QuirksMode.org is the prime source for browser compatibility information on the Internet. It is maintained by Peter-Paul Koch, mobile platform strategist in Amsterdam, the Netherlands. http://www.quirksmode.org/compatibility.html",
-			"popularity": 0
+			"value": "\"Cross-browser\" is a buzz word used to describe a resource that works in multiple browsers. However, its meaning is diluted in popular culture. Its true meaning is a described resource that works in a maximal amount of browsers, therefore working \"across\" environmental divides. See !multi-browser for the popular, misused definition.",
+			"popularity": 2
 		},
 		"quirksmode": {
 			"alias": "cross-browser"
 		},
-		"factoids": {
-			"value": "You can access my factoid database at http://eboyjr.homelinux.org:3000/",
-			"popularity": 0
-		},
 		"rimshot": {
 			"value": "Ba dun tshh... http://instantrimshot.com/classic/?sound=rimshot",
-			"popularity": 5
+			"popularity": 6
 		},
 		"sadtrombone": {
 			"value": "Wah wah wah waahhh... http://www.sadtrombone.com/",
-			"popularity": 0
+			"popularity": 1
 		},
 		"ugt": {
 			"value": "Universal Greeting Time (or UGT) is a convention that states when a user enters an IRC channel it is always morning and upon leaving it is always night, regardless of the actual physical locations of the users in the channel. http://www.total-knowledge.com/~ilya/mips/ugt.html",
-			"popularity": 0
+			"popularity": 26
 		},
 		"crickets": {
-			"value": "*chirp* *chirp* *chirp*... http://instantcrickets.com/",
-			"popularity": 0
+			"value": "crickets *chirp* *chirp* *chirp*... http://instantrimshot.com/index.php?sound",
+			"popularity": 3
 		},
 		"include": {
 			"value": "Include another JavaScript file programmatically with JavaScript: http://www.phpied.com/javascript-include/",
-			"popularity": 1
+			"popularity": 3
 		},
 		"jsfiddle": {
 			"alias": "code"
-		},
-		"db": {
-			"value": "Search through this bot's factoids at http://68.104.15.222:3000/",
-			"popularity": 5
 		},
 		"member access": {
 			"alias": "property access"
@@ -282,49 +295,43 @@
 		"innerText": {
 			"alias": "textContent"
 		},
-		"elliottcable": {
-			"value": "elliottcable is a meanie face",
-			"popularity": 1
-		},
 		"console": {
 			"value": "The console object will provide you with an easy way to check the values of some variables, instead of the blocking alert() function. See <http://getfirebug.com/logging>",
-			"popularity": 4
+			"popularity": 45
 		},
 		"debug": {
-			"value": "This channel is not here to debug your code. Use a debugger. Firefox: Firebug <http://www.getfirebug.com/> ;; Google Chrome, Safari: Developer Tools (Built-in) ;; IE: Debug Bar <http://www.debugbar.com/> ;; Opera: DragonFly <http://www.opera.com/dragonfly/>",
-			"popularity": 9
-		},
-		"semicolon": {
-			"value": "See <http://aresemicolonsnecessaryinjavascript.com/>",
-			"popularity": 3
+			"value": "Browser-based debuggers -- Firefox <https://developer.mozilla.org/en-US/docs/Tools/Web_Console>, Safari <https://developer.apple.com/technologies/safari/developer-tools.html>, Chrome <https://developers.google.com/chrome-developer-tools/docs/overview>, Opera <http://www.opera.com/dragonfly/>, IE <http://msdn.microsoft.com/en-us/library/dd565625%28v=vs.85%29>",
+			"popularity": 122,
+			"editors": [
+				"j201",
+				"FireFly"
+			]
 		},
 		"events": {
-			"value": "Javascript DOM: Introduction to Events <http://www.quirksmode.org/js/introevents.html>",
-			"popularity": 6
+			"value": "QuirksMode Events guide <http://www.quirksmode.org/js/introevents.html>",
+			"popularity": 66
 		},
 		"botabuse": {
-			"value": "Please investigate me in a private message, so we can keep the channel clutter to a minimum. /msg jbotjr help",
-			"popularity": 1
+			"value": "Please investigate me in a private message, so we can keep the channel clutter to a minimum. /msg ecmabot usage",
+			"popularity": 8
 		},
 		"abuse": {
 			"alias": "botabuse"
 		},
 		"about": {
-			"value": "I'm written entirely in JavaScript using Node.js. See under my covers at Github: <https://github.com/oftn/oftn-bot>"
+			"value": "I'm written entirely in JavaScript using Node.js. See under my covers at Github: <https://github.com/oftn/oftn-bot>",
+			"popularity": 32
 		},
 		"help": {
-			"value": "In order to get help, paste the relevant portions JavaScript in a pastebin (see !paste), and tell us 1) what you want to happen, 2) what is actually happenning, and 3) any error messages you find (see !debug).",
-			"popularity": 19
-		},
-		"asi": {
-			"alias": "semicolon"
+			"value": "For help, ask your question. Be patient. Code samples should be pasted in a paste service (see !paste). Tell us 1) what you want to happen, 2) what is actually happening, and 3) any error messages you find (see !debug).",
+			"popularity": 1122
 		},
 		"robot attack unicorn": {
 			"value": "http://games.adultswim.com/robot-unicorn-attack-twitchy-online-game.html",
 			"popularity": 0
 		},
 		"bracket access": {
-			"value": "yourObject.foobar is just another way of saying yourObject['foobar']. So of course if varName = 'foobar', then it's also the same as yourObject[varName]",
+			"value": "yourObject.foobar is just another way of saying yourObject['foobar']. So of course if varName = 'foobar', then it's also the same as yourObject[varName]. Dot notation is preferred to bracket notation except where the property name would be an invalid identifier. The same applies to keys inside object literals.",
 			"popularity": 1
 		},
 		"bracketaccess": {
@@ -333,19 +340,16 @@
 		"bracket": {
 			"alias": "bracket access"
 		},
-		"[]": {
-			"alias": "bracket access"
-		},
 		"ops": {
-			"value": "HALP! [Use only in emergencies] Ops: GarethAdams buu Gozzy Boki Phrogz Woosta dorward Twey inimino",
-			"popularity": 3
-		},
-		"semicolons": {
-			"alias": "semicolon"
+			"value": "HALP! [Use only in emergencies] Ops: GarethAdams buu Gozzy Boki Phrogz Woosta dorward Twey inimino gkatsev Mortchek",
+			"popularity": 44,
+			"editors": [
+				"Mortchek"
+			]
 		},
 		"str->num": {
 			"value": "parseFloat(str, 10), parseInt(str, 10), +str",
-			"popularity": 1
+			"popularity": 2
 		},
 		"string->num": {
 			"alias": "str->num"
@@ -353,53 +357,44 @@
 		"not working": {
 			"alias": "doesn't work"
 		},
-		"same": {
-			"value": "For XHR and cross-frame-interaction to work, this://this.this.and:this/ have to be the same.",
-			"popularity": 2
-		},
 		"resources": {
-			"value": "!eloquent, !es5, !mdc, !quirksmode",
-			"popularity": 3
+			"value": "!eloquent, !es5, !gcu, !mdn, !owsc, !quirksmode",
+			"popularity": 1
 		},
 		"atwood's law": {
 			"value": "Any application that can be written in JavaScript, will eventually be written in JavaScript.",
 			"popularity": 0
 		},
 		"associative": {
-			"value": "Arrays in JavaScript are not associative arrays. x = []; x.foo = 1; will not work. Period.",
-			"popularity": 0
+			"value": "Arrays in JS are not associative arrays (like in PHP), but are intended to be accessed by numeric index. \"var a=[]; a.foo = 1;\" is not standard usage. http://andrewdupont.net/2006/05/18/javascript-associative-arrays-considered-harmful/",
+			"popularity": 7
 		},
 		"es5": {
 			"value": "An annotated, hyperlinked, HTML view of Edition 5.1 of the ECMAScript Specification. <http://es5.github.com/>",
-			"popularity": 3
+			"popularity": 18
 		},
 		"node.js": {
-			"value": "Node.js is an event-driven I/O framework for the V8 JavaScript engine on Unix-like platforms. It is intended for writing scalable network programs such as web servers. For Node.js help, see #node.js",
-			"popularity": 1
+			"value": "Node.js is an event-driven I/O framework for the V8 JavaScript engine on Unix-like and Windows platforms. It is intended for writing scalable network programs such as web servers. For Node.js help, see #node.js",
+			"popularity": 8
 		},
 		"str->int": {
-			"value": "v8> [parseInt('1', 10), Number('1'), +'1', 1*'1', ~~'1', '1'>>0, '1'|0] // each item in the list is a way of doing string->int conversions. Items from ~~ onwards only work for 32bit integers.",
-			"popularity": 1
-		},
-		"!": {
-			"value": "I know, right!",
-			"popularity": 0
-		},
-		"!!": {
-			"value": "I know, right!",
-			"popularity": 0
+			"value": " [parseInt('1', 10), Number('1'), +'1', 1*'1', ~~'1', '1'>>0, '1'|0] // each item in the list is a way of doing string->int conversions. Items from ~~ onwards only work for 32bit integers. You likely don't want parseInt, unless you want to convert something like `1001 nights` to the number `1001`. See !parseint.",
+			"popularity": 6,
+			"editors": [
+				"Sorella"
+			]
 		},
 		"garden": {
 			"value": "JavaScript Garden is a growing collection of documentation about the most quirky parts of the JavaScript programming language. It gives advice to avoid common mistakes, subtle bugs, as well as performance issues and bad practices that non-expert JavaScript programmers may encounter on their endeavours into the depths of the language. <http://bonsaiden.github.com/JavaScript-Garden/>",
-			"popularity": 0
+			"popularity": 1
 		},
 		"numbers": {
-			"value": "The Number type has exactly 2^64 − 2^53 + 3 values, representing the double-precision 64-bit format IEEE 754 values as specified in the IEEE Standard for Binary Floating-Point Arithmetic, except that the 2^53 − 2 distinct “Not-a-Number” values of the IEEE Standard are represented as a single special NaN value.",
-			"popularity": 0
+			"value": "The Number type has exactly 2^64 − 2^53 + 3 values, representing the double-precision 64-bit format IEEE 754 values as specified in the IEEE Standard for Binary Floating-Point Arithmetic, except that the 2^53 − 2 distinct “Not-a-Number” values of the IEEE Standard are represented as a single special NaN value. : http://www.2ality.com/2012/04/number-encoding.html",
+			"popularity": 15
 		},
 		"objects": {
-			"value": "An Object is a collection of properties, usually named data properties which associate strings with any JavaScript value. See !enumeration.",
-			"popularity": 1
+			"value": "A JavaScript object is a set of properties. A property name is a string, a property value is any JS value. See: Working with Objects https://developer.mozilla.org/en/JavaScript/Guide/Working_with_Objects",
+			"popularity": 12
 		},
 		"enumeration": {
 			"value": "The mechanics and order of enumerating the properties is not specified. Properties of the object being enumerated may be deleted during enumeration.",
@@ -407,23 +402,30 @@
 		},
 		"undefined": {
 			"value": "The undefined type has exactly one value, called `undefined`. Any variable that has not been assigned a value has the value `undefined`.",
-			"popularity": 0
+			"popularity": 2
 		},
 		"booleans": {
 			"value": "The boolean type represents a logical entity having two values, called `true` and `false`.",
-			"popularity": 0
+			"popularity": 1
 		},
 		"minimal": {
-			"value": "A minimal test case should contain precisely the HTML and JavaScript necessary to demonstrate the problem, no more and no less.  If it is more than 32 lines, it is probably not a minimal test case.",
-			"popularity": 0
+			"value": "A minimal test case should contain precisely the HTML and JavaScript necessary to demonstrate the problem, no more and no less. If the JavaScript is more than 42 lines, it is probably not a minimal test case.",
+			"popularity": 61
 		},
 		"psychic": {
-			"value": "You're asking a JavaScript question, but you're not showing us the right code. Please, show us the HTML/JS that the browser sees WHEN THE PROBLEM OCCURS. If you have content inserted by ajax, paste the code *with* that content. We're not psychic, dude. See also !minimal",
-			"popularity": 1
+			"value": "You're asking a JavaScript question, but you're not letting us know what you are doing. Please, show us the HTML/JS that the browser sees WHEN THE PROBLEM OCCURS. If you have content inserted by ajax, paste the code *with* that content. We're not psychic, dude. See also !minimal",
+			"popularity": 4
 		},
 		"dom": {
 			"value": "The DOM API allows you to interact with your document with JavaScript. <https://developer.mozilla.org/en/DOM>",
-			"popularity": 1
+			"popularity": 15
+		},
+		"node": {
+			"alias": "node.js"
+		},
+		"mootools": {
+			"value": "For help with MooTools-related problems, visit the #mootools channel.",
+			"popularity": 2
 		},
 		"textcontent": {
 			"value": "There is no single cross-browser way to get the text from an element, so you need the following: var mytext = element.textContent || element.innerText; To set the text, you can do: element.textContent = element.innerText = mytext;",
@@ -432,11 +434,1516 @@
 		"innertext": {
 			"alias": "textcontent"
 		},
+		"equivalent": {
+			"value": "Instead of asking what's JavaScript's equivalent of `x' in `y' language, tell us what `x' does, and what you expect to achieve using it. Chances are we don't know `y', or you're trying something silly in JS.",
+			"popularity": 0
+		},
+		"enter": {
+			"value": "Please try to keep your questions/responses on one line. Don't use the \"Enter\" key as punctuation!",
+			"popularity": 11
+		},
 		"usage": {
-			"value": "You may use me to run tiny JavaScript snippets. I will execute your code and show you the result of the last statement. You may also use the console functions like console.log, console.time, and console.timeEnd. Use `>>` to execute with SpiderMonkey and `>>>` to execute with V8."
+			"value": "You may use me to run tiny JavaScript snippets and retrieve factoids. See <https://github.com/oftn/oftn-bot/wiki/Guide-to-Ecmabot>.",
+			"popularity": 28
+		},
+		"jshint": {
+			"value": "A fork of jslint, made to be more configurable on how strict you want it to be, which is overall a great way to make your programs less error-prone. <http://jshint.com/>",
+			"popularity": 6,
+			"editors": [
+				"yorick",
+				"Sorella"
+			]
+		},
+		"jslint": {
+			"value": "Douglas Crockford's tool for testing his 'Code Conventions' for JavaScript. It includes both syntax checking and very particular style conventions, but is an excellent way to make your programs less error-prone. <http://www.jslint.com/> See also !jshint for a similar tool that's less particular about style.",
+			"popularity": 10,
+			"editors": [
+				"yorick"
+			]
+		},
+		"uuid": {
+			"value": "'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});",
+			"popularity": 2
+		},
+		"eventintro": {
+			"value": "JavaScript - Introduction to Events <http://www.quirksmode.org/js/introevents.html>"
+		},
+		"gtfo": {
+			"value": "This is a channel for help with JavaScript, the language, not for the APIs of some JavaScript library you found. Read the documentation for your library, contact the maintainer, find their IRC channel, but don't expect us to know how it works (see !shoo).",
+			"popularity": 8
+		},
+		"homework": {
+			"value": "We won't do your homework for you. Period. We can help, but we'll want to see some effort, and we'll expect you to read docs rather than get spoon-fed.",
+			"popularity": 24
+		},
+		"no": {
+			"value": "Don't make shit up.",
+			"popularity": 7
+		},
+		"spelling": {
+			"value": "Spelling and capitalization are important in programming, unless you are using PHP.",
+			"popularity": 11
+		},
+		"submit": {
+			"value": "Do you have a form element with name=\"submit\"? That confuses some browsers. When you call form.submit(), it thinks you're talking about the name=\"submit\" element."
+		},
+		"sleep": {
+			"value": "JavaScript doesn't have a sleep command -- as it's single threaded (if that makes no sense, ask). Instead, use the setTimeout function. Example: `do_this(); window.setTimeout(do_this_in_at_least_2seconds, 2e3);`",
+			"popularity": 2
+		},
+		"ternary": {
+			"value": "var result = expr ? a : b; is equivalent to: var result; if (expr) { result = a; } else { result = b; }"
+		},
+		"performance": {
+			"value": "Speed Up Your JavaScript [including dom manipulation]: <http://www.youtube.com/watch?v=mHtdZgou0qU#t=131s> (56 minutes)",
+			"popularity": 5
+		},
+		"alert": {
+			"value": "The alert() function opens a simple window that blocks your script to show a message box. For debugging purposes, you should use the console functions. See !console",
+			"popularity": 36
+		},
+		"prompt": {
+			"value": "The prompt() function opens a simple window that blocks your script to show a message box with an area for the user to enter text. This text is then returned (or null if no text was entered)."
+		},
+		"pad": {
+			"value": "function pad2(n){return (\"0\"+n).slice(-2)}",
+			"popularity": 2
+		},
+		"console.log": {
+			"alias": "console"
+		},
+		"default": {
+			"value": "JavaScript has no default parameters. You can handle this in different ways depending on what data you consider a valid value. If anything but undefined is valid, use `if (typeof x === 'undefined') { x = 'default'; }` if anything but null and undefined are valid, use `if (x == null) { x = default'; }` if anything but falsy values are valid, use `if (!x) { x = 'default'; } or `x = x || 'default';`.",
+			"popularity": 20
+		},
+		"speed": {
+			"value": "Yahoo! Best Practices for Speeding Up Your Web Site <http://developer.yahoo.com/performance/rules.html>"
+		},
+		"php": {
+			"value": "You're showing us PHP, but asking a question about the browser, which sees the output. Maybe your PHP produces correct output, maybe it doesn't. Please show us the HTML as the browser sees it.",
+			"popularity": 63
+		},
+		"debugger": {
+			"alias": "debug"
 		},
 		"sex": {
-			"value": "[~sex] updatedb; locate; talk; date; cd; strip; look; touch; finger; unzip; uptime; gawk; head; emerge --oneshot condom; mount; fsck; gasp; more; yes; yes; yes; more; umount; emerge -C condom; make clean;  sleep;"
+			"value": "[~sex] updatedb; locate; talk; date; cd; strip; look; touch; finger; unzip; uptime; gawk; head; emerge --oneshot condom; mount; fsck; gasp; more; yes; yes; yes; more; umount; emerge -C condom; make clean; sleep;",
+			"popularity": 4
+		},
+		"chromedevtools": {
+			"value": "http://www.youtube.com/watch?v=N8SS-rUEZPg",
+			"popularity": 1
+		},
+		"tag": {
+			"value": "Know the difference between \"element\" and \"tag\". In \"<p id=x>...</p>\", \"<p id=x>\" is a start tag, and \"</p>\" is an end tag. Taken together, the entire paragraph is a p *element*, not a tag. document.getElementById('x') returns an element, not a tag. Tags do not exist in the DOM, only in the markup.",
+			"popularity": 3
+		},
+		"`": {
+			"value": "A relic of a lost age",
+			"popularity": 1
+		},
+		"html-regex": {
+			"value": "http://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags/1732454#1732454"
+		},
+		"spec": {
+			"value": "Language Specification (3 [widely supported]) http://www.mozilla.org/js/language/E262-3.pdf (5 [current]) http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf You can use !ecma topic or !ecma 1.2.3 to get a link to specific parts of ECMA-262 5th edition",
+			"popularity": 6
+		},
+		"compat": {
+			"value": "ECMAScript 5 compatibility table by kangax: <http://kangax.github.com/es5-compat-table/>. Also see !quirksmode",
+			"popularity": 1
+		},
+		"atwood": {
+			"alias": "atwood's law"
+		},
+		"js": {
+			"value": "did you mean: recursive acronym for JavaScript is not Java.",
+			"popularity": 12
+		},
+		"comparisons": {
+			"value": "Using == should be avoided, since it performs coercion giving unexpected results. Use === instead. <http://eboyjr.oftn.org:8080/testing/problemboole.php> <http://zero.milosz.ca/>",
+			"popularity": 25,
+			"editors": [
+				"jrajav"
+			]
+		},
+		"libraries": {
+			"alias": "gtfo"
+		},
+		"libs": {
+			"alias": "gtfo"
+		},
+		"sosf": {
+			"value": "Son of Suckerfish Dropdowns, a simple technique for making dropdown menus with minimal JavaScript merely for support in IE6: http://www.htmldog.com/articles/suckerfish/dropdowns/",
+			"popularity": 1
+		},
+		"alot": {
+			"value": "Do you like to hug alot? http://bit.ly/aVDMTo"
+		},
+		"drde": {
+			"value": "It's U+22F1 DOWN RIGHT DIAGONAL ELLIPSIS \"⋱\"",
+			"popularity": 3
+		},
+		"capitalization": {
+			"alias": "spelling"
+		},
+		"private": {
+			"value": "JavaScript has no mechanism that provides private properties or variables. Common alternatives are prepending the property name with a `__` or `_` symbol, using closures (see !closures), or creating a public `priv` property which is not documented.",
+			"popularity": 4
+		},
+		"source": {
+			"value": "My source code is available at: https://github.com/oftn/oftn-bot/",
+			"popularity": 13
+		},
+		"not-our-library": {
+			"alias": "gtfo"
+		},
+		"firebug": {
+			"value": "JavaScript console and related tools (for Firefox) http://getfirebug.com/, in-browser (portable) version is Firebug Lite http://getfirebug.com/firebuglite",
+			"popularity": 2
+		},
+		"won't work": {
+			"alias": "doesn't work"
+		},
+		"same": {
+			"value": "The same-origin policy prevents access to most methods and properties across pages on different sites (even those inside iframes). Short version: for XHR and cross-frame-interaction to work, this://this.this.and:this/ have to be the same. Alternatives: A server-side proxy, the Dojo iframe trick, CORS, and JSONP. See also: !jsonp, !cors.",
+			"popularity": 38
+		},
+		"jsonp": {
+			"value": "JSONP is an insecure, but workable way to allow cross-domain requests. It consists of inserting a <script> element pointing to a generated script which runs the callback you specify in URL with the response data: <script src=\"http://some.api/api.js?callback=blah\"/> and server has in api.js ’<?= GET['callback'] ?>(<? '{generate:\"response\", data: \"here\"}' ?>)’. See also: !same",
+			"popularity": 15
+		},
+		"cors": {
+			"value": "Cross-origin resource sharing (http://www.w3.org/TR/cors/) allows browser to negotiate access for cross-domain requests - for example with XMLHttpRequest - as a way to work around the same-origin policy. See also: !same, http://caniuse.com/cors , https://developer.mozilla.org/en/HTTP_access_control",
+			"popularity": 40
+		},
+		"point": {
+			"value": "Don't ask to ask, don't ask if someone is available. Just get to the point, and then wait a while.",
+			"popularity": 4
+		},
+		"http": {
+			"value": "Any Web developer worthy of the name must have a strong understanding of HTTP. http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol, http://www.w3.org/Protocols/rfc2616/rfc2616.html, http://www.jmarshall.com/easy/http/, and http://tomayko.com/writings/rest-to-my-wife should be useful.",
+			"popularity": 4
+		},
+		"reduction": {
+			"value": "How and why to reduce your page: http://css-tricks.com/reduced-test-cases/ http://webkit.org/quality/reduction.html https://developer.mozilla.org/en/Reducing_testcases"
+		},
+		"ajax-upload": {
+			"value": "Ajax Upload; A file upload script with progress-bar, drag-and-drop: http://valums.com/ajax-upload/",
+			"popularity": 1
+		},
+		"guide": {
+			"value": "MDN JavaScript Guide: https://developer.mozilla.org/en/javascript/guide",
+			"popularity": 1
+		},
+		"clj": {
+			"value": "comp.lang.javascript, the JS Usenet group: http://groups.google.com/group/comp.lang.javascript/topics"
+		},
+		"history": {
+			"value": "Old style, change window.location.hash: https://developer.mozilla.org/en/DOM/window.location | Newer style, listen for window's hashchange event: https://developer.mozilla.org/en/DOM/window.onhashchange | Newest style, use the HTML5 History API: https://developer.mozilla.org/en/DOM/Manipulating_the_browser_history",
+			"popularity": 1
+		},
+		"last one only": {
+			"value": "If something is only being applied to the 'last' one of many, you have a scoping problem. e.g.: in for (i=0; i<5; ++i) {doX(function(){ doY(i) })}; `doY' might only receive 4 as a value. You can solve this using closures, so see !closures. For more info see http://www.mennovanslooten.nl/blog/post/62/",
+			"popularity": 13
+		},
+		"jscript": {
+			"value": "\"JScript\" is not an abbreviation for JavaScript, but the name of a specific implementation."
+		},
+		"prototype": {
+			"value": "JavaScript uses prototypal inheritance, where Objects inherit directly from other Objects (there's no !classes). This post covers the foundations of that: http://yehudakatz.com/2011/08/12/understanding-prototypes-in-javascript/",
+			"popularity": 50
+		},
+		"innerhtml": {
+			"value": "InnerHTML is fast, but has its quirks. DOM methods are a good alternative - without the speed and readability (http://xrl.us/bmaiz). To read a list of innerHTML quirks and possible workarounds, see http://js.isite.net.au/faq/innerHTML)",
+			"popularity": 13
+		},
+		"io": {
+			"value": "JavaScript has no notion of input/output. IO, including network access, must be mediated by host objects, which your environment must provide (that is, the environment in which you are running the script, like a browser)"
+		},
+		"testcase": {
+			"value": "A pared-down test case has the absolute minimum HTML, CSS, and JS needed to reproduce a problem. If you can delete any HTML, CSS, or JS and the problem still remains, you haven't pared it down fully. For best results, put your test case on http://jsfiddle.net and give us the URL.",
+			"popularity": 3
+		},
+		"properties": {
+			"value": "foo.bar and foo[\"bar\"] are both ways to access a property on a JavaScript object; use the latter when the property name is not a legal identifier (e.g. foo[\"my-cats\"] or foo[\"emails[]\"]) or when you need to construct the property name from a variable (e.g. var prop = \"bar\"; var x = foo[prop]).",
+			"popularity": 4
+		},
+		"document.wrong": {
+			"alias": "document.write"
+		},
+		"parseint": {
+			"value": "If you want to convert something to a Number, don't use `parseInt`, just cast it to a Number using `Number(x)`. parseInt will convert it to a String, then extract the first numeric characters in that String that are allowed in the specified radix, THEN convert those to a Number. You only use it for things like parseInt('500 days of summer') => 500",
+			"popularity": 9,
+			"editors": [
+				"Sorella"
+			]
+		},
+		"trust": {
+			"value": "Stop worrying and TRUST THE GARBAGE COLLECTOR."
+		},
+		"gcu": {
+			"value": "Google Code University: HTML, CSS, and Javascript from the Ground Up <http://code.google.com/edu/submissions/html-css-javascript/>"
+		},
+		"owsc": {
+			"value": "Opera Web Standards Curriculum: Start-to-finish curriculum for learning modern web standards: <http://dev.opera.com/articles/wsc/>"
+		},
+		"truthy": {
+			"value": "The 'falsy' values in JavaScript are undefined, null, NaN, 0, -0, '', and false. The 'truthy' values are all other values. All objects are truthy. There is nothing both truthy and falsy, or neither truthy nor falsy.",
+			"popularity": 23,
+			"editors": [
+				"Mortchek",
+				"ljharb"
+			]
+		},
+		"operators": {
+			"value": "https://developer.mozilla.org/en/JavaScript/Reference/Operators",
+			"popularity": 7
+		},
+		"can i do cross domain request with xmlhttprequest?": {
+			"value": "no",
+			"popularity": 3
+		},
+		"for..in": {
+			"value": "for..in is not to loop through indices/values of an array. Use for(init;cond;step) or Array#forEach. For..in iterates over *all* enumerable properties of an object, without any defined order.",
+			"popularity": 11
+		},
+		"intro": {
+			"value": "https://developer.mozilla.org/en-US/learn/javascript",
+			"popularity": 6
+		},
+		"library": {
+			"alias": "gtfo"
+		},
+		"experience": {
+			"value": "\"experience is never wasted! don't feel down\"",
+			"popularity": 3
+		},
+		"timeout": {
+			"value": "Use setTimeout for guaranteed delay (callbacks will be delayed at least x ms from the last execution). use setInterval for guaranteed frequency (callbacks will be called at least every x ms, regardless of previous executions).",
+			"popularity": 9,
+			"editors": [
+				"gkatsev"
+			]
+		},
+		"holistic-performance": {
+			"value": "\"Holistic performance encompasses two notions. A) Performance includes filesize, load time and parse time as well as execution time. B) Try to keep performance across browsers even where possible. From John Resig's speech: http://ontwik.com/javascript/velocity-2011-john-resig-holistic-performance/\"",
+			"popularity": 2
+		},
+		"comma": {
+			"value": "\"The humble comma has a more complex role in javascript than it may, at first, appear. Take a gander at this for details : http://javascriptweblog.wordpress.com/2011/04/04/the-javascript-comma-operator/\"",
+			"popularity": 7
+		},
+		"fastest": {
+			"value": "Please refrain from asking broad questions such \"What's the easiest way to do X?\" or \"Fastest way to do Y?\". Explain the context, what you want to do and ask one well defined question."
+		},
+		"single-threaded": {
+			"value": "Browser JS is single-threaded and shares a thread with the rendering engine. That means that the browser can't render the page while it's executing JS, and it can't execute JS while it's rendering the page. There's NO parallelism (except for webworkers).",
+			"popularity": 3
+		},
+		"str2num": {
+			"value": "There are a variety of ways to convert a string to a number. See http://phrogz.net/JS/string_to_number.png for the functional \"problems\" with some of them. See http://jsperf.com/convert-string-to-number-techniques for the performance impacts."
+		},
+		"property": {
+			"alias": "properties"
+		},
+		"control-click on table cells": {
+			"value": "Solution is to add \"-moz-user-select: none;\" for table elements that you want to disable this behavior."
+		},
+		"coffeescript": {
+			"value": "CoffeeScript is not JavaScript; try #coffeescript for help.",
+			"popularity": 10,
+			"editors": [
+				"FireFly"
+			]
+		},
+		"fast": {
+			"alias": "fastest"
+		},
+		"best": {
+			"alias": "fastest"
+		},
+		"next": {
+			"value": "Another satisfied customer! NEXT!!",
+			"popularity": 97
+		},
+		"iife": {
+			"value": "An \"Immediately-invoked function expression\" is an expression that both creates and calls a function. As with any function call, a scope is created. \"(function () { /* ... */ }())\" is a common form. For more info: http://benalman.com/news/2010/11/immediately-invoked-function-expression/",
+			"popularity": 150
+		},
+		"away": {
+			"value": "Please do not use noisy away messages and nicks. It is annoying and unnecessary. Use the command \"/away <reason>\" to set your client away silently.",
+			"popularity": 6
+		},
+		"oop": {
+			"value": "http://killdream.github.com/blog/2011/10/understanding-javascript-oop/index.html summarizes Object Oriented Programming in Javascript, using concepts from ECMAScript 5, and relating them back to older paradigms from ECMAScript 3",
+			"popularity": 198
+		},
+		"[]": {
+			"alias": "properties"
+		},
+		"cast": {
+			"value": "boolean: !!o, Boolean(o). number: +o, Number(o). string: String(o), '' + o",
+			"popularity": 3
+		},
+		"pask": {
+			"value": "Paste your code at http://jsfiddle.net. If you have a question, please just ask it. Don't look for topic experts. Don't ask to ask. Don't PM! Just ask the question straight out. http://catb.org/~esr/faqs/smart-questions.html"
+		},
+		"lol": {
+			"value": "Thou shalt not type LOL unless you are really laughing out loud.",
+			"popularity": 1
+		},
+		"equivalent of x": {
+			"value": "Instead of asking \"What's the equivalent of language Y's X\", describe the feature you want. Chances are we don't know what language Y is or what feature X does."
+		},
+		"learn-js": {
+			"value": "Learn JavaScript https://developer.mozilla.org/en-US/learn/javascript",
+			"popularity": 32
+		},
+		"plz": {
+			"value": "http://dominik.honnef.co/posts/2011/07/don_t_abbreviate__thanks____sorry__or__please_/",
+			"popularity": 1
+		},
+		"format": {
+			"value": "\"inimino: It is ridiculous to use formatting conventions as a proxy for code quality. ...snip... If you are reduced to picking software on the basis of whether the author prefers your particular coding style or not, you may just as well admit that you do not know how to discern code quality and flip a coin instead.\"",
+			"popularity": 1
+		},
+		"kitten": {
+			"value": "Whenever you pass a String to setTimeout, God kills a kitten! Think of the poor kittens! Since passing JS in a string to these functions means an implicit eval, you likely don't want that. Also see: first-class functions;",
+			"popularity": 2
+		},
+		"first-class functions": {
+			"value": "Functions in JavaScript are first class. This means you can pass it around, store it in variables and do anything you'd do with other objects. I.e.: The following are both valid: var foo = {}; console.log(foo); and var foo = function(){ }; console.log(foo);",
+			"popularity": 3,
+			"editors": [
+				"eboy"
+			]
+		},
+		"doubleyea": {
+			"value": "yea YEAAAAH *screeching guitar*",
+			"popularity": 4
+		},
+		"hey": {
+			"value": "\"!ho\"",
+			"popularity": 13
+		},
+		"hughfdjackson": {
+			"value": "\"https://github.com/hughfdjackson\""
+		},
+		"regexp": {
+			"value": "Regular Expressions in Javascript: http://www.evolt.org/article/Regular_Expressions_in_JavaScript/17/36435/ .. or more generally: http://www.regular-expressions.info/. Useful tester: http://regexpal.com/",
+			"popularity": 9
+		},
+		"ide": {
+			"value": "\"vim\"",
+			"popularity": 7
+		},
+		"prototype intro": {
+			"value": "A short (and practical) explanation of how prototypal inheritance works in JavaScript: http://hughfdjackson.com/javascript/2012/01/05/prototypes:-the-short%28est-possible%29-story/. For a much more in-depth introduction, see !oop",
+			"popularity": 128
+		},
+		"mix": {
+			"value": "You should not mix HTML and JavaScript. Instead of <button onclick=\"foo()\"> use <button id=\"magicmaker\"> and in your JS document.getElementById('magicmaker').addEventListener('click',foo,false);",
+			"popularity": 1
+		},
+		"kiss": {
+			"value": "Keep It Simple, Stupid",
+			"popularity": 1
+		},
+		"inline": {
+			"value": "Using inline event handlers is bad practice and results in poorly factored, hard-to-manage code. Consider attaching your events with Javascript, instead, eg: https://developer.mozilla.org/en/DOM/element.addEventListener",
+			"popularity": 108
+		},
+		"foo": {
+			"value": "foo, bar, baz, and quux are commonly used metasyntactic variables. They stand for whatever you want. See http://www.catb.org/jargon/html/M/metasyntactic-variable.html",
+			"popularity": 7,
+			"editors": [
+				"Mortchek"
+			]
+		},
+		"expect": {
+			"value": "Creators have an innate notion of their expectations that their audiences don't necessarily share. Please define \"work\" and \"doesn't work\"."
+		},
+		"gist": {
+			"value": "Paste code at https://gist.github.com or a similar site so that we can look over it. Thanks!",
+			"popularity": 4
+		},
+		"diy": {
+			"value": "Before you ask your question, ask yourself if you could have discovered it yourself in a javascript console. If so, try it. Feel free to ask *why* something is the way it is, but don't be lazy.",
+			"popularity": 2
+		},
+		"associative array": {
+			"value": "In javascript, normal objects can be used as associative arrays: that is, they are unordered collections of key:value pairs. e.g. var data = { first_name: \"bob\", last_name: \"peterson\", age: 34, children: [\"beth\", \"rob\", \"chris\"]}",
+			"popularity": 4
+		},
+		"repl": {
+			"value": "REPL stands for 'read-eval-print loop', and is a great way to try your code out. Google for '<your browser> console'. The normal shortcuts are f12 or command/ctrl-shift-I",
+			"popularity": 14
+		},
+		"class": {
+			"alias": "classes"
+		},
+		"module pattern": {
+			"value": "http://www.adequatelygood.com/2010/3/JavaScript-Module-Pattern-In-Depth. See https://github.com/substack/node-browserify and http://requirejs.org/ for alternative module definition and loading support.",
+			"popularity": 38
+		},
+		"schools": {
+			"value": "Some useful resources for learning js: https://developer.mozilla.org/en-US/learn/javascript. Also see !eloquent",
+			"popularity": 6
+		},
+		"hug": {
+			"value": "Big old bear hug!",
+			"popularity": 1
+		},
+		"oink": {
+			"value": "^(oo)^"
+		},
+		"live": {
+			"value": "Give us some live code, so we don't have to do it for you. http://jsfiddle.net and http://jsbin.com are great!"
+		},
+		"delete": {
+			"value": "Delete only removes properties from objects, not variables from a scope. See http://perfectionkills.com/understanding-delete/",
+			"popularity": 10
+		},
+		"last one": {
+			"alias": "last one only"
+		},
+		"oop intro": {
+			"alias": "prototype intro"
+		},
+		"bitwise": {
+			"value": "Bitwise operators (<<, >>, >>>, ^, &, |, and ~) limit their arguments to 32-bit integers and should not be used with values of unknown size.",
+			"popularity": 3
+		},
+		"regex": {
+			"value": "Give us 1. What you want to match, 2. Some sample data 3. Your attempt. http://regexpal.com/ is useful!",
+			"popularity": 21
+		},
+		"equality": {
+			"value": "When the types of a and b are the same, 'a == b' and 'a === b' have the same value. Otherwise, == coerces its operands to the same type, and is sometimes true on operands where === is false. On objects (which are mutable), a == b iff mutating a also mutates b. On immutable types (string, number, boolean, undefined, null) a == b iff the values are equal. Equality Table: https://janosch.woschitz.org/javascript-equality-comparison/",
+			"popularity": 17,
+			"editors": [
+				"CoverSlide|TPFR"
+			]
+		},
+		"'ecma5 compat'": {
+			"value": "'For a robust list of ES5 compatibility charts, see Kangax's page at : <http://kangax.github.com/es5-compat-table/>'",
+			"popularity": 0
+		},
+		"stupidintheroom": {
+			"value": "'It is you'",
+			"popularity": 0
+		},
+		"fortpark": {
+			"value": "'There is no fortpark fish here'",
+			"popularity": 1
+		},
+		"work": {
+			"alias": "jobs"
+		},
+		"example": {
+			"value": "don't show us examples that include mistakes out of laziness and ask us why it's not working. We'll tell you about those mistakes. Seriously. What else did you expect?",
+			"popularity": 3
+		},
+		"amiallowed": {
+			"value": "Yes, you're allowed to add factoids!",
+			"popularity": 2
+		},
+		"rtfm": {
+			"value": "This is a problem you should be able to solve yourself with research. Please be so kind as to read the funky manual. For library-specific problems, read their documentation or visit their channel. For javascript documentation, see: !mdn 'foo' and !ecma 'foo'",
+			"popularity": 11
+		},
+		"public": {
+			"value": "don't direct your question towards one member of the chat who is active & seems knowledgable, but is otherwise unrelated. Ask the channel at large instead.",
+			"popularity": 9
+		},
+		"oom": {
+			"value": "Out of Mangos!",
+			"popularity": 2
+		},
+		"premature optimisation": {
+			"value": "See !premature optimization",
+			"popularity": 6
+		},
+		"premature optimization": {
+			"value": "Worrying about effeciency without first identifying real bottlenecks that affect the end-user leads to hard to read, hard to maintain code; and is far slower to write. Unless you can prove that it causes significant and noticeable slow-down, you've probably got bigger things to worry about.",
+			"popularity": 8
+		},
+		"falsy": {
+			"alias": "truthy"
+		},
+		"new array": {
+			"value": "The array literal format - [] - is often preferred for array construction to the array constructor - new Array() or Array(), for two reasons. 1) [] is fewer characters without damaging readability, 2) new Array acts the same as [], *except* if you pass a single integer argument; in which case it makes an array whose length is equal to that argument. [] has no such functionality, and hence has no such inconsistencies.",
+			"popularity": 9
+		},
+		"everything": {
+			"value": "I got that, too.",
+			"popularity": 0
+		},
+		"describe": {
+			"value": "Please, provide the full scenario for your problem. e.g.: I am trying to do X, I do so by calling APIs Y (link to code on a pastebin site), but Z happens instead. I see the following error messages: [can't call method Y of undefined].",
+			"popularity": 1
+		},
+		"synchronous": {
+			"value": "Please, show a little love to your users and *don't* use synchronous functions that can take more than a couple of mileseconds. JS is single threaded, and the browser can't do anything else while your code is running, including rendering the UI.",
+			"popularity": 2
+		},
+		"env": {
+			"value": "javascript is a scripting language; it has no inherent power to interact with anything external. Environments empower js with APIs to do this; which environment are you in?",
+			"popularity": 3
+		},
+		"namespaces": {
+			"value": "The horror, the horror…",
+			"popularity": 2
+		},
+		"helpfulhelp": {
+			"value": "http://guipn.com/blog/how-to-get-helpful-help/",
+			"popularity": 6
+		},
+		"asi": {
+			"value": "ASI stands for 'automatic semicolon insertion', a mechanism by which semicolons may be omitted from the source code, and inferred by a JS engine at runtime. For details: http://inimino.org/~inimino/blog/javascript_semicolons - for fewer details and a commonly-held opinion, see http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml?showone=Semicolons#Semicolons",
+			"popularity": 46
+		},
+		"guest": {
+			"value": "'If you switched your nick to something a little more personalized, it would be easier for us to talk to you! Here are some possibilities to get you started: 'pikachu' 'he_man' 'milky_joe' 'beastman'",
+			"popularity": 0
+		},
+		"pols": {
+			"value": "JS is not like a lot of languages out there. It'll probably violate the principle of least surprise for people coming from many other languages. While this may be frustrating to start with, it's not inherently a reason that js is 'a bad language'(tm). Keep at it.",
+			"popularity": 0
+		},
+		"study": {
+			"value": "List of resources (of varying quality) for further study of JavaScript for web app developers. http://www.impressivewebs.com/javascript-resources-web-app-developers/",
+			"popularity": 2
+		},
+		"api": {
+			"value": "An API (or Application Programming Interface) is an interface through which you interact with a software component, such as a library or module.",
+			"popularity": 4
+		},
+		"factoids": {
+			"value": "http://boshi.inimino.org/ecmabot-factoids.json",
+			"popularity": 2
+		},
+		"last-only": {
+			"alias": "last one only"
+		},
+		"last": {
+			"alias": "last one only"
+		},
+		"nouns": {
+			"value": "In Javascript, verbs are equally important as nouns. http://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html",
+			"popularity": 32
+		},
+		"fe vs fd": {
+			"value": "A function expression is an expression and a function declaration is a statement. The former can be immediately invoked (see !iife). The latter is hoisted, so can be called in the same function before it appears. `function` at the beginning of a statement starts a function declaration, and anywhere else starts a function expression.",
+			"popularity": 23,
+			"editors": [
+				"Mortchek"
+			]
+		},
+		"nfe": {
+			"value": "Named Function Expressions: http://kangax.github.com/nfe/",
+			"popularity": 5
+		},
+		"browserling": {
+			"value": "test out your cross-browser issues yourself at browserling.com",
+			"popularity": 4
+		},
+		"shoo": {
+			"value": "List of topics that have dedicated channels: jQuery (#jquery), Node.js (#node.js), Google Closure Tools (##closure-tools), Backbone.js (#documentcloud), Google Maps (#googlemaps), require.js (#requirejs), Bootstrap (##twitter-bootstrap), CSS (#css), MooTools (#mootools), Coffeescript (#coffeescript), Ember.js (#emberjs), YUI (#yui), Prototype (#prototype), Express (#express), Dojo (#dojo)",
+			"popularity": 105,
+			"editors": [
+				"nathan7",
+				"PigDude",
+				"Mortchek",
+				"j201"
+			]
+		},
+		"google maps": {
+			"value": "You are asking a question about the Google Maps API. Though written in JS, it is out of scope for this channel. The folks in #googlemaps will probably be able to help you better.",
+			"popularity": 0
+		},
+		"googlemaps": {
+			"alias": "google maps"
+		},
+		"bootstrap": {
+			"value": "The guys in ##twitter-bootstrap can probably answer your question better than we can.",
+			"popularity": 13
+		},
+		"faq": {
+			"value": "http://jibbering.com/faq/",
+			"popularity": 3
+		},
+		"crypto": {
+			"value": "Don't try to do encryption or cryptography in Javascript. http://www.matasano.com/articles/javascript-cryptography/",
+			"popularity": 6
+		},
+		"hello": {
+			"value": "hello",
+			"popularity": 40,
+			"editors": [
+				"PigDude"
+			]
+		},
+		"otbs": {
+			"value": "The One True Brace style: http://en.wikipedia.org/wiki/Indent_style#Variant:_1TBS",
+			"popularity": 16
+		},
+		"arrays": {
+			"value": "https://developer.mozilla.org/en/JavaScript/Guide/Predefined_Core_Objects#Array_Object",
+			"popularity": 4
+		},
+		"str_repeat": {
+			"value": "String.prototype.repeat = function str_repeat(n) { var undef, str = []; if (n < 0) { return this; } for (var i = 0; i < n; ++i) { str.push(undef); } return str.join(this); }; /* http://jsperf.com/jsstringrepeat/2 */",
+			"popularity": 3
+		},
+		"use a library": {
+			"value": "You want to solve a problem that has been solved several times before, and has been distributed as a reusable component for anyone to use. Using a library you can have your cake, and eat it too!",
+			"popularity": 0
+		},
+		"ajax": {
+			"value": "XMLHttpRequest, a method for asynchronous fetching of pages from javascript. https://developer.mozilla.org/en/docs/DOM/XMLHttpRequest (see also: !cors for issues with cross-origin XHR)",
+			"popularity": 20
+		},
+		"xhr": {
+			"alias": "ajax"
+		},
+		"es5 shim": {
+			"value": "You can add some ES5 functionality to older browsers with https://github.com/kriskowal/es5-shim/blob/master/es5-shim.js or http://cdnjs.cloudflare.com/ajax/libs/es5-shim/1.2.4/es5-shim.min.js",
+			"popularity": 53
+		},
+		"mixins": {
+			"value": "A fresh look at Javascript mixins: http://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/",
+			"popularity": 13
+		},
+		"rest": {
+			"value": "\"How I Explained REST to my Wife\" http://tomayko.com/writings/rest-to-my-wife",
+			"popularity": 1
+		},
+		"dom0": {
+			"value": "The DOM 0 API was originally included by Netscape in 1995 with Netscape Navigator 2.0. It contained features such as collections and events, which were used to create primitive effects (e.g. form validation). The features that formed the DOM 0 API have become the foundation that forms the DOM today. For more, visit: (http://www.fortybelow.ca/Articles/DOM-0-Reference/).",
+			"popularity": 11
+		},
+		"dom 0": {
+			"alias": "dom0"
+		},
+		"raf": {
+			"value": "For animations, requestAnimationFrame is far superior to setTimeout. http://paulirish.com/2011/requestanimationframe-for-smart-animating/ To cover older browsers, use this polyfill: https://gist.github.com/1579671",
+			"popularity": 38,
+			"editors": [
+				"ljharb"
+			]
+		},
+		"document tree": {
+			"value": "A \"document tree\" is a live tree of nodes representing the current Web page. It is interfaced with via the DOM API.",
+			"popularity": 6
+		},
+		"subtree": {
+			"value": "A \"subtree\" is a subset of a document tree. See \"!document tree\" for more.",
+			"popularity": 1
+		},
+		"documenttree": {
+			"alias": "document tree"
+		},
+		"modifying prototypes": {
+			"value": "Don't modify objects you don't own by extending native prototypes! http://www.nczonline.net/blog/2010/03/02/maintainable-javascript-dont-modify-objects-you-down-own/",
+			"popularity": 2
+		},
+		"prototype modify": {
+			"value": "Don't modify objects you don't own by extending native prototypes! http://www.nczonline.net/blog/2010/03/02/maintainable-javascript-dont-modify-objects-you-down-own/",
+			"popularity": 0
+		},
+		"dog balls": {
+			"value": "(function () {}()) > (function () {})() — http://www.youtube.com/watch?v=taaEzHI9xyY#t=34m33s (from YUIConf 2011)",
+			"popularity": 6
+		},
+		"equals": {
+			"value": "The == operator is actually an overhead view of the Four Horsemen of the Apocalypse. Please use \"===\" and \"!==\" rather than \"==\" and \"!=\" - the latter does type coercion. See !comparisons.",
+			"popularity": 37
+		},
+		"functions": {
+			"value": "See !fe vs fd",
+			"popularity": 3
+		},
+		"ssjs": {
+			"value": "Server-side JavaScript: Node.js and other V8 distributions (C++), Rhino (JVM), Spidermonkey (C).",
+			"popularity": 10
+		},
+		"multi-browser": {
+			"value": "\"Multi-browser\" is a word used to describe a resource that works in multiple browsers. Its definition is often used for the word \"cross-browser\", which has an entirely different meaning. See !cross-browser for details.",
+			"popularity": 1
+		},
+		"templating": {
+			"value": "\"You can get nice string formatting in a tweetful of characters, check out http://microjs.com/#templating for some nice options!\"",
+			"popularity": 0
+		},
+		"help!": {
+			"value": "Dont panic!",
+			"popularity": 3
+		},
+		"onevent": {
+			"value": "You should prefer using the DOM 2 addEventListener & removeEventListener methods to using the on<event name> property. See https://developer.mozilla.org/en/DOM/element.addEventListener#Why_use_addEventListener.3F",
+			"popularity": 18
+		},
+		"bloat": {
+			"value": "The solution to worrying about JS lib/framework size: include one less .jpg on your site. // https://twitter.com/paul_irish/status/227203681462927361 - also, https://twitter.com/trek/status/227082154109186049 http://fourkitchens.com/blog/2013/04/24/one-less-jpg/",
+			"popularity": 22,
+			"editors": [
+				"gkatsev"
+			]
+		},
+		"extend": {
+			"value": "A simple and naive implementation of the extend functionality which can copy items from one object to another. https://gist.github.com/3162008. A safe, non-destructive implementation that merges any number of objects: https://gist.github.com/3162033",
+			"popularity": 15
+		},
+		"yoda condition": {
+			"value": "A Yoda Condition: if ('blue' === sky) … if blue the sky is.",
+			"popularity": 0
+		},
+		"yoda": {
+			"alias": "yoda condition"
+		},
+		"horsemen": {
+			"value": "The == operator is actually an overhead view of the Four Horsemen of the Apocalypse. see !equals",
+			"popularity": 1
+		},
+		"cthuloop": {
+			"alias": "cthuloops"
+		},
+		"javascript url": {
+			"value": "It's often advisable not to use inline javascript; including within the href of a link. If you want to achieve this, event handlers offer cleaner separation of markup and behavior, leading to easier maintenance. See !inline and !onevent",
+			"popularity": 3
+		},
+		"ni!": {
+			"value": "Do you demand a shrubbery?",
+			"popularity": 2
+		},
+		">>>": {
+			"alias": ">>"
+		},
+		"v8>": {
+			"alias": ">>"
+		},
+		"sm>": {
+			"alias": ">>"
+		},
+		"for-in": {
+			"alias": "for..in"
+		},
+		"for...in": {
+			"alias": "for..in"
+		},
+		"hoist": {
+			"value": "'Hoisting' is the Javascript interpreter automatically moving a function declaration (see !fe vs fd) or a variable declaration to the top of its containing scope by the JavaScript interpreter.",
+			"popularity": 18
+		},
+		"!>>": {
+			"value": ">> and sm> run on the Spidermonkey JS engine. >>> and v8> run on the v8 JS engine.",
+			"popularity": 11
+		},
+		"!>>>": {
+			"alias": "!>>"
+		},
+		"!v8>": {
+			"alias": "!>>"
+		},
+		"!sm>": {
+			"alias": "!>>"
+		},
+		"es6": {
+			"value": "The next version of JavaScript, slated for completion in late 2013. For ES6 features see http://wiki.ecmascript.org/doku.php?id=harmony:proposals. To experiment with ES6 now see http://benvie.github.com/continuum. For availability in browsers see http://kangax.github.com/es5-compat-table/es6",
+			"popularity": 6,
+			"editors": [
+				"Benvie"
+			]
+		},
+		"concat": {
+			"value": "For two JS programs A and B the safe way to concatenate them is A + \"\\n;\" + B. This resolves all possible syntax issues (and both the newline and the semicolon are required to do so), however there still can be semantic collisions, e.g. between same-named functions in the top scope.",
+			"popularity": 5
+		},
+		"try it and see why don'tcha": {
+			"alias": "tias"
+		},
+		"try it and see why dontcha": {
+			"alias": "tias"
+		},
+		"last value": {
+			"alias": "last one only"
+		},
+		"regex html": {
+			"value": "http://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags/1732454#1732454",
+			"popularity": 2
+		},
+		"coffeescript scoping": {
+			"value": "The Problem with Implicit Scoping in CoffeeScript: http://lucumr.pocoo.org/2011/12/22/implicit-scoping-in-coffeescript/",
+			"popularity": 3
+		},
+		"prototypal intro": {
+			"alias": "prototype intro"
+		},
+		"try these": {
+			"alias": "shoo"
+		},
+		"defaults": {
+			"alias": "default"
+		},
+		"quick fix": {
+			"value": "Quick code doesn't do you any favours. You'll just get stuck on the next step if you have no understanding.",
+			"popularity": 0
+		},
+		"quick code": {
+			"alias": "quick fix"
+		},
+		"oldschool": {
+			"value": "prompt() and confirm() and alert()",
+			"popularity": 5
+		},
+		"cats": {
+			"value": "http://jsforcats.com/",
+			"popularity": 0
+		},
+		"ded": {
+			"alias": "shoo"
+		},
+		"dedicated": {
+			"alias": "shoo"
+		},
+		"method": {
+			"value": "a method is a function associated with an object. i.e., a function that interacts and uses the object it is associated with.",
+			"popularity": 5
+		},
+		"arguments": {
+			"value": "in Javascript, functions are variadic. They accept can accept any number of arguments <http://en.wikipedia.org/wiki/Variadic_function>",
+			"popularity": 2
+		},
+		"shameless": {
+			"value": "#shamelessplug!",
+			"popularity": 0
+		},
+		"webconsole": {
+			"value": "The built-in \"Web Console\" in Firefox shows errors & allows you to enter javascript snippets for evaluations. You can open it with 'Ctrl+Shift+K'.",
+			"popularity": 1
+		},
+		"document.all": {
+			"value": "document.all is a remnant from the DOM stone-age and should not be used, mostly because it is unreliable. Use document.getElementById instead.",
+			"popularity": 5
+		},
+		"freelance": {
+			"alias": "jobs"
+		},
+		"learn-css": {
+			"value": "Learn CSS, https://developer.mozilla.org/en-US/learn/css for more CSS specific stuff there's #css",
+			"popularity": 0
+		},
+		"cookie": {
+			"value": "om nom nom. <3",
+			"popularity": 3
+		},
+		"i love you": {
+			"value": "I love you too. <3",
+			"popularity": 1
+		},
+		"<3": {
+			"alias": "i love you"
+		},
+		"!<3": {
+			"alias": "i love you"
+		},
+		"hipsters": {
+			"value": "hipsters use <!-- --> for all their javascript comments. JS: The Hip Parts: https://gist.github.com/3374141",
+			"popularity": 0
+		},
+		"array-like": {
+			"value": "An array-like object is an object with a property `length`, and (possibly) numeric properties 0..`length` holding values of the array-like. You can use Array.prototype.slice to convert an array-like to a proper array.",
+			"popularity": 5,
+			"editors": [
+				"Mortchek"
+			]
+		},
+		"lance": {
+			"value": "try #js-lance and #css-lance",
+			"popularity": 10
+		},
+		"paste live": {
+			"value": "Paste links, not code. Sites like http://jsfiddle.net/ , http://jsbin.com/ , and http://www.webdevout.net/test let people easily run your code.",
+			"popularity": 0
+		},
+		"queryselector": {
+			"value": "Please, use a querySelector engine for querying the DOM. Newer engines will get querySelector and querySelectorAll by default. You can use Sizzle, NWMatcher, Qwery or some other library to get it in older browsers.",
+			"popularity": 2
+		},
+		"love": {
+			"alias": "i love you"
+		},
+		"cthuloops": {
+			"value": "I give you, a cthuloop: for (;;) { } … FOR CTHULU",
+			"popularity": 4
+		},
+		"cthulu": {
+			"alias": "cthuloops"
+		},
+		"books": {
+			"value": "!eloquent (eloquentjavascript.net), JS Patterns by Stoyan Stefanov, JavaScript: The Definitive Guide by David Flanagan, High Performance JavaScript by Nicholas C. Zakas, Effective JavaScript by David Herman.",
+			"popularity": 60,
+			"creator": "gkatsev",
+			"editors": [
+				"gkatsev",
+				"hemanth",
+				"FireFly",
+				"eboy",
+				"_hemanth_"
+			]
+		},
+		"dogballs": {
+			"alias": "dog balls"
+		},
+		"clientside": {
+			"value": "Client-side rendering can be slow. Give a try to last decade's newest technology, server-side rendering! http://engineering.twitter.com/2012/05/improving-performance-on-twittercom.html",
+			"popularity": 0,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"typing": {
+			"value": "A good read on static versus dynamic typing: https://sites.google.com/site/steveyegge2/is-weak-typing-strong-enough",
+			"popularity": 0,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"dynamic": {
+			"alias": "typing"
+		},
+		"static": {
+			"alias": "typing"
+		},
+		"max value": {
+			"value": ">>for(a=Number.MAX_VALUE,i=b=\"\",c=[],e=0,f=Math.floor,g=Math.pow(2,49),h=8*g*g,a=f(0>a?(i=\"-\",-a):a);a>=h;a/=g)c[e++]=0;for(;a>=g;a=d)d=f(a/g),c[e++]=a-d*g;for(c[e++]=a;e;){d=0;for(h=e;h--;)a=c[h]+d*g,(c[h]=f(a/10))||h+1<e||--e,d=a%10;b=d+b}i+b",
+			"popularity": 8,
+			"creator": "very",
+			"editors": [
+				"very"
+			]
+		},
+		"typescript": {
+			"value": "the spawn of satan.  about as useless as a broken condom",
+			"popularity": 2,
+			"creator": "ljharb",
+			"editors": [
+				"niggler"
+			]
+		},
+		"nophp": {
+			"value": "Just say no to PHP!",
+			"popularity": 0,
+			"creator": "gkatsev",
+			"editors": [
+				"gkatsev"
+			]
+		},
+		"curry": {
+			"value": "Partial Application in JavaScript <http://benalman.com/news/2012/09/partial-application-in-javascript/>",
+			"popularity": 6,
+			"creator": "gkatsev",
+			"editors": []
+		},
+		"partial application": {
+			"alias": "curry"
+		},
+		"test": {
+			"alias": "code"
+		},
+		"java": {
+			"value": "Remember, Java is to JavaScript as Pain is to Painting, or Ham is to Hamster. We don't know Java, and if you're trying to apply your Java knowledge to JavaScript, it probably won't work. Try #java",
+			"popularity": 35,
+			"creator": "ljharb",
+			"editors": [
+				"eboy",
+				"niggler",
+				"ljharb"
+			]
+		},
+		"</script>": {
+			"value": "If you have an embedded <script> element with JavaScript code inside, watch out for having \"</script>\" embedded inside a string--it'll pre-emptively end the script tag since the HTML parser doesn't care about it being inside a string.",
+			"popularity": 0,
+			"creator": "FireFly",
+			"editors": []
+		},
+		"promises": {
+			"value": "You're missing the point of promises: \"The point of promises is to give us back functional composition and error bubbling in the async world.\" https://gist.github.com/3889970",
+			"popularity": 7,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"tco": {
+			"value": "http://wiki.ecmascript.org/doku.php?id=harmony:proper_tail_calls https://gist.github.com/1697037",
+			"popularity": 0,
+			"creator": "FireFly",
+			"editors": []
+		},
+		"equality table": {
+			"value": "JavaScript Equality Table: https://janosch.woschitz.org/javascript-equality-comparison/",
+			"popularity": 2,
+			"creator": "CoverSlide|TPFR",
+			"editors": [
+				"CoverSlide|TPFR"
+			]
+		},
+		"tcl": {
+			"value": "programming language that rivals javascript in awesomeness",
+			"popularity": 4,
+			"creator": "niggler",
+			"editors": [
+				"niggler"
+			]
+		},
+		"haskell": {
+			"value": "better than java",
+			"popularity": 3,
+			"creator": "crichard`",
+			"editors": [
+				"niggler"
+			]
+		},
+		"bracket notation": {
+			"alias": "bracket access"
+		},
+		"pebkac": {
+			"value": "Problem Exists Between Keyboard And Chair",
+			"popularity": 2,
+			"creator": "sukima",
+			"editors": [
+				"niggler",
+				"sukima"
+			]
+		},
+		"d3": {
+			"value": "D3.js is a JavaScript library for manipulating documents based on data. http://d3js.org/",
+			"popularity": 0,
+			"creator": "sukima",
+			"editors": []
+		},
+		"jsbin": {
+			"alias": "paste"
+		},
+		"iff": {
+			"value": "If and only if. \"a if and only if b\" is the same as \"a if b and b if a\". http://en.wikipedia.org/wiki/If_and_only_if",
+			"popularity": 3,
+			"creator": "sukima",
+			"editors": [
+				"jrajav",
+				"sukima"
+			]
+		},
+		"oauth2": {
+			"value": "Consider carefully before choosing to use Oauth2. http://hueniverse.com/2012/07/oauth-2-0-and-the-road-to-hell/",
+			"popularity": 0,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"oauth": {
+			"alias": "oauth2"
+		},
+		"hashbang": {
+			"value": "Google proposed a hashbang (#!) URL scheme in 2009: http://googlewebmastercentral.blogspot.com/2009/10/proposal-for-making-ajax-crawlable.html Now that pushState is available in modern browsers, it is strongly encouraged over hashbang URLs.",
+			"popularity": 0,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"jq": {
+			"value": "\"something that should die\"",
+			"popularity": 1,
+			"creator": "niggler",
+			"editors": []
+		},
+		"pyramid": {
+			"value": "Pyramid of Doom: A coding style that uses several levels of anonymous functions creating a pyramid like structure in the indented whitespace when viewed on it's side. http://tritarget.org/blog/2012/11/28/the-pyramid-of-doom-a-javascript-style-trap/",
+			"popularity": 4,
+			"creator": "sukima",
+			"editors": []
+		},
+		"miller": {
+			"value": "The Miller device is a method of determining whether a value is an array. The Miller Device: Object.prototype.toString.call(obj) == '[object Array]'; This works for ES3 and ES5, although for ES5 it is recommended to use the Array.isArray method",
+			"popularity": 0,
+			"creator": "CoverSlide",
+			"editors": [
+				"Mortchek"
+			]
+		},
+		"miller-device": {
+			"alias": "miller"
+		},
+		"isarray": {
+			"alias": "miller"
+		},
+		"lastoneonly": {
+			"value": "Javascript closures in for-loops http://www.mennovanslooten.nl/blog/post/62",
+			"popularity": 8,
+			"creator": "NoiseEee",
+			"editors": []
+		},
+		"learn": {
+			"value": "learn",
+			"popularity": 0,
+			"creator": "CoverSlide",
+			"editors": [
+				"Maxdamantus"
+			]
+		},
+		"crockford": {
+			"value": "javascript zealot",
+			"popularity": 5,
+			"creator": "niggler",
+			"editors": []
+		},
+		"cockford": {
+			"alias": "crockford"
+		},
+		"toodles": {
+			"value": "emasculated good-bye",
+			"popularity": 1,
+			"creator": "niggler",
+			"editors": []
+		},
+		"eboy": {
+			"value": "god",
+			"popularity": 0,
+			"creator": "niggler",
+			"editors": []
+		},
+		"god": {
+			"value": "eboy",
+			"popularity": 0,
+			"creator": "niggler",
+			"editors": []
+		},
+		"caps": {
+			"value": "stop resting your coffee mug on shift.  it damages your keyboard",
+			"popularity": 1,
+			"creator": "hughfdjackson",
+			"editors": []
+		},
+		"sod off": {
+			"alias": "shoo"
+		},
+		"unobtrusive": {
+			"value": "http://en.wikipedia.org/wiki/Unobtrusive_JavaScript",
+			"popularity": 2,
+			"creator": "misterhat",
+			"editors": []
+		},
+		"constructor": {
+			"value": "Constructors considered mildly confusing. http://joost.zeekat.nl/constructors-considered-mildly-confusing.html",
+			"popularity": 7,
+			"editors": [
+				"gkatsev"
+			]
+		},
+		"constructors": {
+			"alias": "constructor"
+		},
+		"nextleap": {
+			"value": "my fucking array contains the fucking motherfucking shitfuck pair.",
+			"popularity": 0,
+			"creator": "PigDude",
+			"editors": []
+		},
+		"vanillajs": {
+			"value": "The most lightweight JavaScript framework out there: http://vanilla-js.com/",
+			"popularity": 0,
+			"creator": "CoverSlide",
+			"editors": []
+		},
+		"vanilla": {
+			"alias": "vanillajs"
+		},
+		"bot": {
+			"value": "I'm a bot!",
+			"popularity": 4,
+			"creator": "lilmonkey",
+			"editors": []
+		},
+		"@": {
+			"value": "!<handler> @<user>",
+			"popularity": 2,
+			"creator": "hemanth_",
+			"editors": []
+		},
+		"sop": {
+			"value": "https://developer.mozilla.org/en-US/docs/JavaScript/Same_origin_policy_for_JavaScript",
+			"popularity": 1,
+			"creator": "mistertwig",
+			"editors": []
+		},
+		"same origin policy": {
+			"alias": "sop"
+		},
+		"jswiki": {
+			"value": "This wiki indexes libraries and resources available for JavaScript. In addition it provides some starting points for newbies in form of Beginner's Resources.  https://github.com/bebraw/jswiki/wiki",
+			"popularity": 1,
+			"creator": "mikef",
+			"editors": []
+		},
+		"classes": {
+			"value": "JavaScript does not have class-based inheritance. Instead, it has constructor functions which initialize newly created objects that are linked to the constructor's prototype. These instances point to the prototype and use it for fallback property lookup.",
+			"popularity": 10,
+			"creator": "flebron",
+			"editors": [
+				"Benvie"
+			]
+		},
+		"jobs": {
+			"value": "##javascript is not a jobs forum.  Check out #css-lance for work",
+			"popularity": 2,
+			"creator": "niggler",
+			"editors": [
+				"niggler"
+			]
+		},
+		"contract": {
+			"alias": "jobs"
+		},
+		"continuum": {
+			"value": "A next-generation JavaScript (ES6) virtual machine written in last-generation JavaScript (ES3) http://benvie.github.com/continuum",
+			"popularity": 2,
+			"creator": "Benvie",
+			"editors": []
+		},
+		"hamster": {
+			"value": "Java is to Javascript like ham is to hamster.",
+			"popularity": 1,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"setinterval": {
+			"value": "Avoid setInterval; use setTimeout instead. http://zetafleet.com/blog/why-i-consider-setinterval-harmful",
+			"popularity": 6,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"book": {
+			"alias": "books"
+		},
+		"copy": {
+			"value": "\"Shallow copy\" means to copy all the properties over from the source object to the new object.  \"Deep copy\" recursively performs the same to all properties with object values. Illustrations: https://gist.github.com/4644248",
+			"popularity": 3,
+			"creator": "FireFly",
+			"editors": [
+				"FireFly"
+			]
+		},
+		"doesnt work": {
+			"alias": "doesn't work"
+		},
+		"dedicated channels": {
+			"alias": "shoo"
+		},
+		"axe": {
+			"value": "Doned axe to axe or if eniwon iz heer or a hive or yous's sumding. Jos axe yor westen an lets get mowen a lawn, k? Fanks.",
+			"popularity": 3,
+			"creator": "CoverSlide",
+			"editors": []
+		},
+		"videotestcase": {
+			"value": "A video testcase is a minimal viewable video exhibiting your problem. \"Minimal\" means just the bare essentials required to illustrate your problem. Please record a video testcase at http://www.youtube.com to help us assist you.",
+			"popularity": 0,
+			"creator": "eboy",
+			"editors": []
+		},
+		"nashorn": {
+			"value": "Nashorn is an upcoming JavaScript engine created by Oracle and programmed in Java. http://en.wikipedia.org/wiki/Nashorn_(JavaScript_engine)",
+			"popularity": 0,
+			"creator": "Benvie",
+			"editors": []
+		},
+		"beer": {
+			"value": "Don't mind if I do! Glug glug glug!",
+			"popularity": 5,
+			"creator": "CoverSlide",
+			"editors": []
+		},
+		"stop": {
+			"value": "collaborate and listen",
+			"popularity": 3,
+			"creator": "eboy",
+			"editors": []
+		},
+		"module patterns": {
+			"alias": "module pattern"
+		},
+		"tldr": {
+			"value": "too many concerns. Modularize, simplify, remove the cruft. See !modularising",
+			"popularity": 1,
+			"creator": "pachet",
+			"editors": [
+				"pachet",
+				"sukima",
+				"Mortchek",
+				"Sorella",
+				"niggler"
+			]
+		},
+		"modularising": {
+			"value": "The code is difficult to read or follow. When writing code consider modularizing, simplifying, and/or extracting unneeded code. Narrowing down to the actual problem will greatly increase your chances of getting constructive feedback.",
+			"popularity": 1,
+			"creator": "Sorella",
+			"editors": []
+		},
+		"jsurl": {
+			"alias": "javascript url"
+		},
+		"thanks": {
+			"value": "Don't thank me, I'm just a bot! You're welcome, nevertheless.",
+			"popularity": 0,
+			"creator": "eboy",
+			"editors": [
+				"eboy"
+			]
+		},
+		"vanilla-js": {
+			"alias": "vanillajs"
+		},
+		"vanilla js": {
+			"alias": "vanillajs"
+		},
+		"test case": {
+			"alias": "testcase"
+		},
+		"lastone": {
+			"alias": "last one only"
+		},
+		"shipit": {
+			"value": "http://shipitsquirrel.github.com/",
+			"popularity": 1,
+			"creator": "gkatsev",
+			"editors": []
+		},
+		"niggler": {
+			"value": "YOU JUST GOT NIGGL'D!",
+			"popularity": 6,
+			"creator": "j201",
+			"editors": []
+		},
+		"callbacks": {
+			"value": "Callback hell is easily avoidable. Check out http://callbackhell.com , and look into Promises ( https://gist.github.com/domenic/3889970 )",
+			"popularity": 3,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"html regex": {
+			"value": "'How can I parse HTML/XHTML/XML with regular expressions? http://stackoverflow.com/a/1732454/632724'",
+			"popularity": 1,
+			"creator": "ljharb",
+			"editors": [
+				"ljharb"
+			]
+		},
+		"this meanings": {
+			"value": "\"this\" has 6 meanings (7 in ES6) http://javascriptweblog.wordpress.com/2010/08/30/understanding-javascripts-this/",
+			"popularity": 1,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"float": {
+			"value": "Confused by why 0.1+0.2 is not 0.3? In base-10 0.1 is simple, but in base-2, it's not. Consider a base-10 system with only three decimal places: 1/3 is represented as 0.333, even though that's imprecise. Add 1/3 to 1/3 and we get 0.666, which isn't exactly 1/6. Add another 1/3 and we get 0.999, which isn't exactly 1. In base-2, 0.1 is hard to represent, but 0.5 is easy. See http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html",
+			"popularity": 6,
+			"creator": "systemfault",
+			"editors": [
+				"Gregor"
+			]
+		},
+		"performance matters": {
+			"value": "Performance only matters when it's built, working, measured, and THEN found to be slow.",
+			"popularity": 0,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"subclass arrays": {
+			"value": "You can't subclass Array in javascript: http://perfectionkills.com/how-ecmascript-5-still-does-not-allow-to-subclass-an-array/",
+			"popularity": 0,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"array mutators": {
+			"value": "Array mutator methods: push, pop, unshift, shift, splice, reverse, sort. https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array#Mutator_methods",
+			"popularity": 4,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"hola": {
+			"alias": "hello"
+		},
+		"new": {
+			"value": "https://gist.github.com/Havvy/5037770",
+			"popularity": 3,
+			"creator": "Havvy",
+			"editors": []
+		},
+		"this alt": {
+			"value": "See !this, also see: http://javascriptweblog.wordpress.com/2010/08/30/understanding-javascripts-this/",
+			"popularity": 0,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"prototype confusion": {
+			"value": "The [[Prototype]] of an object is not related to the 'prototype' property it may have. For a function `Foo`, `Foo.prototype` is the [[Prototype]] of `new Foo`. The [[Prototype]] of `Foo` itself is `Function.prototype`.",
+			"popularity": 1,
+			"creator": "Mortchek",
+			"editors": []
+		},
+		"cross": {
+			"alias": "same"
+		},
+		"is function": {
+			"value": "Some browsers' host objects (IE, of course) are functions, but typeof doesn't return \"function\". Object.prototype.toString.call(foo) === '[object Function]' is reliable.",
+			"popularity": 0,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"first class functions": {
+			"alias": "first-class functions"
+		},
+		"patterns": {
+			"value": "Learning Javascript Design Patterns by Addy Osmani : http://addyosmani.com/resources/essentialjsdesignpatterns/book/",
+			"popularity": 0,
+			"creator": "CoverSlide",
+			"editors": []
+		},
+		"duck ducktype ducktyping duck-typing": {
+			"value": "A pattern of testing an object is what you think it is in a loose way. http://en.wikipedia.org/wiki/Duck_typing",
+			"popularity": 0,
+			"creator": "sukima",
+			"editors": []
+		},
+		"duckpunching duck-punching punching punch": {
+			"value": "A pattern of making an object look and act like another object. Also known as monkey-patching. http://en.wikipedia.org/wiki/Monkey_patch",
+			"popularity": 0,
+			"creator": "sukima",
+			"editors": []
+		},
+		"falsey": {
+			"alias": "truthy"
+		},
+		"onclick": {
+			"alias": "inline"
+		},
+		"iteration": {
+			"value": "Instead of using for or while loop constructs to iterate over arrays, consider using array iteration methods (i.e., forEach, every, some, filter, map, reduce, reduceRight, or a combination thereof). They relieve the need for manual iteration, provide better abstraction, and make it clear what your iteration is doing.",
+			"popularity": 3,
+			"creator": "Mortchek",
+			"editors": [
+				"Mortchek"
+			]
+		},
+		"es6 shim": {
+			"value": "Once the ES6 spec is finalized, you can use https://github.com/paulmillr/es6-shim to get all the backwards-compatible features of ES6 in every browser! It's fully tested, and requires the !es5 shim.",
+			"popularity": 0,
+			"creator": "ljharb",
+			"editors": []
+		},
+		"document.head": {
+			"value": "Use this shim for document.head in IE 8 and below: `if (!document.head) { document.head = document.getElementsByTagName('head')[0]; }`",
+			"popularity": 0,
+			"creator": "ljharb",
+			"editors": []
 		}
 	}
 }

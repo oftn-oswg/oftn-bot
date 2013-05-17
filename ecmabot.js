@@ -29,12 +29,9 @@ util.inherits(JSBot, Bot);
 JSBot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 	
-	this.register_listener(/^((?:sm?|v8?|js?|>>?)>)([^>].*)+/, Shared.execute_js);
+	this.register_listener(/^((?:sm|v8|js|>>?)>)([^>].*)+/, Shared.execute_js);
 	
 	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
-	
-	this.register_listener(/\bi(?:\u0027| wi)?ll try\b/i,
-		this.there_is_no_try);
 	
 	this.register_command("g", Shared.google, {
 		help: "Run this command with a search query to return the first Google result. Usage: !g kitten images"});
@@ -59,7 +56,11 @@ JSBot.prototype.init = function() {
 	this.register_command("find", Shared.find);
 	
 	this.register_command("help", this.help);
-	
+
+	this.register_command("auth", Shared.reauthenticate, {
+		allow_intentions: false,
+		help: "Attempt to re-authenticate with NickServ."});
+
 	this.register_command("learn", Shared.learn, {
 		allow_intentions: false,
 		help: "Add factoid to bot. Usage: !learn ( [alias] foo = bar | foo =~ s/expression/replace/gi )"});
