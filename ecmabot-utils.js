@@ -235,6 +235,67 @@ var utils = {
 	}
 };
 
+// Fake setTimeout functionality
+// Preserves proper setTimeout order but doesn't honor delay
+var timerQueue = [];
+var timerHandle = 0xDECAFBAD;
+
+timerQueue.insertOrdered = function(val) {
+	var l = this.length,
+	    order = val.order;
+
+	while (l--) {
+		if (this[l].order > order) break;
+	}
+
+	this.splice(l+1, 0, val);
+}
+
+function executeTimeouts() {
+	var nextTimer;
+
+	while (nextTimer = timerQueue.pop()) {
+		nextTimer.callback.apply(nextTimer.thisVal, nextTimer.args);
+	}
+}
+
+Object.defineProperty(global, "setTimeout", {
+	value: function setTimeout(fn, delay) {
+		var runOrder = Date.now() + delay,
+		    args = Array.prototype.slice.call(arguments, 2),
+		    fnType = Object.prototype.toString.call(fn);
+
+		if (fnType !== "[object Function]") {
+			return;
+		}
+
+		timerQueue.insertOrdered({
+			thisVal : this,
+			order : runOrder,
+			callback : fn,
+			args: args,
+			handle: timerHandle
+		});
+
+		return timerHandle++;
+	},
+	enumerable: true
+});
+
+Object.defineProperty(global, "clearTimeout", {
+	value: function clearTimeout(handle) {
+		var l = timerQueue.length;
+
+		while (l--) {
+			if (timerQueue[l].handle === handle) {
+				timerQueue.splice(l, 1);
+				break;
+			}
+		}
+	},
+	enumerable: true
+});
+
 // The built-ins in this context should not be changed.
 Object.freeze(Function.prototype);
 Object.freeze(Boolean.prototype);
@@ -257,6 +318,7 @@ exports.run = function(execute) {
 	var result, error;
 	try {
 		result = execute();
+		executeTimeouts();
 	} catch(e) {
 		if (typeof e.name !== "undefined" &&
 			typeof e.message !== "undefined") {
