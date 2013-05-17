@@ -293,12 +293,13 @@ util.inherits(ΩF_0Bot, Bot);
 		"amcgregor": "GothAlice",
 		"guipn": "guidj0s",
 		"insidious": "Obfuscate",
-		"killdream": "Sorella",
+		"killdream": "sorella",
 		"mathiasbynens": "matjas",
 		"navarr": "Navarr",
 		"nisstyre56": "Nisstyre",
 		"SilverTab": "jeannicolas",
-		"Systemfault": "systemfault"
+		"Systemfault": "systemfault",
+		"imbcmdth": "ImBcmDth"
 	};
 
 	http.createServer(function (request, response) {
