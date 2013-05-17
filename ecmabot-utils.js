@@ -262,7 +262,12 @@ function executeTimeouts() {
 Object.defineProperty(global, "setTimeout", {
 	value: function setTimeout(fn, delay) {
 		var runOrder = Date.now() + delay,
-		    args = Array.prototype.slice.call(arguments, 2);
+		    args = Array.prototype.slice.call(arguments, 2),
+		    fnType = Object.prototype.toString.call(fn);
+
+		if (fnType !== "[object Function]") {
+			return;
+		}
 
 		timerQueue.insertOrdered({
 			thisVal : this,
