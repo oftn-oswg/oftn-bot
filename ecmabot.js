@@ -29,7 +29,7 @@ util.inherits(JSBot, Bot);
 JSBot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 	
-	this.register_listener(/^((?:sm|v8|js|>>?)>)([^>].*)+/, Shared.execute_js);
+	this.register_listener(/^((?:sm|v8|js|>>?|\|)>)([^>].*)+/, Shared.execute_js);
 	
 	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
 	
