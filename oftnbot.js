@@ -407,7 +407,7 @@ util.inherits(ΩF_0Bot, Bot);
 
 ΩF_0Bot.prototype.projects = function(context, project) {
 
-	var options = { host: "api.github.com" };
+	var options = { host: "api.github.com", headers: {'User-Agent': 'The oftn-bot IRC bot from #oftn on irc.freenode.net'}};
 
 	if (project) {
 		// Output information for specific project.
@@ -479,7 +479,8 @@ util.inherits(ΩF_0Bot, Bot);
 
 	var options = {
 		host: "api.github.com",
-		path: "/users/" + username
+		path: "/users/" + username,
+		headers: {'User-Agent': 'The oftn-bot IRC bot from #oftn on irc.freenode.net'}
 	};
 
 	https.get (options, function(res) {
@@ -513,16 +514,16 @@ util.inherits(ΩF_0Bot, Bot);
 	var username, auth;
 	var twitters = {
 		/* Board */
-		"eboyjr": "eboyjr",
-		"sephr": "sephr",
-		"devyn": "devynci",
-		"inimino": "inimino",
-		"gkatsev": "gkatsev",
-		"cloudhead": "cloudhead",
-		"yrashk": "yrashk",
-		"amcgregor": "GothAlice",
+		"eboyjr": "^DS",
+		"sephr": "^EG",
+		"devyn": "^DC",
+		"inimino": "^MC",
+		"gkatsev": "^GK",
+		"cloudhead": "^AS",
+		"yrashk": "^YR",
+		"amcgregor": "^AG",
 
-		"FireFly": "FireyFly"
+		"FireFly": "^JH"
 	};
 
 	try {
@@ -536,8 +537,8 @@ util.inherits(ΩF_0Bot, Bot);
 			throw new Error("You are not authorized.");
 		}
 
-		auth = twitters[auth[1]] ? "@" + twitters[auth[1]] : auth[1];
-		text = text + " \u2014" + auth;
+		auth = twitters[auth[1]] ? twitters[auth[1]] : "\u2014" + auth[1];
+		text = text + " " + auth;
 
 		if (text.length > 140) {
 			throw new Error("Status is over 140 characters. Get rid of at least "+(text.length-140)+" characters.");
