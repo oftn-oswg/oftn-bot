@@ -12,11 +12,11 @@ function parse_regex_literal (text) {
 	return [regex, regexparsed[2].replace(/\\\//g, '/')];
 }
 
-function FactoidFindHelper(context, text, regex, suppressSearch) {
+function FactoidFindHelper(context, text, suppressSearch) {
 	try {
 		var results, factoid = this.factoids.find(text, true);
 
-		if (regex && (results = factoid.match(regex))) {
+		if (results = factoid.match(this.executeRegex)) {
 			context.channel.send_reply(context.channel, results[0] + " @" + context.intent.name, {color: true});
 			Shared.execute_js.apply(this, [context, factoid].concat(results.slice(1)));
 		} else {
@@ -33,7 +33,9 @@ function FactoidFindHelper(context, text, regex, suppressSearch) {
 
 			if (found.length) {
 				reply = ["Found:"];
-				if (found.length > 1) found[found.length-1] = "and "+found[found.length-1];
+				if (found.length > 1) {
+					found[found.length-1] = "and "+found[found.length-1];
+				}
 				reply.push(found.join(found.length-2 ? ", " : " "));
 			}
 
@@ -203,8 +205,8 @@ var Shared = module.exports = {
 		FactoidFindHelper.call(this, context, text);
 	},
 
-	findPlus: function(context, text, regex, suppressSearch) {
-		FactoidFindHelper.call(this, context, text, regex, suppressSearch);
+	findPlus: function(context, text, suppressSearch) {
+		FactoidFindHelper.call(this, context, text, suppressSearch);
 	},
 
 	topic: function(context, text) {
