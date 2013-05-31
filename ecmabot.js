@@ -11,12 +11,12 @@ var CanIUseServer = require("./lib/caniuse");
 var Bot = require("./lib/irc");
 var Shared = require("./shared");
 
-var EXECUTE_REGEX = /^((?:sm|v8|js|>>?|\|)>)([^>].*)+/;
 
 var JSBot = function(profile) {
 	this.sandbox = new Sandbox(path.join(__dirname, "ecmabot-utils.js"));
 	this.factoids = new FactoidServer(path.join(__dirname, "ecmabot-factoids.json"));
 	this.caniuse_server = new CanIUseServer;
+	this.executeRegex = /^((?:sm|v8|js|>>?|\|)>)([^>].*)+/;
 
 	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
@@ -30,7 +30,7 @@ util.inherits(JSBot, Bot);
 JSBot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 
-	this.register_listener(EXECUTE_REGEX, Shared.execute_js);
+	this.register_listener(this.executeRegex, Shared.execute_js);
 
 	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
 
@@ -184,7 +184,7 @@ JSBot.prototype.mdn = function(context, text, command) {
 
 
 JSBot.prototype.command_not_found = function(context, text) {
-	Shared.findPlus.call (this, context, text, EXECUTE_REGEX, !context.priv);
+	Shared.findPlus.call (this, context, text, !context.priv);
 };
 
 // JSON.stringify([].slice.call(document.querySelectorAll('#toc-full a')).map(function(v) {return {title: v.firstChild.textContent, id: v.href.replace(/.+#/, '')};}));
