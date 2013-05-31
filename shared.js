@@ -12,6 +12,35 @@ function parse_regex_literal (text) {
 	return [regex, regexparsed[2].replace(/\\\//g, '/')];
 }
 
+function FactoidFindHelper(context, text, regex, suppressSearch) {
+	try {
+		var results, factoid = this.factoids.find(text, true);
+
+		if (regex && (results = factoid.match(regex))) {
+			context.channel.send_reply(context.channel, results[0] + " @" + context.intent.name, {color: true});
+			Shared.execute_js.apply(this, [context, factoid].concat(results.slice(1)));
+		} else {
+			context.channel.send_reply(context.intent, factoid, {color: true});
+		}
+	} catch(e) {
+		if (!suppressSearch) {
+			var reply = ["Could not find `"+text+"`."],
+				found = this.factoids.search(text);
+
+			found = found.map(function(item) {
+				return "\x033"+item+"\x0F";
+			});
+
+			if (found.length) {
+				reply = ["Found:"];
+				if (found.length > 1) found[found.length-1] = "and "+found[found.length-1];
+				reply.push(found.join(found.length-2 ? ", " : " "));
+			}
+
+			context.channel.send_reply(context.intent, reply.join(" "), {color: true});
+		}
+	}
+}
 
 var Shared = module.exports = {
 	
@@ -170,30 +199,14 @@ var Shared = module.exports = {
 			"Valid commands are: " + trigger + commands.join(", " + trigger));
 	},
 
-
 	find: function(context, text) {
-
-		try {
-			context.channel.send_reply(context.intent, this.factoids.find(text, true), {color: true});
-		} catch(e) {
-		
-			var reply = ["Could not find `"+text+"`."],
-				found = this.factoids.search(text);
-		
-			found = found.map(function(item) {
-				return "\x033"+item+"\x0F";
-			});
-			
-			if (found.length) {
-				reply = ["Found:"];
-				if (found.length > 1) found[found.length-1] = "and "+found[found.length-1];
-				reply.push(found.join(found.length-2 ? ", " : " "));
-			}
-			
-			context.channel.send_reply(context.intent, reply.join(" "), {color: true});
-		}
+		FactoidFindHelper.call(this, context, text);
 	},
-	
+
+	findPlus: function(context, text, regex, suppressSearch) {
+		FactoidFindHelper.call(this, context, text, regex, suppressSearch);
+	},
+
 	topic: function(context, text) {
 	
 		try {
