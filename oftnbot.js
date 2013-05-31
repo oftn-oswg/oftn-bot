@@ -50,6 +50,7 @@ var ΩF_0Bot = function(profile) {
 	
 	this.sandbox = new Sandbox(path.join(__dirname, "oftnbot-utils.js"));
 	this.factoids = new FactoidServer(path.join(__dirname, "oftnbot-factoids.json"));
+	this.executeRegex = /^((?:sm?|v8?|js?|hs?|>>?|>>>>|\|)>)([^>].*)+/;
 
 	this.set_log_level(this.LOG_ALL);
 	this.set_trigger("!"); // Exclamation
@@ -67,7 +68,7 @@ util.inherits(ΩF_0Bot, Bot);
 ΩF_0Bot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 
-	this.register_listener(/^((?:sm?|v8?|js?|hs?|>>?|>>>>|\|)>)([^>].*)+/, Shared.execute_js);
+	this.register_listener(this.executeRegex, Shared.execute_js);
 	this.register_listener(/\bhttps?:\/\/\S+/, this.url);
 
 	this.register_command("topic", Shared.topic);
@@ -393,16 +394,7 @@ util.inherits(ΩF_0Bot, Bot);
 };
 
 ΩF_0Bot.prototype.find = function(context, text) {
-
-	if (context.priv) {
-		return Shared.find.call(this, context, text);
-	}
-	
-	try {
-		context.channel.send_reply(context.intent, this.factoids.find(text, true), {color: true});
-	} catch(e) {
-		// Factoid not found, do nothing.
-	}
+	Shared.findPlus.call (this, context, text, !context.priv);
 };
 
 ΩF_0Bot.prototype.projects = function(context, project) {
