@@ -286,8 +286,8 @@ util.inherits(ΩF_0Bot, Bot);
 ΩF_0Bot.prototype.start_github_server = function(port) {
 
 	var users = {
-		"eboyjr": "eboy",
-		"eligrey": "sephr",
+		"eboyjr": "dsamarin",
+		"eligrey": "eligrey",
 		"otter": "otters",
 		"FireyFly": "FireFly",
 		"amcgregor": "GothAlice",
@@ -514,8 +514,8 @@ util.inherits(ΩF_0Bot, Bot);
 	var username, auth;
 	var twitters = {
 		/* Board */
-		"eboyjr": "^DS",
-		"sephr": "^EG",
+		"dsamarin": "^DS",
+		"eligrey": "^EG",
 		"devyn": "^DC",
 		"inimino": "^MC",
 		"gkatsev": "^GK",
