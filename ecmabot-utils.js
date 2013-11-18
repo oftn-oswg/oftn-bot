@@ -259,6 +259,15 @@ function executeTimeouts() {
 	}
 }
 
+var pretendToBeNativeCode = function toString () {
+	var name = this && this.name;
+	return name ? "function " + name + "() { [native code] }" : "";
+};
+
+Object.defineProperty(pretendToBeNativeCode, "toString", {
+	value: pretendToBeNativeCode
+});
+
 Object.defineProperty(global, "setTimeout", {
 	value: function setTimeout(fn, delay) {
 		var runOrder = Date.now() + delay,
@@ -282,6 +291,10 @@ Object.defineProperty(global, "setTimeout", {
 	enumerable: true
 });
 
+Object.defineProperty(global.setTimeout, "toString", {
+	value: pretendToBeNativeCode
+});
+
 Object.defineProperty(global, "clearTimeout", {
 	value: function clearTimeout(handle) {
 		var l = timerQueue.length;
@@ -294,6 +307,10 @@ Object.defineProperty(global, "clearTimeout", {
 		}
 	},
 	enumerable: true
+});
+
+Object.defineProperty(global.clearTimeout, "toString", {
+	value: pretendToBeNativeCode
 });
 
 // The built-ins in this context should not be changed.
