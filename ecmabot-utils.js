@@ -21,6 +21,9 @@ global.print = global.alert = global.console.log;
 
 global.version = typeof version === "undefined" ? "unknown" : version;
 
+Object.defineProperty(global, "global", {
+	value: global
+});
 
 /**
  * Pretty-prints a Javascript value for viewing.
