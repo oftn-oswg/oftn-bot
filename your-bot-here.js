@@ -11,7 +11,7 @@ Util.inherits(YourBot, Bot);
 
 YourBot.prototype.init = function() {
 	Bot.prototype.init.call(this);
-	
+
 	this.register_command("ping", this.ping);
 	this.on('command_not_found', this.unrecognized);
 };
@@ -26,7 +26,7 @@ YourBot.prototype.unrecognized = function(cx, text) {
 };
 
 var profile = [{
-	host: "irc.freenode.net",
+	host: "chat.freenode.net",
 	port: 6667,
 	nick: "mybot",
 	password: "password_to_authenticate",
