@@ -12,20 +12,20 @@ function parse_regex_literal (text) {
 	return [regex, regexparsed[2].replace(/\\\//g, '/')];
 }
 
-function factoidFindHelper(context, text, suppressSearch) {
+function factoidFindHelper(bot, context, text, suppressSearch) {
 	try {
-		var results, factoid = this.factoids.find(text, true);
+		var results, factoid = bot.factoids.find(text, true);
 
-		if (results = factoid.match(this.executeRegex)) {
+		if (results = factoid.match(bot.executeRegex)) {
 			context.channel.send_reply(context.channel, results[0] + " @" + context.intent.name, {color: true});
-			Shared.execute_js.apply(this, [context, factoid].concat(results.slice(1)));
+			Shared.execute_js.apply(bot, [context, factoid].concat(results.slice(1)));
 		} else {
 			context.channel.send_reply(context.intent, factoid, {color: true});
 		}
 	} catch(e) {
 		if (!suppressSearch) {
 			var reply = ["Could not find `"+text+"`."],
-				found = this.factoids.search(text);
+				found = bot.factoids.search(text);
 
 			found = found.map(function(item) {
 				return "\x033"+item+"\x0F";
@@ -202,11 +202,11 @@ var Shared = module.exports = {
 	},
 
 	find: function(context, text) {
-		factoidFindHelper.call(this, context, text);
+		factoidFindHelper(this, context, text);
 	},
 
 	findPlus: function(context, text, suppressSearch) {
-		factoidFindHelper.call(this, context, text, suppressSearch);
+		factoidFindHelper(this, context, text, suppressSearch);
 	},
 
 	topic: function(context, text) {
