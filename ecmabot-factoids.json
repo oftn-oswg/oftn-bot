@@ -286,7 +286,7 @@
 			"alias": "property access"
 		},
 		"ES5": {
-			"value": "ES5 is edition 5 of ECMA-262, the ECMAScript specification: http://es5.github.com/ http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-262.pdf",
+			"value": "ES5 is edition 5 of ECMA-262, the ECMAScript specification: http://es5.github.io/ http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-262.pdf",
 			"popularity": 0
 		},
 		"w3fools": {
@@ -370,7 +370,7 @@
 			"popularity": 7
 		},
 		"es5": {
-			"value": "An annotated, hyperlinked, HTML view of Edition 5.1 of the ECMAScript Specification. <http://es5.github.com/>",
+			"value": "An annotated, hyperlinked, HTML view of Edition 5.1 of the ECMAScript Specification. <http://es5.github.io/>",
 			"popularity": 18
 		},
 		"node.js": {

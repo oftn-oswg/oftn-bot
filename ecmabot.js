@@ -196,7 +196,7 @@ JSBot.prototype.command_not_found = function(context, text) {
 };
 
 // JSON.stringify([].slice.call(document.querySelectorAll('#toc-full a')).map(function(v) {return {title: v.firstChild.textContent, id: v.href.replace(/.+#/, '')};}));
-// Use that to generate the required JSON from es5.github.com with Firefox
+// Use that to generate the required JSON from es5.github.io with Firefox
 
 JSBot.prototype.ecma = function(context, text) {
 	try {
@@ -216,7 +216,7 @@ JSBot.prototype.ecma = function(context, text) {
 		var item = ref[i], title = item.title.toLowerCase();
 		if (muststart ? title.substring(0, text.length) === text : ~title.indexOf(text)) {
 			context.channel.send_reply(context.intent,
-				"Found: " + item.title + " <http://es5.github.com/#" + item.id + ">");
+				"Found: " + item.title + " <http://es5.github.io/#" + item.id + ">");
 			return;
 		}
 	}
