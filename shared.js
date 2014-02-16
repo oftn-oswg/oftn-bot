@@ -12,7 +12,7 @@ function parse_regex_literal (text) {
 	return [regex, regexparsed[2].replace(/\\\//g, '/')];
 }
 
-function FactoidFindHelper(context, text, suppressSearch) {
+function factoidFindHelper(context, text, suppressSearch) {
 	try {
 		var results, factoid = this.factoids.find(text, true);
 
@@ -202,11 +202,11 @@ var Shared = module.exports = {
 	},
 
 	find: function(context, text) {
-		FactoidFindHelper.call(this, context, text);
+		factoidFindHelper.call(this, context, text);
 	},
 
 	findPlus: function(context, text, suppressSearch) {
-		FactoidFindHelper.call(this, context, text, suppressSearch);
+		factoidFindHelper.call(this, context, text, suppressSearch);
 	},
 
 	topic: function(context, text) {
