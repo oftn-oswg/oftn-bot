@@ -14,7 +14,8 @@ function parse_regex_literal (text) {
 
 function factoidFindHelper(bot, context, text, suppressSearch) {
 	try {
-		var results, factoid = bot.factoids.find(text, true);
+		var results,
+		    factoid = bot.factoids.find(text, true);
 
 		if (results = factoid.match(bot.executeRegex)) {
 			context.channel.send_reply(context.channel, results[0] + " @" + context.intent.name, {color: true});
@@ -25,7 +26,7 @@ function factoidFindHelper(bot, context, text, suppressSearch) {
 	} catch(e) {
 		if (!suppressSearch) {
 			var reply = ["Could not find `"+text+"`."],
-				found = bot.factoids.search(text);
+			    found = bot.factoids.search(text);
 
 			found = found.map(function(item) {
 				return "\x033"+item+"\x0F";
@@ -59,7 +60,8 @@ var Shared = module.exports = {
 	
 	
 	execute_js: function(context, text, command, code) {
-		var engine, person = context.sender;
+		var engine,
+		    person = context.sender;
 	
 		/* This should be temporary. */
 		if (!context.priv) {
