@@ -28,24 +28,24 @@ util.inherits(JSBot, Bot);
 
 JSBot.prototype.init = function() {
 	Bot.prototype.init.call(this);
-	
+
 	this.register_listener(/^((?:sm|v8|js|>>?|\|)>)([^>].*)+/, Shared.execute_js);
-	
+
 	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
-	
+
 	this.register_command("g", Shared.google, {
 		help: "Run this command with a search query to return the first Google result. Usage: !g kitten images"});
-	
+
 	this.register_command("google", this.google, {
 		help: "Returns a link to a Google search page of the search term. Usage: !google opencourseware computational complexity"});
-	
+
 	this.register_command("mdn", this.mdn, {
 		help: "Search the Mozilla Developer Network. Usage: !mdn bitwise operators"});
 	this.register_command("mdc", "mdn");
-		
+
 	this.register_command("ecma", this.ecma, {
 		help: "Lookup a section from the ECMAScript spec. Usage: !ecma null value"});
-	
+
 	this.register_command("re", this.re, {
 		help: "Usage: !re Your text here /expression/gi || FLAGS: (g: global match, i: ignore case)"});
 
@@ -54,7 +54,7 @@ JSBot.prototype.init = function() {
 	this.register_command("ciu", "caniuse");
 
 	this.register_command("find", Shared.find);
-	
+
 	this.register_command("help", this.help);
 
 	this.register_command("auth", Shared.reauthenticate, {
@@ -64,17 +64,17 @@ JSBot.prototype.init = function() {
 	this.register_command("learn", Shared.learn, {
 		allow_intentions: false,
 		help: "Add factoid to bot. Usage: !learn ( [alias] foo = bar | foo =~ s/expression/replace/gi )"});
-		
+
 	this.register_command("forget", Shared.forget, {
 		allow_intentions: false,
 		help: "Remove factoid from bot. Usage: !forget foo"});
-	
+
 	this.register_command("commands", Shared.commands);
-	
+
 	this.on('command_not_found', this.command_not_found);
-	
+
 	this.load_ecma_ref();
-	
+
 };
 
 
@@ -84,7 +84,7 @@ JSBot.prototype.google = function(context, text) {
 		context.channel.send_reply (context.sender, this.get_command_help("google"));
 		return;
 	}
-	
+
 	context.channel.send_reply (context.intent, "Google search: \""+text+"\" <http://www.google.com/search?q="+encodeURIComponent(text)+">");
 };
 
@@ -127,7 +127,7 @@ JSBot.prototype.re = function(context, msg) {
 	// The regular expression to match a real js regex literal
 	// is too long, so we need to use a simpler one.
 	var regexmatches, regexliteral = /\/((?:[^\\\/]|\\.)*)\/([gi]*)$/;
-	
+
 	if (regexmatches = msg.match(regexliteral)) {
 		try {
 			var regexpobj = new RegExp(regexmatches[1], regexmatches[2]);
@@ -136,7 +136,7 @@ JSBot.prototype.re = function(context, msg) {
 			context.channel.send_reply(context.sender, e.message);
 			return;
 		}
-		
+
 		var texttomatch = msg.slice(0, -regexmatches[0].length).trim();
 		var result = texttomatch.match(regexpobj);
 		if (result === null) {
@@ -150,7 +150,7 @@ JSBot.prototype.re = function(context, msg) {
 				"'"+result[i]+"'" :
 				"[undefined]");
 		}
-		
+
 		context.channel.send_reply(context.intent, "Matches: "+reply.join(", "), {truncate: true});
 	} else {
 		context.channel.send_reply(context.sender, this.get_command_help("re"));
@@ -165,7 +165,7 @@ JSBot.prototype.help = function(context, text) {
 		if (!text) {
 			return this.command_not_found (context, "help");
 		}
-		
+
 		context.channel.send_reply(context.intent, this.get_command_help(text));
 	} catch(e) {
 		context.channel.send_reply(context.sender, e);
@@ -187,7 +187,7 @@ JSBot.prototype.command_not_found = function(context, text) {
 	if (context.priv) {
 		return Shared.find.call (this, context, text);
 	}
-	
+
 	try {
 		context.channel.send_reply(context.intent, this.factoids.find(text, true));
 	} catch(e) {
@@ -196,7 +196,7 @@ JSBot.prototype.command_not_found = function(context, text) {
 };
 
 // JSON.stringify([].slice.call(document.querySelectorAll('#toc-full a')).map(function(v) {return {title: v.firstChild.textContent, id: v.href.replace(/.+#/, '')};}));
-// Use that to generate the required JSON from es5.github.com with Firefox
+// Use that to generate the required JSON from es5.github.io with Firefox
 
 JSBot.prototype.ecma = function(context, text) {
 	try {
@@ -208,15 +208,15 @@ JSBot.prototype.ecma = function(context, text) {
 
 	text = text.toLowerCase();
 	var ref = this.ecma_ref, ch = text.charCodeAt(0);
-	
+
 	// If text begins with a number, the search must match at the beginning of the string
 	var muststart = ch >= 48 && ch <= 57; 
-	
+
 	for (var i = 0, len = ref.length; i < len; i++) {
 		var item = ref[i], title = item.title.toLowerCase();
 		if (muststart ? title.substring(0, text.length) === text : ~title.indexOf(text)) {
 			context.channel.send_reply(context.intent,
-				"Found: " + item.title + " <http://es5.github.com/#" + item.id + ">");
+				"Found: " + item.title + " <http://es5.github.io/#" + item.id + ">");
 			return;
 		}
 	}
