@@ -394,7 +394,7 @@ util.inherits(ΩF_0Bot, Bot);
 };
 
 ΩF_0Bot.prototype.find = function(context, text) {
-	Shared.findPlus.call (this, context, text, !context.priv);
+	Shared.findPlus.call(this, context, text, !context.priv);
 };
 
 ΩF_0Bot.prototype.projects = function(context, project) {

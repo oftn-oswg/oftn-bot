@@ -176,7 +176,7 @@ JSBot.prototype.help = function(context, text) {
 
 JSBot.prototype.mdn = function(context, text, command) {
 	if (!text) {
-		return Shared.findPlus.call (this, context, command);
+		return Shared.findPlus.call(this, context, command);
 	}
 
 	Shared.google (context, "site:developer.mozilla.org "+text);
@@ -184,7 +184,7 @@ JSBot.prototype.mdn = function(context, text, command) {
 
 
 JSBot.prototype.command_not_found = function(context, text) {
-	Shared.findPlus.call (this, context, text, !context.priv);
+	Shared.findPlus.call(this, context, text, !context.priv);
 };
 
 // JSON.stringify([].slice.call(document.querySelectorAll('#toc-full a')).map(function(v) {return {title: v.firstChild.textContent, id: v.href.replace(/.+#/, '')};}));
