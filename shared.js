@@ -12,6 +12,38 @@ function parse_regex_literal (text) {
 	return [regex, regexparsed[2].replace(/\\\//g, '/')];
 }
 
+function factoidFindHelper(bot, context, text, suppressSearch) {
+	try {
+		var results,
+		    factoid = bot.factoids.find(text, true);
+
+		if (results = factoid.match(bot.executeRegex)) {
+			context.channel.send_reply(context.channel, results[0] + " @" + context.intent.name, {color: true});
+			Shared.execute_js.apply(bot, [context, factoid].concat(results.slice(1)));
+		} else {
+			context.channel.send_reply(context.intent, factoid, {color: true});
+		}
+	} catch(e) {
+		if (!suppressSearch) {
+			var reply = ["Could not find `"+text+"`."],
+			    found = bot.factoids.search(text);
+
+			found = found.map(function(item) {
+				return "\x033"+item+"\x0F";
+			});
+
+			if (found.length) {
+				reply = ["Found:"];
+				if (found.length > 1) {
+					found[found.length-1] = "and "+found[found.length-1];
+				}
+				reply.push(found.join(found.length-2 ? ", " : " "));
+			}
+
+			context.channel.send_reply(context.intent, reply.join(" "), {color: true});
+		}
+	}
+}
 
 var Shared = module.exports = {
 	
@@ -28,7 +60,8 @@ var Shared = module.exports = {
 	
 	
 	execute_js: function(context, text, command, code) {
-		var engine, person = context.sender;
+		var engine,
+		    person = context.sender;
 	
 		/* This should be temporary. */
 		if (!context.priv) {
@@ -170,30 +203,14 @@ var Shared = module.exports = {
 			"Valid commands are: " + trigger + commands.join(", " + trigger));
 	},
 
-
 	find: function(context, text) {
-
-		try {
-			context.channel.send_reply(context.intent, this.factoids.find(text, true), {color: true});
-		} catch(e) {
-		
-			var reply = ["Could not find `"+text+"`."],
-				found = this.factoids.search(text);
-		
-			found = found.map(function(item) {
-				return "\x033"+item+"\x0F";
-			});
-			
-			if (found.length) {
-				reply = ["Found:"];
-				if (found.length > 1) found[found.length-1] = "and "+found[found.length-1];
-				reply.push(found.join(found.length-2 ? ", " : " "));
-			}
-			
-			context.channel.send_reply(context.intent, reply.join(" "), {color: true});
-		}
+		factoidFindHelper(this, context, text);
 	},
-	
+
+	findPlus: function(context, text, suppressSearch) {
+		factoidFindHelper(this, context, text, suppressSearch);
+	},
+
 	topic: function(context, text) {
 	
 		try {
