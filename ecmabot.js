@@ -57,7 +57,34 @@ JSBot.prototype.init = function() {
 	this.register_command("find", Shared.find);
 
 	this.register_command("help", this.help);
-
+	
+	this.register_command("klingon", function () {
+		var quotes = ["\"This code is a piece of crap! You have no honor!\"",
+		"\"A TRUE Klingon warrior does not comment his code!\"",
+		"\"By filing this bug you have questioned my family honor. Prepare to die!\"",
+		"\"You question the worthiness of my Code?! I should kill you where you stand!\"",
+		"\"Our competitors are without honor!\"",
+		"\"Specs are for the weak and timid!\"",
+		"\"This machine is a piece of GAGH! I need dual Pentium processors if I am to do battle with this code!\"",
+		"\"Perhaps it IS a good day to Die! I say we ship it!\"",
+		"\"My program has just dumped Stova Core!\"",
+		"\"Behold, the keyboard of Kalis! The greatest Klingon code warrior that ever lived!\"",
+		"\"I have challenged the entire ISO-9000 review team to a round of Bat-Leth practice on the holodeck. They will not concern us again.\"",
+		"\"C++? That is for children. A Klingon Warrior uses only machine code, keyed in on the front panel switches in raw binary.\"",
+		"\"Debugging? Klingons do not debug. Bugs are good for building character in the user.\"",
+		"\"Defensive programming? Never! Klingon programs are always on the offense. Yes, Offensive programming is what we do best.\"",
+		"\"Klingon programs don't do accountancy. For that, you need a Farengi programmer.\"",
+		"\"Klingon multitasking systems do not support \"time-sharing\". When a Klingon program wants to run, it challenges the scheduler in hand-to-hand combat and owns the machine.\"",
+		"\"Klingon function calls do not have 'parameters' - they have 'arguments' - and they ALWAYS WIN THEM.\"",
+		"\"You humans call this thing a 'cursor' and you move it with 'mouse'! Bah! A Klingon would not use such a device. We have a Karaghht-Gnot - which is best translated as \"An Aiming Daggar of 16x16 pixels\" and we move it using a Gshnarrrf which is a creature from the Klingon homeworld which posesses just one, (disproportionately large) testicle...which it rubs along the ground.....uh do we really need to talk about this?\"",
+		"\"I am without honor...my children are without honor... My father coded at the Battle of Kittimer...and...and...he... HE ALLOWED HIMSELF TO BE MICROMANAGED.\" <shudder>",
+		"\"Klingons do not make software 'releases'. Our software 'escapes'. Typically leaving a trail of wounded programmers in it's wake.\"",
+		"\"Microsoft is actually a secret Farengi-Klingon alliance designed to cripple the Federation. The Farengi are doing the marketing and the Klingons are writing the code.\"",
+		"\"Klingons do not believe in indentation - except perhaps in the skulls of their program managers.\"",
+		"\"You can't truly appreciate Dilbert unless you read it in the original Klingon.\""];
+		context.channel.send_reply(context.sender, quotes[Math.floor(quotes.length*Math.random())]);
+	});
+	
 	this.register_command("auth", Shared.reauthenticate, {
 		allow_intentions: false,
 		help: "Attempt to re-authenticate with NickServ."});
