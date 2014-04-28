@@ -58,7 +58,7 @@ JSBot.prototype.init = function() {
 
 	this.register_command("help", this.help);
 	
-	this.register_command("klingon", function () {
+	this.register_command("klingon", function (context) {
 		var quotes = ["\"This code is a piece of crap! You have no honor!\"",
 		"\"A TRUE Klingon warrior does not comment his code!\"",
 		"\"By filing this bug you have questioned my family honor. Prepare to die!\"",
