@@ -251,3 +251,4 @@ JSBot.prototype.caniuse = function(context, text) {
 
 var profile = require("./ecmabot-profile.js");
 (new JSBot(profile)).init();
+
