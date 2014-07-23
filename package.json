@@ -1,7 +1,7 @@
 {
   "repository": "https://github.com/oftn/oftn-bot",
   "dependencies": {
-    "twitter": "~0.1.17"
+    "twitter": "~0.1.19"
   }
 }
 
