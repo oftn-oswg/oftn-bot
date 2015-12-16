@@ -1,6 +1,7 @@
 // This is for common functions defined in many bots at once
 var Sandbox = require("./lib/sandbox");
 var FeelingLucky = require("./lib/feelinglucky");
+var Gist = require("./lib/paste/gist");
 
 function parse_regex_literal (text) {
 	var regexparsed = text.match(/s\/((?:[^\\\/]|\\.)*)\/((?:[^\\\/]|\\.)*)\/([gi]*)$/);
@@ -10,6 +11,22 @@ function parse_regex_literal (text) {
 
 	var regex = new RegExp(regexparsed[1], regexparsed[3]);
 	return [regex, regexparsed[2].replace(/\\\//g, '/')];
+}
+
+
+function cleanReply(text){
+	text = text
+		.split('\n')
+		.map(function(x){
+			return x.trim()
+				.replace(/[\n\t]|\s\s+/g, ' ')
+				.replace(/\s\s+/g, ' ');
+		})
+		.join(' ');
+
+	var prefix = result.success ? '(okay)' : '(error)';
+	text = prefix + ' ' + text;
+	return text;
 }
 
 function factoidFindHelper(bot, context, text, suppressSearch) {
@@ -46,23 +63,23 @@ function factoidFindHelper(bot, context, text, suppressSearch) {
 }
 
 var Shared = module.exports = {
-	
+
 	google: function(context, text) {
 		FeelingLucky(text + " -site:w3schools.com", function(data) {
 			if (data) {
-				context.channel.send_reply (context.intent, 
+				context.channel.send_reply (context.intent,
 					"\x02"+data.title+"\x0F \x032< "+data.url+" >\x0F", {color: true});
 			} else {
 				context.channel.send_reply (context.sender, "No search results found.");
 			}
 		});
 	},
-	
-	
+
+
 	execute_js: function(context, text, command, code) {
 		var engine,
 		    person = context.sender;
-	
+
 		/* This should be temporary. */
 		if (!context.priv) {
 			if (command === "v8>" && context.channel.userlist["v8bot"]) {
@@ -72,7 +89,7 @@ var Shared = module.exports = {
 				return;
 			}
 		}
-	
+
 		switch (command) {
 		case "|>": /* Multi-line input */
 			person.js = person.js || {timeout: null, code: []};
@@ -92,6 +109,10 @@ var Shared = module.exports = {
 		case "v8>":
 			// context.channel.send_reply(context.intent, "v8 temporarily disabled, please use js> instead."); return;
 			engine = Sandbox.V8; break;
+		case "n>":
+		    engine = Sandbox.Node; break;
+		case "b>":
+			engine = Sandbox.Babel; break;
 		default:
 			engine = Sandbox.SpiderMonkey; break;
 		}
@@ -108,6 +129,60 @@ var Shared = module.exports = {
 			try {
 				/* If theres an error, show that.
 				   If not, show the type along with the result */
+				if (result.isJSEval) {
+					if (result.reason) {
+						reply = result.reason;
+					} else if (!result.success) {
+						reply = result.text;
+					} else {
+						reply = result.text;
+					}
+
+					if (reply.length > 100) {
+						var visibleReply = reply.slice(0, 80);
+						var formattedCode = code;
+
+						function markdownEscape(str){
+							return str.replace(/```/g, '{triple backticks escaped}');
+						}
+
+						var gistFile = "";
+						gistFile += "For this code:";
+						gistFile += "\n\n";
+						gistFile += "```js\n";
+						gistFile += markdownEscape(formattedCode);
+						gistFile += "\n";
+						gistFile += "```";
+						gistFile += "\n\n";
+						gistFile += "This was the "
+							+ (result.success ? 'output' : 'error')
+							+ ':';
+						gistFile += "\n\n";
+						gistFile += "```";
+						gistFile += "\n";
+						gistFile += markdownEscape(result.text);
+						gistFile += "\n";
+						gistFile += "```";
+						gistFile += "\n\n";
+
+						Gist.createGist(gistFile, {
+							filename: result.success ? "result.md" : "error.md",
+							description: "result of " + context.sender.name + "'s code"
+						})
+						.then(function(url){
+							var fullReply = cleanReply(visibleReply) + " ... " + url;
+							context.channel.send_reply(context.intent, fullReply, {truncate: false});
+						})
+						.catch(function(err){
+							var fullReply = cleanReply(visibleReply) + " ... <unable to create gist url>";
+							context.channel.send_reply(context.intent, fullReply, {truncate: false});
+						});
+					} else {
+						context.channel.send_reply(context.intent, cleanReply(reply), {truncate: true});
+					}
+					return;
+				}
+
 				if (result.error !== null) {
 					reply = result.error;
 				} else {
@@ -118,7 +193,7 @@ var Shared = module.exports = {
 						reply = "undefined";
 					}
 				}
-			
+
 				if (Array.isArray(result.data.console) && result.data.console.length) {
 					// Add console log output
 					reply += "; Console: "+result.data.console.join(", ");
@@ -131,9 +206,9 @@ var Shared = module.exports = {
 			}
 		}, this);
 	},
-	
+
 	learn: function(context, text) {
-	
+
 		try {
 			var parsed = text.match(/^(alias)?\s*("[^"]*"|.+?)\s*(=~?)\s*(.+)$/i);
 			if (!parsed) {
@@ -157,7 +232,7 @@ var Shared = module.exports = {
 				return;
 			}
 
-			/* Setting the text of a factoid */ 
+			/* Setting the text of a factoid */
 			if (operation === "=") {
 				this.factoids.learn(factoid, value, context.sender.name);
 				context.channel.send_reply(context.sender, "Learned `"+factoid+"`.");
@@ -185,7 +260,7 @@ var Shared = module.exports = {
 			context.channel.send_reply(context.sender, e);
 		}
 	},
-	
+
 	forget: function(context, text) {
 		try {
 			this.factoids.forget(text, context.sender.name);
@@ -212,11 +287,11 @@ var Shared = module.exports = {
 	},
 
 	topic: function(context, text) {
-	
+
 		try {
-		
+
 			if (text) {
-	
+
 				if (text === "revert") {
 					var oldtopic = context.channel.oldtopic;
 					if (oldtopic) {
@@ -226,7 +301,7 @@ var Shared = module.exports = {
 						throw new Error("No topic to revert to.");
 					}
 				}
-				
+
 				try {
 					var template = this.factoids.find("topic", true);
 					var data = JSON.parse (text);
@@ -237,10 +312,10 @@ var Shared = module.exports = {
 				} catch (e) {
 					var regexinfo = parse_regex_literal(text);
 					var regex = regexinfo[0];
-		
+
 					var topic = context.channel.topic.replace(regex, regexinfo[1]);
 					if (topic === context.channel.topic) throw new Error("Nothing changed.");
-		
+
 					set_topic (topic.replace(/\n/g, ' '));
 					//context.channel.set_topic(topic);
 				}
@@ -250,7 +325,7 @@ var Shared = module.exports = {
 		} catch (e) {
 			context.channel.send_reply(context.sender, e);
 		}
-		
+
 		function set_topic (topic) {
 			context.channel.oldtopic = context.channel.topic;
 			context.client.get_user("ChanServ")

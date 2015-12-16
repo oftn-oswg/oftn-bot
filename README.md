@@ -72,6 +72,56 @@ When the command is called, the callback is called with the arguments:
 * text: The command arguments
 
 
+Install
+-----------------------
+
+Clone the repo:
+
+```sh
+# clone without all of the history
+git clone --depth=1 https://github.com/oftn/oftn-bot.git my-bot-directory
+```
+
+If you want to build on ecmabot.js, copy sample-profile.js to ecmabot-profile.js and edit options. `nickserv` and `password` can be removed for development.
+
+To run the bot: `node ecmabot.js`.
+
+Currently the only way to update the bot is a full restart.
+
+### REPL
+
+ecmabot can run code in a sandbox. It uses [docker][docker], which you'll need to [install][docker-install]. If you don't install docker, the code execution will silently fail. 
+
+If docker is installed, it'll automatically download [js-eval][js-eval], which provides node, and node+babel for executing code. Each code snippet is run in a fresh container with limited memory, cpu usage, no network access, and a user that owns no files or has any special permissions ([see the docker run command][docker-opts]). Keep docker up to date in case any critical security vulnerabilities are found.
+
+To update the [js-eval][js-eval] version, run `docker pull brigand/js-eval`. This will get you the latest node stable and babel version. You don't need to restart the bot when you do this. The lazy way to do this:
+
+```sh
+# check for updates every 3 hours (a build occurs at least once every 12 hours)
+screen -dmS 'update-js-eval' bash -c 'while true; do sleep 10800; docker pull brigand/js-eval; done'
+```
+
+#### Examples
+
+node:
+
+```yaml
+user: n> require('path').join('foo', 'bar')
+bot: (okay) foo/bar
+```
+
+babel:
+
+```yaml
+user: b> const [foo, ...bar] = ['a', 'b', 'c'].entries(); bar
+bot: (okay) [ [ 1, 'b' ], [ 2, 'c' ] ]
+```
+
+[docker]: https://www.docker.com/
+[docker-install]: https://docs.docker.com/installation/
+[js-eval]: https://registry.hub.docker.com/u/brigand/js-eval/
+[docker-opts]: https://github.com/brigand/oftn-bot/blob/es6/lib/sandbox/index.js#L143
+
 Additional Documentation
 ------------------------
 

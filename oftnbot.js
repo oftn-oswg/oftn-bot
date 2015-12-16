@@ -50,7 +50,7 @@ var ΩF_0Bot = function(profile) {
 	
 	this.sandbox = new Sandbox(path.join(__dirname, "oftnbot-utils.js"));
 	this.factoids = new FactoidServer(path.join(__dirname, "oftnbot-factoids.json"));
-	this.executeRegex = /^((?:sm?|v8?|js?|hs?|>>?|>>>>|\|)>)([^>].*)+/;
+	this.executeRegex = /^((?:sm?|v8|hs?|js?|b|n|>>?|>>>>|\|)>)([^>].*)+/;
 
 	this.set_log_level(this.LOG_ALL);
 	this.set_trigger("!"); // Exclamation

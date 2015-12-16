@@ -16,7 +16,7 @@ var JSBot = function(profile) {
 	this.sandbox = new Sandbox(path.join(__dirname, "ecmabot-utils.js"));
 	this.factoids = new FactoidServer(path.join(__dirname, "ecmabot-factoids.json"));
 	this.caniuse_server = new CanIUseServer;
-	this.executeRegex = /^((?:sm|v8|js|>>?|\|)>)([^>].*)+/;
+	this.executeRegex = /^((?:sm?|v8|js?|b|n|>>?|>>>>|\|)>)([^>].*)+/;
 
 	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
@@ -249,6 +249,12 @@ JSBot.prototype.caniuse = function(context, text) {
 	}
 };
 
-var profile = require("./ecmabot-profile.js");
+var profile;
+if (process.env.ECMABOT_PROFILE) {
+		profile = require(path.resolve(process.env.ECMABOT_PROFILE));
+} else {
+	profile = require("./ecmabot-profile.js");
+}
+
 (new JSBot(profile)).init();
 
