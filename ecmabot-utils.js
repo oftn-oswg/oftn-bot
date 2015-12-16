@@ -40,7 +40,7 @@ var utils = {
 		return (function(value, depth) {
 			if (!depth) { return "\u2026"; /* Ellipsis */}
 			if (value === null) return "null";
-			
+
 			//return typeof value;
 
 			switch (typeof value) {
@@ -60,7 +60,7 @@ var utils = {
 				// Collapse whitespace
 				var str;
 				str = Function.prototype.toString.call(value).replace(/\s+/g, " ");
-				
+
 				// Truncate just enough so you can identify the function
 				if (str.length > 48) {
 					return str.substr(0, 46)+"\u2026}";
@@ -68,7 +68,7 @@ var utils = {
 					return str;
 				}
 			case "object":
-			
+
 				// Only way to get internal [[Class]] property
 				var type = Object.prototype.toString.call(value).slice(8, -1);
 				switch (type) {
@@ -88,12 +88,12 @@ var utils = {
 							utils.string_format(
 								String.prototype.toString.call(value));
 				}
-					
+
 				try {
 
 					if (~seen.indexOf(value)) return "(Circular)";
 					seen.push(value);
-				
+
 					var array = [], braces, props, prepend_key;
 
 					if (Array.isArray(value)) {
@@ -108,7 +108,7 @@ var utils = {
 						props = Object.getOwnPropertyNames(value).sort();
 						prepend_key = true;
 					}
-				
+
 					for( var i = 0, len = props.length; i < len; i++ ) {
 						var desc = Object.getOwnPropertyDescriptor(value, props[i]);
 						var string;
@@ -145,24 +145,24 @@ var utils = {
 	 * least escaping has to be done.
 	 **/
 	string_format: function(value) {
-		
+
 		// First we need to find which quote character to use by comparing the
 		// number of times each occurs in the string.
-		
+
 		var quotes_dbl = (value.match(/"/g) || []).length;
 		var quotes_sgl = (value.match(/'/g) || []).length;
 		var quote = quotes_sgl <= quotes_dbl ? "'" : '"';
 		var quote_code = quote.charCodeAt(0);
-		
+
 		// Next, we create a new array of substrings which contain escaped or
 		// unescaped strings.
-		
+
 		var i = 0, code, code2, len = value.length, result = "";
 		while (i < len) {
 			code = value.charCodeAt(i++);
 			switch (code) {
-			case 8:  result += "\\b"; break;
-			case 9:  result += "\\t"; break;
+			case 8: result += "\\b"; break;
+			case 9: result += "\\t"; break;
 			case 10: result += "\\n"; break;
 			case 11: result += "\\v"; break;
 			case 12: result += "\\f"; break;
@@ -198,7 +198,7 @@ var utils = {
 				}
 			}
 		}
-		
+
 		return quote+result+quote;
 	},
 	type_is_obvious: function(value) {
@@ -244,8 +244,8 @@ var timerQueue = [];
 var timerHandle = 0xDECAFBAD;
 
 timerQueue.insertOrdered = function(val) {
-	var l = this.length,
-	    order = val.order;
+	var l = this.length;
+	var order = val.order;
 
 	while (l--) {
 		if (this[l].order > order) break;
@@ -273,9 +273,9 @@ Object.defineProperty(pretendToBeNativeCode, "toString", {
 
 Object.defineProperty(global, "setTimeout", {
 	value: function setTimeout(fn, delay) {
-		var runOrder = Date.now() + delay,
-		    args = Array.prototype.slice.call(arguments, 2),
-		    fnType = Object.prototype.toString.call(fn);
+		var runOrder = Date.now() + delay;
+		var args = Array.prototype.slice.call(arguments, 2);
+		var fnType = Object.prototype.toString.call(fn);
 
 		if (fnType !== "[object Function]") {
 			return;

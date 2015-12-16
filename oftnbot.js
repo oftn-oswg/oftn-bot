@@ -47,14 +47,14 @@ Array.prototype.zip = function (other, zipFunc) {
 
 var ΩF_0Bot = function(profile) {
 	Bot.call(this, profile);
-	
+
 	this.sandbox = new Sandbox(path.join(__dirname, "oftnbot-utils.js"));
 	this.factoids = new FactoidServer(path.join(__dirname, "oftnbot-factoids.json"));
 	this.executeRegex = /^((?:sm?|v8|hs?|js?|b|n|>>?|>>>>|\|)>)([^>].*)+/;
 
 	this.set_log_level(this.LOG_ALL);
 	this.set_trigger("!"); // Exclamation
-	
+
 	this.start_github_server(9370);
 	this.github_context = null;
 
@@ -126,7 +126,7 @@ util.inherits(ΩF_0Bot, Bot);
 
 			conversions.push(result);
 		}
-		
+
 		context.channel.send (conversions.join("; "));
 
 		function fmt(value) {
@@ -135,7 +135,7 @@ util.inherits(ΩF_0Bot, Bot);
 	});
 
 	this.password = "I solemnly swear that I am up to no evil";
-	
+
 	this.register_command("access", function(context, text) {
 		if (context.priv && text === this.password) {
 			context.sender.access = true;
@@ -147,7 +147,7 @@ util.inherits(ΩF_0Bot, Bot);
 
 	this.register_listener(/^\x0F\x0F(.+)/, function(context, text, code) {
 			var result;
-			
+
 			if (!context.sender.access) {
 				var hours = 1000*60*60;
 				var now = +new Date();
@@ -161,7 +161,7 @@ util.inherits(ΩF_0Bot, Bot);
 				}
 				return;
 			}
-			
+
 			try {
 				with (context) {
 					result = eval (code);
@@ -174,17 +174,17 @@ util.inherits(ΩF_0Bot, Bot);
 				context.channel.send_reply (context.sender, require("./oftnbot-utils.js").pretty_print(result).substr(0, 400));
 			}
 	});
-	
+
 	this.countdown_timer = null;
 
 	this.register_command("countdown", function(context, text) {
-	
+
 		var length, decrement, self = this;
-		
+
 		clearInterval(this.countdown_timer);
-		
+
 		length = 3;
-		
+
 		if (text !== "stop") { 
 			this.countdown_timer = setInterval(function() {
 				if (length) {
@@ -197,11 +197,11 @@ util.inherits(ΩF_0Bot, Bot);
 			}, 1000);
 		}
 	});
-	
+
 	this.on('invite', function(user, channel) {
 		channel.join();
 	});
-	
+
 	this.on('command_not_found', this.find);
 
 	this.on('connect', function(client) {
@@ -233,9 +233,10 @@ util.inherits(ΩF_0Bot, Bot);
 					"Usage: !quiet <user> <time>, where time is optional and specified as [NNd][NNh][NNm]<NN[s]> (defaults to 1m)");
 			}
 
-			var time = match.slice(2).map   (                                  function (i)   { return parseInt(i || 0, 10); })
-			                         .zip   ([86400000, 3600000, 60000, 1000], function (x,y) { return x * y; })
-			                         .reduce(                                  function (x,y) { return x + y; });
+			var time = match.slice(2)
+				.map(function (i) { return parseInt(i || 0, 10); })
+				.zip([86400000, 3600000, 60000, 1000], function (x, y) { return x * y; })
+				.reduce(function (x, y) { return x + y; });
 
 			if (time < 1) time = 60000;
 
@@ -305,7 +306,7 @@ util.inherits(ΩF_0Bot, Bot);
 
 	http.createServer(function (request, response) {
 		var payload = "", channel;
-		
+
 		// Get the channel to send messages in from the url
 		channel = decodeURIComponent(url.parse(request.url).pathname.slice(1));
 		if (!channel) {
@@ -387,7 +388,7 @@ util.inherits(ΩF_0Bot, Bot);
 
 			response.end();
 		}.bind(this));
-	  
+
 	}.bind(this)).listen(port);
 
 	util.puts("Github server running at port: "+port);

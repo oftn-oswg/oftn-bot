@@ -31,8 +31,8 @@ function cleanReply(text){
 
 function factoidFindHelper(bot, context, text, suppressSearch) {
 	try {
-		var results,
-		    factoid = bot.factoids.find(text, true);
+		var results;
+		var factoid = bot.factoids.find(text, true);
 
 		if (results = factoid.match(bot.executeRegex)) {
 			context.channel.send_reply(context.channel, results[0] + " @" + context.intent.name, {color: true});
@@ -42,8 +42,8 @@ function factoidFindHelper(bot, context, text, suppressSearch) {
 		}
 	} catch(e) {
 		if (!suppressSearch) {
-			var reply = ["Could not find `"+text+"`."],
-			    found = bot.factoids.search(text);
+			var reply = ["Could not find `"+text+"`."];
+			var found = bot.factoids.search(text);
 
 			found = found.map(function(item) {
 				return "\x033"+item+"\x0F";
@@ -77,8 +77,8 @@ var Shared = module.exports = {
 
 
 	execute_js: function(context, text, command, code) {
-		var engine,
-		    person = context.sender;
+		var engine;
+		var person = context.sender;
 
 		/* This should be temporary. */
 		if (!context.priv) {
@@ -110,7 +110,7 @@ var Shared = module.exports = {
 			// context.channel.send_reply(context.intent, "v8 temporarily disabled, please use js> instead."); return;
 			engine = Sandbox.V8; break;
 		case "n>":
-		    engine = Sandbox.Node; break;
+			engine = Sandbox.Node; break;
 		case "b>":
 			engine = Sandbox.Babel; break;
 		default:
@@ -127,8 +127,8 @@ var Shared = module.exports = {
 			var reply;
 
 			try {
-				/* If theres an error, show that.
-				   If not, show the type along with the result */
+				/*	If theres an error, show that.
+					If not, show the type along with the result */
 				if (result.isJSEval) {
 					if (result.reason) {
 						reply = result.reason;

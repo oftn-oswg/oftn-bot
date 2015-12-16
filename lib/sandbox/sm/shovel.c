@@ -84,28 +84,28 @@ void sandbox_run (Sandbox *this, const char *filepath)
 
 	if (!JS_CallFunctionName (this->utils_context.context,
 				this->utils_exports, "run", 1, &input, &returned)) {
-		
+
 		SANDBOX_THROW_ERROR_JS (this, this->utils_context.context);
 		sandbox_throw_error (this,
 			"Failed to call exports.run function from utilities file.");
 	}
-	
+
 	output = JS_ValueToString (this->utils_context.context, returned);
 	if (output == NULL) {
 		SANDBOX_THROW_ERROR_JS (this, this->utils_context.context);
 		sandbox_throw_error (this,
 			"Exception thrown while converting exports.run return value into a string.");
 	}
-	
+
 	output_ch = JS_EncodeString (this->utils_context.context, output);
 	if (output_ch == NULL) {
 		sandbox_throw_error (this,
 			"Invalid UTF-8. Could not encode.");
 	}
-	
+
 	fprintf (stdout, "%s\n", output_ch);
 	fflush (stdout);
-	
+
 	JS_free (this->utils_context.context, output_ch);
 }
 
@@ -139,7 +139,7 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 	exports = JS_NewObject (context, NULL, NULL, global);
 
 	if (!JS_DefineProperty (context, global, "exports", OBJECT_TO_JSVAL (exports),
-	                        JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
+							JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
 		sandbox_throw_error (this, "Could not make new exports global.");
 	}
 
@@ -148,8 +148,8 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 		version = JS_NewStringCopyZ (context, version_ch);
 		if (version) {
 			JS_DefineProperty (context, global, "version",
-			                   STRING_TO_JSVAL (version),
-			                   JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT);
+								STRING_TO_JSVAL (version),
+								JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT);
 		}
 	}
 
@@ -157,16 +157,16 @@ void sandbox_load_utils (Sandbox *this, const char *filepath)
 	global_object = sandbox_globals_create (this, context);
 
 	if (!JS_DefineProperty (context, global, "global", OBJECT_TO_JSVAL (global_object),
-	                        JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
+							JS_PropertyStub, JS_StrictPropertyStub, JSPROP_PERMANENT)) {
 		sandbox_throw_error (this, "Could not make global object.");
 	}
 
 	if (!JS_EvaluateScript (context, global, utils_input, utils_size-1,
-	                        "irc", 1, &retval)) {
+							"irc", 1, &retval)) {
 
 		SANDBOX_THROW_ERROR_JS (this, context);
 		sandbox_throw_error (this, "Could not execute utilities file.");
-		
+
 	}
 
 	this->utils_exports = exports;
@@ -207,7 +207,7 @@ char *sandbox_read_into (Sandbox *this, FILE *src, unsigned int buffersize, int 
 }
 
 
-SandboxError sandbox_throw_error (Sandbox *this, const char  *message)
+SandboxError sandbox_throw_error (Sandbox *this, const char *message)
 {
 	static const char* format = "{"
 		"\"data\": {},"
@@ -244,14 +244,14 @@ SandboxContext sandbox_context_create (Sandbox *this)
 JSObject* sandbox_globals_create (Sandbox *this, JSContext *context)
 {
 	JSObject *global;
-	
+
 	static JSClass global_class = {
 		"global", JSCLASS_GLOBAL_FLAGS,
 		JS_PropertyStub, JS_PropertyStub, JS_PropertyStub, JS_StrictPropertyStub,
 		JS_EnumerateStub, JS_ResolveStub, JS_ConvertStub, JS_FinalizeStub,
 		JSCLASS_NO_OPTIONAL_MEMBERS
 	};
-	
+
 	global = JS_NewCompartmentAndGlobalObject (context, &global_class, NULL);
 	if (global == NULL) {
 		sandbox_throw_error (this, "Could not create global object.");
@@ -261,7 +261,7 @@ JSObject* sandbox_globals_create (Sandbox *this, JSContext *context)
 		sandbox_throw_error (this,
 			"Could not populate global object with standard globals.");
 	}
-	
+
 	return global;
 }
 
@@ -271,32 +271,32 @@ JSBool sandbox_jsnative_execute (JSContext *cx, unsigned argc, jsval *vp)
 	JSObject *global;
 	static char *input_text = NULL;
 	static unsigned int input_size;
-	
+
 	JSCrossCompartmentCall *crosscall;
-	
+
 	jsval return_value = JSVAL_VOID;
 	jsval global_jsval = JSVAL_VOID;
 	jsval exception = JSVAL_VOID;
 
 	JSBool success = JS_FALSE;
-	
+
 	if (!JS_GetProperty (cx, JS_GetGlobalObject (cx), "global", &global_jsval)) {
 		goto cleanup;
 	}
-	
+
 	if (!JS_ValueToObject (cx, global_jsval, &global)) {
 		goto cleanup;
 	}
-	
+
 	if (input_text == NULL) {
 		input_text = sandbox_read_into (NULL, stdin, 512, &input_size);
 	}
-	
+
 	if (input_text == NULL) {
 		JS_THROW_SANDBOX_ERROR (cx, "Could not read input script.");
 		goto cleanup;
 	}
-	
+
 	crosscall = JS_EnterCrossCompartmentCall (cx, global);
 	if (!crosscall) {
 		JS_THROW_SANDBOX_ERROR (cx, "Could not enter a cross compartment call.");
@@ -304,7 +304,7 @@ JSBool sandbox_jsnative_execute (JSContext *cx, unsigned argc, jsval *vp)
 	}
 
 	JS_EvaluateScript (cx, global, input_text, input_size-1,
-	                   "irc", 1, &return_value);
+						"irc", 1, &return_value);
 
 	if (JS_GetPendingException (cx, &exception)) {
 		JS_ClearPendingException (cx);
