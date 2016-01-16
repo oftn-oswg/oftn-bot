@@ -125,6 +125,8 @@ var Shared = module.exports = {
 
 		this.sandbox.run(engine, 4000, code, function(result) {
 			var reply;
+			if (result.text) result.text = result.text.replace(/\r\n?/g, '\n');
+			if (result.reason) result.reason = result.reason.replace(/\r\n?/g, '\n');
 
 			try {
 				/*	If theres an error, show that.
