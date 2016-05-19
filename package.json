@@ -3,6 +3,7 @@
 	"dependencies": {
 		"bhttp": "^1.2.1",
 		"object.assign": "^4.0.3",
-		"twitter": "~0.1.19"
+		"twitter": "~0.1.19",
+		"scrape-mdn": "^1.0.2"
 	}
 }

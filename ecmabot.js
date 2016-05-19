@@ -10,6 +10,7 @@ var CanIUseServer = require("./lib/caniuse");
 
 var Bot = require("./lib/irc");
 var Shared = require("./shared");
+var scrapeMdn = require('scrape-mdn');
 
 
 var JSBot = function(profile) {
@@ -176,10 +177,21 @@ JSBot.prototype.help = function(context, text) {
 
 JSBot.prototype.mdn = function(context, text, command) {
 	if (!text) {
-		return Shared.findPlus.call(this, context, command);
+		return;
 	}
 
-	Shared.google (context, "site:developer.mozilla.org "+text);
+	scrapeMdn.search(text).then((results) => {
+		var result = results[0];
+		context.channel.send_reply(
+			context.intent,
+			'\x02' + result.title + '\x0F \x032< ' + result.url + '>\x0F',
+			{color: true}
+		);
+	})
+	.catch((err) => {
+		console.error('Error with command "!' + command + ' ' + text + '"');
+		console.error(err);
+	});
 };
 
 
