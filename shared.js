@@ -14,7 +14,7 @@ function parse_regex_literal (text) {
 }
 
 
-function cleanReply(text){
+function cleanReply(text, result){
 	text = text
 		.split('\n')
 		.map(function(x){
@@ -172,15 +172,15 @@ var Shared = module.exports = {
 							description: "result of " + context.sender.name + "'s code"
 						})
 						.then(function(url){
-							var fullReply = cleanReply(visibleReply) + " ... " + url;
+							var fullReply = cleanReply(visibleReply, result) + " ... " + url;
 							context.channel.send_reply(context.intent, fullReply, {truncate: false});
 						})
 						.catch(function(err){
-							var fullReply = cleanReply(visibleReply) + " ... <unable to create gist url>";
+							var fullReply = cleanReply(visibleReply, result) + " ... <unable to create gist url>";
 							context.channel.send_reply(context.intent, fullReply, {truncate: false});
 						});
 					} else {
-						context.channel.send_reply(context.intent, cleanReply(reply), {truncate: true});
+						context.channel.send_reply(context.intent, cleanReply(reply, result), {truncate: true});
 					}
 					return;
 				}
