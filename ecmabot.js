@@ -69,16 +69,27 @@ JSBot.prototype.init = function() {
 	this.register_command("forget", Shared.forget, {
 		allow_intentions: false,
 		help: "Remove factoid from bot. Usage: !forget foo"});
+		
+	this.register_command("s", this.ducky, { help: "Feeling Ducky Search | Usage: !s <text>" });
 
 	this.register_command("commands", Shared.commands);
-
+	
+	
 	this.on('command_not_found', this.command_not_found);
 
 	this.load_ecma_ref();
 
 };
 
-
+JSBot.prototype.ducky = function(context, text) {
+	if (!text) {
+		context.channel.send_reply (context.sender, this.get_command_help("s"));
+		return;
+	}
+	var ducky = function ducky(query) { return " search: " + query + " => https://duckduckgo.com/?q=!ducky+%q".replace("%q", encodeURI(query.replace(" ", "+"))) + " "; };
+	context.channel.send_reply (context.intent, ducky(text));
+	
+};
 JSBot.prototype.google = function(context, text) {
 
 	if (!text) {
