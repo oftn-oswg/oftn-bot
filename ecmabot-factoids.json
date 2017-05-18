@@ -89,7 +89,7 @@
 			"popularity": 12
 		},
 		"paste": {
-			"value": "Show some code, but don't paste it on the channel. Sites like http://gist.github.com/ and http://bpaste.net/ are cool. You can also use http://jsbin.com , http://requirebin.com or http://jsfiddle.net/ to provide a test case we can run and help you with your problem.",
+			"value": "Show some code, but don't paste it on the channel. Sites like http://gist.github.com, http://bpaste.net, http://dpaste.com are cool. You can also use http://jsbin.com , http://requirebin.com or http://jsfiddle.net/ to provide a test case we can run and help you with your problem.",
 			"popularity": 915,
 			"editors": [
 				"niggler",
