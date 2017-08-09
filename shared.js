@@ -1,6 +1,7 @@
 // This is for common functions defined in many bots at once
 var Sandbox = require("./lib/sandbox");
 var FeelingLucky = require("./lib/feelinglucky");
+var YoutubeRequest = require("./lib/youtube");
 var Gist = require("./lib/paste/gist");
 
 function parse_regex_literal (text) {
@@ -75,6 +76,18 @@ var Shared = module.exports = {
 		});
 	},
 
+	youtube: function(context, text, vidId) {
+		YoutubeRequest(vidId, function(data) {
+			context.channel.send(
+				'^ Youtube :: ' + data.title +
+				' :: Channel: ' + data.user +
+				' :: Duration: ' + data.duration.replace(/PT(\d{1,4})M(\d{1,2})S/,'$1:$2') +
+				' :: Views: ' + Number(data.views).toLocaleString('en') +
+				' :: likes: ' + Number(data.likes).toLocaleString('en') +
+				' :: dislikes: ' + Number(data.dislikes).toLocaleString('en')
+			);
+		});
+	},
 
 	execute_js: function(context, text, command, code) {
 		var engine;

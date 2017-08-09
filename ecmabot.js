@@ -18,6 +18,7 @@ var JSBot = function(profile) {
 	this.factoids = new FactoidServer(path.join(__dirname, "ecmabot-factoids.json"));
 	this.caniuse_server = new CanIUseServer;
 	this.executeRegex = /^((?:sm?|v8|js?|b|n|>>?|>>>>|\|)>)([^>].*)+/;
+	this.youtubeRegex  = /https?:\/\/www.youtube.com\/watch\?v=(\w+)/;
 
 	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
@@ -32,6 +33,8 @@ JSBot.prototype.init = function() {
 	Bot.prototype.init.call(this);
 
 	this.register_listener(this.executeRegex, Shared.execute_js);
+
+	this.register_listener(this.youtubeRegex, Shared.youtube);
 
 	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
 
