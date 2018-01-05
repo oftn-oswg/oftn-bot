@@ -87,7 +87,7 @@ JSBot.prototype.google = function(context, text) {
 		return;
 	}
 
-	context.channel.send_reply (context.intent, "Google search: \""+text+"\" <http://www.google.com/search?q="+encodeURIComponent(text)+">");
+	context.channel.send_reply (context.intent, "Google search: \""+text+"\" <https://www.google.com/search?q="+encodeURIComponent(text)+">");
 };
 
 
