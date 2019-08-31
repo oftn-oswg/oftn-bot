@@ -270,7 +270,7 @@ exports.run = function(execute) {
 	try {
 		result = execute();
 	} catch(e) {
-		if (typeof e.name !== "undefined" &&
+		if (e && typeof e.name !== "undefined" &&
 			typeof e.message !== "undefined") {
 			error = e;
 			error.name = e.name; // Weird bug
