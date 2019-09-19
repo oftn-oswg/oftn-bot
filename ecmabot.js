@@ -7,6 +7,7 @@ var Sandbox = require("./lib/sandbox");
 var FactoidServer = require("./lib/factoidserv");
 var FeelingLucky = require("./lib/feelinglucky");
 var CanIUseServer = require("./lib/caniuse");
+var YoutubeRequest = require("./lib/youtube");
 
 var Bot = require("./lib/irc");
 var Shared = require("./shared");
@@ -18,6 +19,7 @@ var JSBot = function(profile) {
 	this.factoids = new FactoidServer(path.join(__dirname, "ecmabot-factoids.json"));
 	this.caniuse_server = new CanIUseServer;
 	this.executeRegex = /^((?:sm?|v8|js?|b|n|>>?|>>>>|\|)>)([^>].*)+/;
+	this.youtubeRegex  = /https?:\/\/(?:www.youtube.com\/watch\?v=|youtu.be\/)([^&\s]+)/;
 
 	Bot.call(this, profile);
 	this.set_log_level(this.LOG_ALL);
@@ -33,10 +35,16 @@ JSBot.prototype.init = function() {
 
 	this.register_listener(this.executeRegex, Shared.execute_js);
 
+	this.register_listener(this.youtubeRegex, this.ytRememberId);
+
 	//this.register_listener(/^(\S+)(\+\+|--);?$/, this.do_beers);
 
 	this.register_command("g", Shared.google, {
 		help: "Run this command with a search query to return the first Google result. Usage: !g kitten images"});
+
+	this.register_command("yt", this.ytRequest, {
+		help: "You have to paste a link to youtube first."
+	});
 
 	this.register_command("google", this.google, {
 		help: "Returns a link to a Google search page of the search term. Usage: !google opencourseware computational complexity"});
@@ -79,6 +87,30 @@ JSBot.prototype.init = function() {
 
 };
 
+JSBot.prototype.ytRememberId = function(context, text, vidId) {
+	this._lastYtId = vidId
+};
+
+JSBot.prototype.ytRequest = function(context, text) {
+	if (this._lastYtId) {
+		YoutubeRequest(this._lastYtId, function(data) {
+			context.channel.send(
+				'^^ Youtube: ' + data.title +
+				' (by ' + data.user +
+				') [' + data.duration
+				  .replace(/PT((\d{1,2})H)?((\d{1,2})M)?((\d{1,2})S)?/,'$2:$4:$6')
+				  .replace(/:(\d)$/,':0$1')
+				  .replace(/^:|:$/g,'') +
+				'] views:' + Number(data.views).toLocaleString('en') +
+				' likes:' + Number(data.likes).toLocaleString('en') +
+				' dislikes:' + Number(data.dislikes).toLocaleString('en')
+			);
+		});
+		this._lastYtId = null
+	} else {
+		context.channel.send_reply (context.sender, this.get_command_help("yt"));
+	}
+};
 
 JSBot.prototype.google = function(context, text) {
 
@@ -269,4 +301,3 @@ if (process.env.ECMABOT_PROFILE) {
 }
 
 (new JSBot(profile)).init();
-
