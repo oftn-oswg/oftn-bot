@@ -1,9 +1,15 @@
 {
-	"repository": "https://github.com/oftn/oftn-bot",
-	"dependencies": {
-		"bhttp": "^1.2.1",
-		"object.assign": "^4.0.3",
-		"twitter": "~0.1.19",
-		"scrape-mdn": "^1.0.2"
-	}
+  "repository": "https://github.com/oftn/oftn-bot",
+  "dependencies": {
+    "bhttp": "^1.2.1",
+    "object.assign": "^4.0.3",
+    "twitter": "~0.1.19",
+    "scrape-mdn": "^1.0.2",
+    "snyk": "^1.316.1"
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
